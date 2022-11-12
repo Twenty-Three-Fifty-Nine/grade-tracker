@@ -4,6 +4,8 @@ import CourseOverview from './CourseOverview';
 import { SessionContext } from './GradesOverview';
 
 const TrimesterOverview = ({triInfo}) => {
+    const courses = React.useContext(SessionContext).courses;
+
     return (
         <Accordion defaultExpanded={triInfo.isActive}>
             <AccordionSummary expandIcon={<Icon>expand_more</Icon>}>
@@ -18,9 +20,9 @@ const TrimesterOverview = ({triInfo}) => {
             </AccordionSummary>
             <AccordionDetails>
                 <Stack spacing={2}>
-                    { 
-                        React.useContext(SessionContext).courses[triInfo.tri - 1][0] ?
-                        React.useContext(SessionContext).courses[triInfo.tri - 1].map((courseInfo) => {
+                    {
+                        courses[triInfo.tri - 1][0] ?
+                        courses[triInfo.tri - 1].map((courseInfo) => {
                             return (
                                 <CourseOverview key={courseInfo.code} courseInfo={courseInfo} />
                             )
