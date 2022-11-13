@@ -78,7 +78,7 @@ const GradesOverview = () => {
             <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear > new Date().getFullYear()} sx={{position: 'absolute', bottom: 32, right: 32}}>
                 <Icon>add</Icon>
             </Fab>
-            <AddCourseDialog selectedValue={""} open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} />
+            <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} />
         </Box>
         </>
     )
