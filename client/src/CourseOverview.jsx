@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardActionArea, CardContent, Chip, Divider, Typography } from '@mui/material';
 
 const CourseOverview = ({courseInfo}) => {
-    console.log(courseInfo);
     return (
         <Card sx={{maxWidth: 500}}>
             <CardActionArea>
@@ -11,7 +10,7 @@ const CourseOverview = ({courseInfo}) => {
                         {courseInfo.code}
                     </Typography>
                     <Divider orientation="vertical" flexItem />
-                    <Chip label="100% Completed" sx={{marginRight: 2, marginLeft: 2}} />
+                    <Chip label={courseInfo.getCourseCompletion() * 100 + "% Completed"} sx={{marginRight: 2, marginLeft: 2}} />
                     <Chip label="93% | A+" sx={{marginRight: 2}} />
                 </CardContent>
             </CardActionArea>
