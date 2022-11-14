@@ -51,10 +51,10 @@ app.post('/api/users', (req, res) => {
 app.post('/api/courses', (req, res) => {
     const courseCode = req.body.courseCode;
     const courseName = req.body.courseName;
-    const trimesters = req.body.trimesters;
+    const trimester = req.body.trimester;
 
     const sqlInsert = "INSERT INTO courses (CourseCode, CourseName, TrimesterTaught) VALUES (?, ?, ?)";
-    db.query(sqlInsert, [courseCode, courseName, trimesters], (err, result) => {
+    db.query(sqlInsert, [courseCode, courseName, trimester], (err, result) => {
         reply(res, err, result);
     });
 });
@@ -88,8 +88,8 @@ app.post('/api/authorise', (req, res) => {
 });
 
 // Add a course to a user
-app.post('/api/:userID/courses', (req, res) => {
-    const userID = req.params.userID;
+app.post('/api/user/courses', (req, res) => {
+    const userID = req.body.userID;
     const courseCode = req.body.courseCode;
     const year = req.body.year;
     const trimester = req.body.trimester;
@@ -121,9 +121,9 @@ app.get('/api/courses', (req, res) => {
 });
 
 // Get user courses with optional filter of year
-app.get('/api/:userId/courses/', (req, res) => {
-    const userId = req.params.userId;
-    const year = req.params.year;
+app.get('/api/user/courses', (req, res) => {
+    const userId = req.query.userId;
+    const year = req.query.year; 
 
     if (year == null) {
         const sqlSelect = "SELECT * FROM grades WHERE Email = ?";
@@ -142,28 +142,28 @@ app.get('/api/:userId/courses/', (req, res) => {
 // ========== Put requests ==========
 
 // Update user details - Could be a better way to do this
-app.put('/api/users/:userId', (req, res) => {
-    const userId = req.params.userId;
+app.put('/api/user', (req, res) => {
+    const userId = req.body.userId;
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
     
-    const sqlUpdate = "UPDATE users SET Email = ?, Password = ?, Name = ? WHERE Email = ?";
+    const sqlUpdate = "UPDATE users SET Email = ?, Password = ?, DisplayName = ? WHERE Email = ?";
     db.query(sqlUpdate, [email, password, name, userId], (err, result) => {
         reply(res, err, result);
     });
 });
 
 // Update a user's grades
-app.put('/api/:userId/courses/:courseCode', (req, res) => {
-    const userId = req.params.userId;
-    const courseCode = req.params.courseCode;
-    const year = req.params.year;
-    const trimester = req.params.trimester;
-    const grade = req.params.grade;
+app.put('/api/courses/', (req, res) => {
+    const userId = req.body.userId;
+    const courseCode = req.body.courseCode;
+    const year = req.body.year;
+    const trimester = req.body.trimester;
+    const grades = req.body.grades;
 
-    const sqlUpdate = "UPDATE grades SET Grade = ? WHERE Email = ? AND CourseCode = ? AND Year = ? AND Trimester = ?";
-    db.query(sqlUpdate, [grade, userId, courseCode, year, trimester], (err, result) => {
+    const sqlUpdate = "UPDATE grades SET Grades = ? WHERE Email = ? AND CourseCode = ? AND Year = ? AND Trimester = ?";
+    db.query(sqlUpdate, [grades, userId, courseCode, year, trimester], (err, result) => {
         reply(res, err, result);
     });
 });
