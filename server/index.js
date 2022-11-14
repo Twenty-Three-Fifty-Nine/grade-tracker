@@ -21,7 +21,7 @@ const PORT = 3001;
 const reply = (res, err, result) => {
     if (err) {
         console.log(err); // For development only
-        res.send(0);
+        res.sendStatus(500);
     } else {
         res.send(result);
     }
@@ -40,9 +40,10 @@ app.post('/api/users', (req, res) => {
     db.query(sqlInsert, [email, password, name], (err, result) => {
         console.log(result);
         if (err) {
-            res.send(0);
+            console.log(err);
+            res.sendStatus(500);
         } else {
-            res.send(1);
+            res.sendStatus(200);
         }
     });
 });
@@ -82,7 +83,7 @@ app.post('/api/authorise', (req, res) => {
         if (result.length > 0 && err == null) {
             res.send(result);
         } else {
-            res.send(0);
+            res.sendStatus(500);
         }
     });
 });
