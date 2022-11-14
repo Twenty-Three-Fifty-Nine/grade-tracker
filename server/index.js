@@ -113,8 +113,8 @@ app.get('/api/courses', (req, res) => {
             reply(res, err, result);
         });
     } else {
-        const sqlSelect = "SELECT * FROM courses WHERE TrimesterTaught LIKE ?";
-        db.query(sqlSelect, ['%' + trimester + '%'], (err, result) => {
+        const sqlSelect = "SELECT * FROM courses WHERE TrimesterTaught = ?";
+        db.query(sqlSelect, trimester, (err, result) => {
             reply(res, err, result);
         });
     }
