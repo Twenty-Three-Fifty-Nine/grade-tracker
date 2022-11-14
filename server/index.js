@@ -88,8 +88,8 @@ app.post('/api/authorise', (req, res) => {
 });
 
 // Add a course to a user
-app.post('/api/:userID/courses', (req, res) => {
-    const userID = req.params.userID;
+app.post('/api/user/courses', (req, res) => {
+    const userID = req.body.userID;
     const courseCode = req.body.courseCode;
     const year = req.body.year;
     const trimester = req.body.trimester;
