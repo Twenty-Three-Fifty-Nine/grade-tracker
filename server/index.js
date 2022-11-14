@@ -36,9 +36,8 @@ app.post('/api/users', (req, res) => {
     const password = req.body.password;
     const name = req.body.name;
 
-    const sqlInsert = "INSERT INTO users (email, password, name) VALUES (?, ?, ?)";
+    const sqlInsert = "INSERT INTO users (Email, Password, DisplayName) VALUES (?, ?, ?)";
     db.query(sqlInsert, [email, password, name], (err, result) => {
-        console.log(result);
         if (err) {
             console.log(err);
             res.sendStatus(500);
@@ -78,7 +77,7 @@ app.post('/api/authorise', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    const sqlSelect = "SELECT * FROM users WHERE username = ? AND password = ?";
+    const sqlSelect = "SELECT * FROM users WHERE DisplayName = ? AND Password = ?";
     db.query(sqlSelect, [username, password], (err, result) => {
         if (result.length > 0 && err == null) {
             res.send(result);
