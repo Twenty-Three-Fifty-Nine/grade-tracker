@@ -4,9 +4,11 @@ import TrimesterOverview from './TrimesterOverview';
 import { SessionContext } from './GradesOverview';
 
 const YearOverview = () => {
-    const timeInfo = React.useContext(SessionContext).timeInfo;
-    
+    const session = React.useContext(SessionContext);
+
     const getTriInfo = (tri) => {
+        const timeInfo = session ? session.timeInfo : null;
+        if(!timeInfo) return null;
         return {
             tri,
             isActive: timeInfo.selectedYear === timeInfo.activeTri.year && tri === timeInfo.activeTri.tri,
