@@ -171,6 +171,16 @@ app.get('/api/user/courses', (req, res) => {
     }
 });
 
+// Get all assignments for a course
+app.get('/api/:course/assignments', (req, res) => {
+    const courseCode = req.params.course;
+    const trimester = req.query.trimester;
+
+    const sqlSelect = "SELECT * FROM assignments a JOIN courses c ON a.CourseCode = c.CourseCode WHERE a.CourseCode = ? AND c.TrimesterTaught = ?";
+    db.query(sqlSelect, [courseCode, trimester], (err, result) => {
+        reply(res, err, result);
+    });
+});
 
 // ========== Put requests ==========
 
