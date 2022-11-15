@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 const app = express();
 
 const db = mysql.createConnection({
@@ -27,6 +28,23 @@ const reply = (res, err, result) => {
     }
 }
 
+// Hashing function
+const getSaltHash = (password) => {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = getHash(password, salt);
+
+    return {
+        salt: salt,
+        hash: hash
+    };
+}
+
+const getHash = (password, salt) => {
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+
+    return hash;
+}
+
 
 // ========== Post requests ==========
 
@@ -36,17 +54,18 @@ app.post('/api/users', (req, res) => {
     const password = req.body.password;
     const name = req.body.name;
 
-    const sqlInsert = "INSERT INTO users (Email, Password, DisplayName) VALUES (?, ?, ?)";
-    db.query(sqlInsert, [email, password, name], (err, result) => {
+    const hashedPassword = getSaltHash(password);
+
+    const sqlInsert = "INSERT INTO users (Email, Password, Salt, DisplayName) VALUES (?, ?, ?, ?)";
+    db.query(sqlInsert, [email, hashedPassword.hash, hashedPassword.salt, name], (err, result) => {
         if (err) {
-            console.log(err);
             res.sendStatus(500);
         } else {
             res.sendStatus(200);
         }
     });
 });
-
+ 
 // Add a new course
 app.post('/api/courses', (req, res) => {
     const courseCode = req.body.courseCode;
@@ -74,15 +93,28 @@ app.post('/api/assignments', (req, res) => {
 
 // Authenticate a user
 app.post('/api/authorise', (req, res) => {
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
 
-    const sqlSelect = "SELECT * FROM users WHERE DisplayName = ? AND Password = ?";
-    db.query(sqlSelect, [username, password], (err, result) => {
-        if (result.length > 0 && err == null) {
-            res.send(result);
-        } else {
+    const sqlSelect = "SELECT * FROM users WHERE Email = ?";
+    db.query(sqlSelect, [email], (err, result) => {
+        if (err) {
+            console.log(err);
             res.sendStatus(500);
+        } else {
+            if (result.length > 0) {
+                const hash = getHash(password, result[0].Salt);
+                if (hash === result[0].Password) {
+                    res.send({
+                        email: result[0].Email,
+                        displayName: result[0].DisplayName
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            } else {
+                res.sendStatus(401);
+            }
         }
     });
 });
