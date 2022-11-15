@@ -39,6 +39,7 @@ const getSaltHash = (password) => {
     };
 }
 
+// Combine salt and password to create hash
 const getHash = (password, salt) => {
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
