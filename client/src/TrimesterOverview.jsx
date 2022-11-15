@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Alert, Chip, Icon, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Alert, Chip, Icon, Skeleton, Stack, Typography } from '@mui/material';
 import CourseOverview from './CourseOverview';
 import { SessionContext } from './GradesOverview';
 
@@ -24,18 +24,24 @@ const TrimesterOverview = ({triInfo}) => {
                     <AccordionDetails>
                         <Stack spacing={2}>
                             {
-                                courses[triInfo.tri - 1][0] ?
-                                courses[triInfo.tri - 1].map((courseInfo) => {
+                                courses[triInfo.year][triInfo.tri - 1][0] ?
+                                courses[triInfo.year][triInfo.tri - 1].map((courseInfo) => {
                                     return (
                                         <CourseOverview key={courseInfo.code} courseInfo={courseInfo} />
                                     )
                                 }) :
-                                <Alert severity="warning" sx={{marginTop: 1}}> No courses added to this trimester yet. </Alert>
+                                <Alert severity="warning" sx={{marginTop: 1}}> 
+                                    { 
+                                        triInfo.isFinished ? 
+                                        "No courses were taken this trimester." :
+                                        "No courses added to this trimester yet." 
+                                    }
+                                </Alert>
                             }
                         </Stack>
                     </AccordionDetails>
                 </Accordion> :
-                <Typography sx={{paddingTop: 0.5}}> PLACEHOLDER- REPLACE WITH SKELETON </Typography>
+                <Skeleton variant="rounded" height={60} />
             }
         </>
     )
