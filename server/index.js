@@ -51,7 +51,7 @@ const getHash = (password, salt) => {
 // Add a new user
 app.post('/api/users', (req, res) => {
     const email = req.body.email;
-    let password = req.body.password;
+    const password = req.body.password;
     const name = req.body.name;
 
     const hashedPassword = getSaltHash(password);
