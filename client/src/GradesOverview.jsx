@@ -34,7 +34,7 @@ const GradesOverview = () => {
         setYear(newValue);
     };
 
-    const handleNoData = async () => {
+    const handleLoadData = async () => {
         getSessionData(selectedYear).then((data) => { setSessionData(data); }); 
     };
 
@@ -42,10 +42,8 @@ const GradesOverview = () => {
         setAddCourseOpen(true);
     };
 
-    const handleCloseAddCourse = (newCourse, courseCode) => {
+    const handleCloseAddCourse = () => {
         setAddCourseOpen(false);
-        if(newCourse) console.log("Creating New Course");
-        else if(courseCode) console.log(courseCode);
     };
 
     const getSessionData = async (year) => {
@@ -113,16 +111,16 @@ const GradesOverview = () => {
             </Tabs>
         </Box>
         <Box sx={{ marginTop: 2 }}>
-            { baseYear + selectedYear <= new Date().getFullYear() ? 
-                <SessionContext.Provider value={sessionData !== null ? sessionData : handleNoData()}>
-                    <YearOverview />
-                </SessionContext.Provider> :
-                <Alert severity="warning" sx={{marginTop: 1}}> Academic year is not currently active. </Alert>
-            }
-            <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear > new Date().getFullYear()} sx={{position: 'absolute', bottom: 32, right: 32}}>
-                <Icon>add</Icon>
-            </Fab>
-            <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} />
+            <SessionContext.Provider value={sessionData !== null ? sessionData : handleLoadData()}>
+                { baseYear + selectedYear <= new Date().getFullYear() ? 
+                    <YearOverview /> :
+                    <Alert severity="warning" sx={{marginTop: 1}}> Academic year is not currently active. </Alert>
+                }
+                <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear > new Date().getFullYear()} sx={{position: 'absolute', bottom: 32, right: 32}}>
+                    <Icon>add</Icon>
+                </Fab>
+                <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} />
+            </SessionContext.Provider> 
         </Box>
         </>
     )

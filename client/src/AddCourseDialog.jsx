@@ -1,37 +1,82 @@
 import React from 'react';
-import { Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Stack, TextField } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Icon, IconButton, Stack, TextField } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
+import { SessionContext } from './GradesOverview';
+import Axios from 'axios';
 
 const AddCourseDialog = (props) => {
-    const { onClose, open, activeTri } = props;
+    const { onClose, open, activeTri, updateData } = props;
+    const session = React.useContext(SessionContext);
 
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [courseList, setCourseList] = React.useState(null);
   
     const handleClose = () => {
-        onClose(false, null);
+        setCourseCode(null);
+        onClose();
     };
 
-    const handleAddCourse = () => {
-        onClose(false, courseCode);
+    const handleAddCourse = async () => {
+        console.log("Adding course " + courseCode + " to user");
+        
+        let emptyGrades = "";
+        await Axios.get("http://localhost:3001/api/" + courseCode + "/assignments?trimester=" + activeTri.tri).then((result) => { 
+            result.data.forEach((a) => {
+                emptyGrades += "null";
+            })
+        });
+        
+        await Axios.post("http://localhost:3001/api/user/courses", {
+            userID: session.userData.email,
+            courseCode: courseCode,
+            year: activeTri.year,
+            trimester: activeTri.tri,
+            grades: emptyGrades
+        }).then((result) => {
+            console.log(result)
+        })
+        handleClose();
+        updateData();
     }
 
     const handleNewCourse = () => {
-        onClose(true, null);
+        handleClose();
         setCourseCreator(true);
     }
 
     const handleCancelCreation = () => {
         setCourseCreator(false);
     }
-  
+
+    const getTemplatesList = async () => {
+        if(loading) return;
+        console.log("Getting Course Templates");
+        
+        setLoading(true);
+        let tempList = [];
+        Axios.get("http://localhost:3001/api/courses?trimester=" + activeTri.tri).then((courses) => {
+            courses.data.forEach((course) => {
+                tempList.push(course.CourseCode);
+            });
+            setCourseList(tempList);
+            setLoading(false);
+        });
+    }
+
     return (
         <>
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle sx={{ textAlign:"center", padding: 5, paddingBottom: 2 }}>Add Course for Trimester {activeTri.tri} {activeTri.year}</DialogTitle>
-            <Autocomplete options={["COMP261", "EEEN202", "NWEN241", "SWEN221"]} sx={{ width: 300, margin: "auto", paddingBottom: 2 }} 
-            renderInput={(params) => <TextField {...params} label="Course Code" />}
-            value={courseCode} onChange={(event, newValue) => { setCourseCode(newValue); }} />
+            <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
+                <Autocomplete options={courseList ? courseList : getTemplatesList()} sx={{ width: 240 }} 
+                renderInput={(params) => <TextField {...params} label="Course Code" />}
+                value={courseCode} onChange={(event, newValue) => { setCourseCode(newValue); }} />
+                <IconButton onClick={() => getTemplatesList()}>
+                    <Icon fontSize="large" sx={{ paddingTop: 0 }}> refresh </Icon>
+                </IconButton>
+            </Stack>
             <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3}}> 
                 If your course is not in this list, you can create an entry for the course offering.
             </DialogContentText>
