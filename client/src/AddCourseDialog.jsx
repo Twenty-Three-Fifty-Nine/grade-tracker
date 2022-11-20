@@ -34,8 +34,6 @@ const AddCourseDialog = (props) => {
             year: activeTri.year,
             trimester: activeTri.tri,
             grades: emptyGrades
-        }).then((result) => {
-            console.log(result)
         })
         handleClose();
         updateData();

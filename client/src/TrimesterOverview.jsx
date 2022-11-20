@@ -3,14 +3,15 @@ import { Accordion, AccordionSummary, AccordionDetails, Alert, Chip, Icon, Skele
 import CourseOverview from './CourseOverview';
 import { SessionContext } from './GradesOverview';
 
-const TrimesterOverview = ({triInfo}) => {
+const TrimesterOverview = ({triInfo, open, toggleAccordion}) => {
     const courses = React.useContext(SessionContext).courses;
-
+    
     return (
         <>
+            {/* {console.log(open)} */}
             {
                 triInfo ?
-                <Accordion defaultExpanded={triInfo.isActive}>
+                <Accordion expanded={open} onChange={() => toggleAccordion(triInfo.tri)} key={triInfo.tri}>
                     <AccordionSummary expandIcon={<Icon>expand_more</Icon>}>
                         <Typography sx={{paddingTop: 0.5}}> Trimester {triInfo.tri} </Typography>
                         { 
