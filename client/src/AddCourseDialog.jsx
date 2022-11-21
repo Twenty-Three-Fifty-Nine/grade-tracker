@@ -18,11 +18,12 @@ const AddCourseDialog = (props) => {
         onClose();
     };
 
-    const handleAddCourse = async () => {
-        console.log("Adding course " + courseCode + " to user");
+    const handleAddCourse = async (newCourse) => {
+        const code = newCourse ? newCourse : courseCode;
+        console.log("Adding course " + code + " to user");
         
         let emptyGrades = "";
-        await Axios.get("http://localhost:3001/api/" + courseCode + "/assignments?trimester=" + activeTri.tri).then((result) => { 
+        await Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + activeTri.tri).then((result) => { 
             result.data.forEach((a) => {
                 emptyGrades += "null";
             })
@@ -30,7 +31,7 @@ const AddCourseDialog = (props) => {
         
         await Axios.post("http://localhost:3001/api/user/courses", {
             userID: session.userData.email,
-            courseCode: courseCode,
+            courseCode: code,
             year: activeTri.year,
             trimester: activeTri.tri,
             grades: emptyGrades
@@ -44,7 +45,11 @@ const AddCourseDialog = (props) => {
         setCourseCreator(true);
     }
 
-    const handleCancelCreation = () => {
+    const handleCancelCreation = async (newCourse) => {
+        if(newCourse){
+            handleAddCourse(newCourse);
+            getTemplatesList();
+        }
         setCourseCreator(false);
     }
 
@@ -61,6 +66,8 @@ const AddCourseDialog = (props) => {
             setCourseList(tempList);
             setLoading(false);
         });
+        
+        return "Loading...";
     }
 
     return (
@@ -68,7 +75,7 @@ const AddCourseDialog = (props) => {
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle sx={{ textAlign:"center", padding: 5, paddingBottom: 2 }}>Add Course for Trimester {activeTri.tri} {activeTri.year}</DialogTitle>
             <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
-                <Autocomplete options={courseList ? courseList : getTemplatesList()} sx={{ width: 240 }} 
+                <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: 240 }} 
                 renderInput={(params) => <TextField {...params} label="Course Code" />}
                 value={courseCode} onChange={(event, newValue) => { setCourseCode(newValue); }} />
                 <IconButton onClick={() => getTemplatesList()}>

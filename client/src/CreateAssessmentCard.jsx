@@ -11,7 +11,7 @@ const CreateAssessmentCard = (props) => {
     const dateToStr = (date) => {
         if(!date) return null;
         return date.getFullYear() + "-" + addLeadingZeros(date.getMonth() + 1, 2) + "-" + addLeadingZeros(date.getDate(), 2) + 
-               "T" + addLeadingZeros(date.getHours() + 1, 2) + ":" + addLeadingZeros(date.getMinutes(), 2);
+               "T" + addLeadingZeros(date.getHours(), 2) + ":" + addLeadingZeros(date.getMinutes(), 2);
     }
 
     return (
@@ -19,14 +19,14 @@ const CreateAssessmentCard = (props) => {
             <CardContent>
                 <Stack spacing={2}>
                     <Box sx={{display: 'flex'}}>
-                        <TextField label="Assessment Name" sx={{ width: 400, paddingRight: 5}} defaultValue={details.name ? details.name : ""} />
+                        <TextField label="Assessment Name" sx={{ width: 400, paddingRight: 5}} defaultValue={details.name ? details.name : ""} onChange={(e) => {details.name = e.target.value}} />
                         <IconButton onClick={() => removeAssessment(index)}>
                             <Icon>delete</Icon>
                         </IconButton>
                     </Box>
                     <Box sx={{display: 'flex'}}>
-                        <TextField label="Due Date" type="datetime-local" defaultValue={dateToStr(details.deadline) ? dateToStr(details.deadline) : "2022-12-24T10:30"} onChange={(e) => {console.log(e.target.value)}} sx={{ paddingRight: 2}}/>
-                        <TextField label="Grade Weight (%)" defaultValue={details.weight ? details.weight : ""} onChange={(e) => {console.log(e)}} />
+                        <TextField label="Due Date" type="datetime-local" defaultValue={dateToStr(details.deadline)} onChange={(e) => {details.deadline = new Date(e.target.value)}} sx={{ paddingRight: 2}}/>
+                        <TextField label="Grade Weight (%)" defaultValue={details.weight ? details.weight : ""} onChange={(e) => {details.weight = e.target.value}} />
                     </Box>
                 </Stack>
             </CardContent>
