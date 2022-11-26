@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Icon, IconButton, Stack, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Icon, IconButton, Snackbar, Stack, TextField } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
@@ -12,14 +12,15 @@ const AddCourseDialog = (props) => {
     const [courseCreator, setCourseCreator] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [courseList, setCourseList] = React.useState(null);
+
+    const [snackbar, setSnackbar] = React.useState("none");
   
     const handleClose = () => {
         setCourseCode(null);
         onClose();
     };
 
-    const handleAddCourse = async (newCourse) => {
-        const code = newCourse ? newCourse : courseCode;
+    const handleAddCourse = async (code = courseCode) => {
         console.log("Adding course " + code + " to user");
         
         let emptyGrades = "";
@@ -35,9 +36,11 @@ const AddCourseDialog = (props) => {
             year: activeTri.year,
             trimester: activeTri.tri,
             grades: emptyGrades
-        })
-        handleClose();
-        updateData();
+        }).then(() => {
+            setSnackbar("success");
+            handleClose();
+            updateData();
+        }).catch((e) => {setSnackbar("error")})
     }
 
     const handleNewCourse = () => {
@@ -77,7 +80,7 @@ const AddCourseDialog = (props) => {
             <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
                 <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: 240 }} 
                 renderInput={(params) => <TextField {...params} label="Course Code" />}
-                value={courseCode} onChange={(event, newValue) => { setCourseCode(newValue); }} />
+                value={courseCode} onChange={(e, value) => { setCourseCode(value); }} />
                 <IconButton onClick={() => getTemplatesList()}>
                     <Icon fontSize="large" sx={{ paddingTop: 0 }}> refresh </Icon>
                 </IconButton>
@@ -87,9 +90,14 @@ const AddCourseDialog = (props) => {
             </DialogContentText>
             <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
                 <Button onClick={handleNewCourse} variant="outlined">Create New Course</Button>
-                <Button disabled={!courseCode} onClick={handleAddCourse} variant="contained">Add Course</Button>
+                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained">Add Course</Button>
             </Stack>
         </Dialog>
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
+            <Alert severity={snackbar !== "none" ? snackbar : "error"} sx={{ width: '100%' }}>
+                {snackbar === "success" ? "Course added successfully." : "Course already added."}
+            </Alert>
+        </Snackbar>
         <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
         </>
     );
