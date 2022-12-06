@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 04:29 AM
+-- Generation Time: Dec 06, 2022 at 04:36 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `assignments` (
   `CourseCode` char(7) NOT NULL,
+  `Trimester` tinyint(4) NOT NULL,
   `AssignmentName` varchar(30) NOT NULL,
   `Weight` tinyint(4) NOT NULL,
   `DueDate` datetime NOT NULL
@@ -38,13 +39,13 @@ CREATE TABLE `assignments` (
 -- Dumping data for table `assignments`
 --
 
-INSERT INTO `assignments` (`CourseCode`, `AssignmentName`, `Weight`, `DueDate`) VALUES
-('COMP103', 'Close Da PC', 75, '2022-11-11 13:59:21'),
-('COMP103', 'Open Da PC', 25, '2022-11-01 13:58:55'),
-('COMP261', 'Make a computer', 50, '2022-11-15 05:11:31'),
-('CSFF101', 'ffe', 100, '2022-12-06 15:49:00'),
-('TEM361', 'ffe', 50, '2022-11-21 22:08:00'),
-('TEM361', 'YOOO', 50, '2022-11-04 22:08:00');
+INSERT INTO `assignments` (`CourseCode`, `Trimester`, `AssignmentName`, `Weight`, `DueDate`) VALUES
+('COMP103', 3, 'Close Da PC', 75, '2022-11-11 13:59:21'),
+('COMP103', 3, 'Open Da PC', 25, '2022-11-01 13:58:55'),
+('COMP261', 1, 'Make a computer', 50, '2022-11-15 05:11:31'),
+('CSFF101', 3, 'Computer Stuff', 100, '2022-12-06 15:49:00'),
+('TEM361', 3, 'ffe', 50, '2022-11-21 22:08:00'),
+('TEM361', 3, 'YOOO', 50, '2022-11-04 22:08:00');
 
 -- --------------------------------------------------------
 
@@ -122,8 +123,9 @@ INSERT INTO `users` (`Email`, `Password`, `Salt`, `DisplayName`) VALUES
 -- Indexes for table `assignments`
 --
 ALTER TABLE `assignments`
-  ADD PRIMARY KEY (`CourseCode`,`AssignmentName`),
-  ADD KEY `CourseCode` (`CourseCode`);
+  ADD PRIMARY KEY (`CourseCode`,`AssignmentName`,`Trimester`) USING BTREE,
+  ADD KEY `CourseCode` (`CourseCode`),
+  ADD KEY `Trimester` (`Trimester`);
 
 --
 -- Indexes for table `courses`
