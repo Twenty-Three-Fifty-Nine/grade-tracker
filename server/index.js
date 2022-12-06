@@ -127,9 +127,10 @@ app.post('/api/user/courses', (req, res) => {
     const year = req.body.year;
     const trimester = req.body.trimester;
     const grades = req.body.grades;
+    const totalGrade = req.body.totalGrade;
 
-    const sqlInsert = "INSERT INTO grades (Email, CourseCode, Year, Trimester, Grades) VALUES (?, ?, ?, ?, ?)";
-    db.query(sqlInsert, [userID, courseCode, year, trimester, grades], (err, result) => {
+    const sqlInsert = "INSERT INTO grades (Email, CourseCode, Year, Trimester, Grades, TotalGrade) VALUES (?, ?, ?, ?, ?, ?)";
+    db.query(sqlInsert, [userID, courseCode, year, trimester, grades, totalGrade], (err, result) => {
         reply(res, err, result);
     });
 });
