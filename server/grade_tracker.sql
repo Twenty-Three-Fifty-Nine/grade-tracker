@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2022 at 08:03 AM
+-- Generation Time: Dec 06, 2022 at 04:29 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -34,6 +34,18 @@ CREATE TABLE `assignments` (
   `DueDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `assignments`
+--
+
+INSERT INTO `assignments` (`CourseCode`, `AssignmentName`, `Weight`, `DueDate`) VALUES
+('COMP103', 'Close Da PC', 75, '2022-11-11 13:59:21'),
+('COMP103', 'Open Da PC', 25, '2022-11-01 13:58:55'),
+('COMP261', 'Make a computer', 50, '2022-11-15 05:11:31'),
+('CSFF101', 'ffe', 100, '2022-12-06 15:49:00'),
+('TEM361', 'ffe', 50, '2022-11-21 22:08:00'),
+('TEM361', 'YOOO', 50, '2022-11-04 22:08:00');
+
 -- --------------------------------------------------------
 
 --
@@ -46,6 +58,17 @@ CREATE TABLE `courses` (
   `CourseName` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`CourseCode`, `TrimesterTaught`, `CourseName`) VALUES
+('COMP103', 1, 'Testing'),
+('COMP103', 3, 'Computers Are Easy ASF'),
+('COMP261', 1, 'HELLO I AM NAME OF COURSE'),
+('CSFF101', 3, 'Computer Stuff'),
+('TEM361', 3, 'Temp Thing');
+
 -- --------------------------------------------------------
 
 --
@@ -57,8 +80,19 @@ CREATE TABLE `grades` (
   `CourseCode` char(7) NOT NULL,
   `Year` year(4) NOT NULL,
   `Trimester` tinyint(4) NOT NULL,
-  `Grades` varchar(100) NOT NULL
+  `Grades` varchar(100) NOT NULL,
+  `TotalGrade` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grades`
+--
+
+INSERT INTO `grades` (`Email`, `CourseCode`, `Year`, `Trimester`, `Grades`, `TotalGrade`) VALUES
+('abdz2004@gmail.com', 'COMP103', 2022, 3, 'nullnull', 0),
+('abdz2004@gmail.com', 'COMP261', 2022, 2, '56850000null8000', 0),
+('abdz2004@gmail.com', 'CSFF101', 2022, 3, 'null', 0),
+('abdz2004@gmail.com', 'TEM361', 2022, 3, 'nullnull', 0);
 
 -- --------------------------------------------------------
 
@@ -68,9 +102,17 @@ CREATE TABLE `grades` (
 
 CREATE TABLE `users` (
   `Email` varchar(256) NOT NULL,
-  `Password` varchar(50) NOT NULL,
+  `Password` char(128) NOT NULL,
+  `Salt` char(32) NOT NULL,
   `DisplayName` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`Email`, `Password`, `Salt`, `DisplayName`) VALUES
+('abdz2004@gmail.com', '278b86fc39f89cfab15dfb76d240b2b1e97cddca72ffef23c087dd8077d510a4bd8f95d93e0a720b3b40eca1762f87be0b8032df33c989ccbedf096c2bfd03cb', 'f6c8e7e401fce735447ba985d3f63af2', 'ABOOBIES');
 
 --
 -- Indexes for dumped tables
