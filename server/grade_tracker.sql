@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 05:22 AM
+-- Generation Time: Dec 06, 2022 at 05:32 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -97,7 +97,7 @@ CREATE TABLE `grades` (
   `Year` year(4) NOT NULL,
   `Trimester` tinyint(4) NOT NULL,
   `Grades` varchar(100) NOT NULL,
-  `TotalGrade` tinyint(4) NOT NULL
+  `TotalGrade` decimal(5,2) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -105,9 +105,9 @@ CREATE TABLE `grades` (
 --
 
 INSERT INTO `grades` (`Email`, `CourseCode`, `Year`, `Trimester`, `Grades`, `TotalGrade`) VALUES
-('abdz2004@gmail.com', 'COMP102', 2022, 3, '9000904290009042830090427900full90429000', 0),
-('abdz2004@gmail.com', 'COMP261', 2022, 1, '9800full8571800095009344', 0),
-('abdz2004@gmail.com', 'DATA201', 2022, 2, 'full421148847750560080007500', 0);
+('abdz2004@gmail.com', 'COMP102', 2022, 3, '9000904290009042830090427900full90429000', '90.19'),
+('abdz2004@gmail.com', 'COMP261', 2022, 1, '9800full8571800095009344', '91.51'),
+('abdz2004@gmail.com', 'DATA201', 2022, 2, 'full421148847750560080007500', '70.14');
 
 -- --------------------------------------------------------
 
