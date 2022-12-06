@@ -52,9 +52,9 @@ const AddCourseDialog = (props) => {
         setCourseCreator(true);
     }
 
-    const handleCancelCreation = async (newCourse) => {
+    const handleCancelCreation = async (newCourse, assessmentCount) => {
         if(newCourse){
-            handleAddCourse(newCourse);
+            handleAddCourse(newCourse, assessmentCount);
             getTemplatesList();
         }
         setCourseCreator(false);
@@ -98,7 +98,7 @@ const AddCourseDialog = (props) => {
             </Stack>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={snackbar !== "none" ? snackbar : "error"} sx={{ width: '100%' }}>
+            <Alert severity={snackbar !== "none" ? snackbar : "success"} sx={{ width: '100%' }}>
                 {snackbar === "success" ? "Course added successfully." : "Course already added."}
             </Alert>
         </Snackbar>
