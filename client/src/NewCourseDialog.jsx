@@ -50,7 +50,7 @@ const NewCourseDialog = (props) => {
             trimester: activeTri.tri
         })
 
-        await addAssessments().then(() => { onClose(courseCode) });
+        await addAssessments().then(() => { onClose(courseCode, assessments.length) });
 
         setAssessments([]);
         setCourseName("");

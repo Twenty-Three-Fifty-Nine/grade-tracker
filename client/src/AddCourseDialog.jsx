@@ -20,15 +20,19 @@ const AddCourseDialog = (props) => {
         onClose();
     };
 
-    const handleAddCourse = async (code = courseCode) => {
+    const handleAddCourse = async (code = courseCode, assessmentCount) => {
         console.log("Adding course " + code + " to user");
         
         let emptyGrades = "";
-        await Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + activeTri.tri).then((result) => { 
-            result.data.forEach((a) => {
-                emptyGrades += "null";
-            })
-        });
+        if(assessmentCount){
+            for(let i = 0; i < assessmentCount; i++) emptyGrades += "null";
+        }else{
+            await Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + activeTri.tri).then((result) => { 
+                result.data.forEach((a) => {
+                    emptyGrades += "null";
+                })
+            });
+        }
         
         await Axios.post("http://localhost:3001/api/user/courses", {
             userID: session.userData.email,
