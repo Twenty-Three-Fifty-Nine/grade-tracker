@@ -8,7 +8,6 @@ const TrimesterOverview = ({triInfo, open, toggleAccordion}) => {
     
     return (
         <>
-            {/* {console.log(open)} */}
             {
                 triInfo ?
                 <Accordion expanded={open} onChange={() => toggleAccordion(triInfo.tri)} key={triInfo.tri}>

@@ -50,6 +50,14 @@ const NewCourseDialog = (props) => {
             trimester: activeTri.tri
         })
 
+        await addAssessments().then(() => { onClose(courseCode) });
+
+        setAssessments([]);
+        setCourseName("");
+        setCourseCode("");
+    }
+
+    const addAssessments = async () => {
         await assessments.forEach(async (assessment) => {
             console.log("Adding new assessment: " + assessment.name);
             await Axios.post("http://localhost:3001/api/assignments", {
@@ -59,9 +67,6 @@ const NewCourseDialog = (props) => {
                 dueDate: assessment.dateToSQLDate()
             })
         })
-
-        setAssessments([]);
-        onClose(courseCode);   
     }
 
     const stopCreating = () => {
