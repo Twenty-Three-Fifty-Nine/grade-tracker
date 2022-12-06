@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 05:32 AM
+-- Generation Time: Dec 06, 2022 at 05:36 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -73,7 +73,7 @@ INSERT INTO `assignments` (`CourseCode`, `Trimester`, `AssignmentName`, `Weight`
 CREATE TABLE `courses` (
   `CourseCode` char(7) NOT NULL,
   `TrimesterTaught` tinyint(3) UNSIGNED NOT NULL,
-  `CourseName` varchar(30) NOT NULL
+  `CourseName` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`CourseCode`, `TrimesterTaught`, `CourseName`) VALUES
-('COMP102', 3, 'Introduction to Computer Progr'),
+('COMP102', 3, 'Introduction to Computer Program Design'),
 ('COMP261', 1, 'Algorithms and Data Structures'),
 ('DATA201', 2, 'Techniques of Data Science ');
 
