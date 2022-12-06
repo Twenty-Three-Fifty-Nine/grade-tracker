@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 04:36 AM
+-- Generation Time: Dec 06, 2022 at 05:22 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -40,12 +40,29 @@ CREATE TABLE `assignments` (
 --
 
 INSERT INTO `assignments` (`CourseCode`, `Trimester`, `AssignmentName`, `Weight`, `DueDate`) VALUES
-('COMP103', 3, 'Close Da PC', 75, '2022-11-11 13:59:21'),
-('COMP103', 3, 'Open Da PC', 25, '2022-11-01 13:58:55'),
-('COMP261', 1, 'Make a computer', 50, '2022-11-15 05:11:31'),
-('CSFF101', 3, 'Computer Stuff', 100, '2022-12-06 15:49:00'),
-('TEM361', 3, 'ffe', 50, '2022-11-21 22:08:00'),
-('TEM361', 3, 'YOOO', 50, '2022-11-04 22:08:00');
+('COMP102', 3, 'Assignment 1', 4, '2022-11-21 11:59:59'),
+('COMP102', 3, 'Assignment 2', 6, '2022-11-28 11:59:59'),
+('COMP102', 3, 'Assignment 3', 6, '2022-12-05 11:59:59'),
+('COMP102', 3, 'Assignment 4', 6, '2022-12-12 11:59:59'),
+('COMP102', 3, 'Assignment 5', 8, '2022-12-22 11:59:59'),
+('COMP102', 3, 'Final Test', 30, '2022-12-21 11:59:59'),
+('COMP102', 3, 'Test 1', 10, '2022-11-25 11:59:59'),
+('COMP102', 3, 'Test 2', 10, '2022-12-02 11:59:59'),
+('COMP102', 3, 'Test 3', 10, '2022-12-09 11:59:59'),
+('COMP102', 3, 'Test 4', 10, '2022-12-16 11:59:59'),
+('COMP261', 1, 'Assignment 1', 10, '2022-03-23 11:59:59'),
+('COMP261', 1, 'Assignment 2', 10, '2022-04-13 11:59:59'),
+('COMP261', 1, 'Assignment 3', 10, '2022-05-11 11:59:59'),
+('COMP261', 1, 'Assignment 4', 15, '2022-06-05 11:59:59'),
+('COMP261', 1, 'Test 1', 25, '2022-04-29 10:00:00'),
+('COMP261', 1, 'Test 2', 30, '2022-06-20 10:00:00'),
+('DATA201', 2, 'Assignment 1', 10, '2022-08-05 11:59:59'),
+('DATA201', 2, 'Assignment 2', 10, '2022-08-24 11:59:59'),
+('DATA201', 2, 'Assignment 3', 10, '2022-09-28 11:59:59'),
+('DATA201', 2, 'Assignment 4', 10, '2022-10-07 11:59:59'),
+('DATA201', 2, 'Final Test', 15, '2022-12-26 09:00:00'),
+('DATA201', 2, 'Mid Term Test', 15, '2022-09-07 09:00:00'),
+('DATA201', 2, 'Project 1', 30, '2022-10-20 11:59:59');
 
 -- --------------------------------------------------------
 
@@ -64,11 +81,9 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`CourseCode`, `TrimesterTaught`, `CourseName`) VALUES
-('COMP103', 1, 'Testing'),
-('COMP103', 3, 'Computers Are Easy ASF'),
-('COMP261', 1, 'HELLO I AM NAME OF COURSE'),
-('CSFF101', 3, 'Computer Stuff'),
-('TEM361', 3, 'Temp Thing');
+('COMP102', 3, 'Introduction to Computer Progr'),
+('COMP261', 1, 'Algorithms and Data Structures'),
+('DATA201', 2, 'Techniques of Data Science ');
 
 -- --------------------------------------------------------
 
@@ -90,10 +105,9 @@ CREATE TABLE `grades` (
 --
 
 INSERT INTO `grades` (`Email`, `CourseCode`, `Year`, `Trimester`, `Grades`, `TotalGrade`) VALUES
-('abdz2004@gmail.com', 'COMP103', 2022, 3, 'nullnull', 0),
-('abdz2004@gmail.com', 'COMP261', 2022, 2, '56850000null8000', 0),
-('abdz2004@gmail.com', 'CSFF101', 2022, 3, 'null', 0),
-('abdz2004@gmail.com', 'TEM361', 2022, 3, 'nullnull', 0);
+('abdz2004@gmail.com', 'COMP102', 2022, 3, '9000904290009042830090427900full90429000', 0),
+('abdz2004@gmail.com', 'COMP261', 2022, 1, '9800full8571800095009344', 0),
+('abdz2004@gmail.com', 'DATA201', 2022, 2, 'full421148847750560080007500', 0);
 
 -- --------------------------------------------------------
 
