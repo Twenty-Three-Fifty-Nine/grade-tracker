@@ -39,7 +39,8 @@ const AddCourseDialog = (props) => {
             courseCode: code,
             year: activeTri.year,
             trimester: activeTri.tri,
-            grades: emptyGrades
+            grades: emptyGrades,
+            totalGrade: 0.0
         }).then(() => {
             setSnackbar("success");
             handleClose();
