@@ -82,12 +82,13 @@ app.post('/api/courses', (req, res) => {
 // Add a new assignment
 app.post('/api/assignments', (req, res) => {
     const courseCode = req.body.courseCode;
+    const trimester = req.body.trimester;
     const assignmentName = req.body.assignmentName;
     const weight = req.body.weight;
     const dueDate = req.body.dueDate;
 
-    const sqlInsert = "INSERT INTO assignments (CourseCode, AssignmentName, Weight, DueDate) VALUES (?, ?, ?, ?)";
-    db.query(sqlInsert, [courseCode, assignmentName, weight, dueDate], (err, result) => {
+    const sqlInsert = "INSERT INTO assignments (CourseCode, Trimester, AssignmentName, Weight, DueDate) VALUES (?, ?, ?, ?, ?)";
+    db.query(sqlInsert, [courseCode, trimester, assignmentName, weight, dueDate], (err, result) => {
         reply(res, err, result);
     });
 });
@@ -127,9 +128,10 @@ app.post('/api/user/courses', (req, res) => {
     const year = req.body.year;
     const trimester = req.body.trimester;
     const grades = req.body.grades;
+    const totalGrade = req.body.totalGrade;
 
-    const sqlInsert = "INSERT INTO grades (Email, CourseCode, Year, Trimester, Grades) VALUES (?, ?, ?, ?, ?)";
-    db.query(sqlInsert, [userID, courseCode, year, trimester, grades], (err, result) => {
+    const sqlInsert = "INSERT INTO grades (Email, CourseCode, Year, Trimester, Grades, TotalGrade) VALUES (?, ?, ?, ?, ?, ?)";
+    db.query(sqlInsert, [userID, courseCode, year, trimester, grades, totalGrade], (err, result) => {
         reply(res, err, result);
     });
 });
@@ -176,7 +178,7 @@ app.get('/api/:course/assignments', (req, res) => {
     const courseCode = req.params.course;
     const trimester = req.query.trimester;
 
-    const sqlSelect = "SELECT * FROM assignments a JOIN courses c ON a.CourseCode = c.CourseCode WHERE a.CourseCode = ? AND c.TrimesterTaught = ?";
+    const sqlSelect = "SELECT * FROM assignments WHERE CourseCode = ? AND Trimester = ?";
     db.query(sqlSelect, [courseCode, trimester], (err, result) => {
         reply(res, err, result);
     });

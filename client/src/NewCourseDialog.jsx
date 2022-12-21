@@ -62,6 +62,7 @@ const NewCourseDialog = (props) => {
             console.log("Adding new assessment: " + assessment.name);
             await Axios.post("http://localhost:3001/api/assignments", {
                 courseCode: courseCode,
+                trimester: activeTri.tri,
                 assignmentName: assessment.name,
                 weight: assessment.weight,
                 dueDate: assessment.dateToSQLDate()
