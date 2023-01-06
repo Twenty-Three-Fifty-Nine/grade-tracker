@@ -49,7 +49,6 @@ const GradesOverview = () => {
 
     const getSessionData = async (year) => {
         console.log("Getting Session Data");
-        console.log(baseYear + year);
         await setSessionData("Reloading");
         return parseCourseData("http://localhost:3001/api/user/courses?userId=abdz2004@gmail.com&year=" + (baseYear + year)).then((courseData) => { 
             return {

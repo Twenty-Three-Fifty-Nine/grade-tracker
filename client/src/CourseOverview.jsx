@@ -10,7 +10,7 @@ const CourseOverview = ({courseInfo}) => {
                         {courseInfo.code}
                     </Typography>
                     <Divider orientation="vertical" flexItem />
-                    <Chip label={courseInfo.getCourseCompletion() * 100 + "% Completed"} sx={{marginRight: 2, marginLeft: 2}} />
+                    <Chip label={Math.round(courseInfo.getCourseCompletion() * 100) + "% Completed"} sx={{marginRight: 2, marginLeft: 2}} />
                     <Chip label="93% | A+" sx={{marginRight: 2}} />
                 </CardContent>
             </CardActionArea>
