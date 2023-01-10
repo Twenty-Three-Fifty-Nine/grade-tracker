@@ -26,12 +26,13 @@ const GradesOverview = () => {
     const baseYear = 2022;
     const activeTri = {year: 2022, tri: 3};
 
-    const [selectedYear, setYear] = React.useState(0);
+    const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
     const [sessionData, setSessionData] = React.useState(null);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
 
-    const handleChangedYear = (event, newValue) => {
+    const handleChangedYear = async (event, newValue) => {
         setYear(newValue);
+        getSessionData(newValue).then((data) => { setSessionData(data); }); 
     };
 
     const handleLoadData = async () => {
@@ -48,9 +49,8 @@ const GradesOverview = () => {
 
     const getSessionData = async (year) => {
         console.log("Getting Session Data");
-
         await setSessionData("Reloading");
-        return parseCourseData("http://localhost:3001/api/user/courses?userId=abdz2004@gmail.com").then((courseData) => { 
+        return parseCourseData("http://localhost:3001/api/user/courses?userId=abdz2004@gmail.com&year=" + (baseYear + year)).then((courseData) => { 
             return {
                 userData: {email: "abdz2004@gmail.com", displayName: "ABOOBIES"},
                 timeInfo: {activeTri, selectedYear: baseYear + year},
@@ -61,11 +61,7 @@ const GradesOverview = () => {
 
     const parseCourseData = async (request) => {
         return Axios.get(request).then(async (result) => {
-            const ret = {
-                2022: [[], [], []],
-                2023: [[], [], []],
-            };
-
+            const ret = [[], [], []];
             for(let i = 0; i < result.data.length; i++){
                 const data = result.data[i];
                 let courseTemplate;
@@ -73,7 +69,7 @@ const GradesOverview = () => {
                 await getCourseTemplate(data.CourseCode, data.Trimester).then((value) => { courseTemplate = value });
 
                 const course = new Course(data.CourseCode, courseTemplate[0], courseTemplate[1], courseTemplate[2], grades);
-                ret[data.Year][data.Trimester - 1].push(course);
+                ret[data.Trimester - 1].push(course);
             }
             return ret;
         });
@@ -90,9 +86,8 @@ const GradesOverview = () => {
     }
 
     const getCourseTemplate = async (code, tri) => {
-        return Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + (tri - 1)).then((result) => {
+        return Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + tri).then((result) => {
             const ret = [[], [], []]
-
             for(let i = 0; i < result.data.length; i++){
                 ret[0].push(result.data[i].AssignmentName);
                 ret[1].push(result.data[i].Weight);
