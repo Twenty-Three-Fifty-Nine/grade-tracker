@@ -4,10 +4,12 @@ import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
 
 class Assessment {
-    constructor(name, weight, deadline) {
+    constructor(name, weight, deadline, valid) {
         this.name = name;
         this.weight = weight;
         this.deadline = deadline;
+        this.valid = false;
+        console.log(this.name.length)
     }
 
     dateToSQLDate = () => {
@@ -34,7 +36,7 @@ const NewCourseDialog = (props) => {
         setScrollActive(true);
         const date = new Date();
         date.setSeconds(0);
-        setAssessments(oldArray => [...oldArray, new Assessment(null, null, date)]);
+        setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
     }
 
     const removeAssessment = (index) => {
