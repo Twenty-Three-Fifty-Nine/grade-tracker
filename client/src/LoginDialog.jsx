@@ -1,11 +1,9 @@
 import React from 'react';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Axios from 'axios';
-import { SessionContext } from './GradesOverview';
 
 const LoginDialog = (props) => {
-    const { onClose, open } = props;
-    const session = React.useContext(SessionContext);
+    const { onClose, open, onLogin } = props;
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -16,11 +14,11 @@ const LoginDialog = (props) => {
     }
     
     const handleLogin = async () => {
-        await Axios.post("http://localhost:3001/api/user/login", {
+        await Axios.post("http://localhost:3001/api/authorise", {
             email: email,
             password: password
         }).then((result) => {
-            session.setUserData(result.data);
+            onLogin();
             handleClose();
         }).catch((e) => {setLoginError(true)})
     }

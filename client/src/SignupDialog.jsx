@@ -1,11 +1,9 @@
 import React from 'react';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Axios from 'axios';
-import { SessionContext } from './GradesOverview';
 
 const SignupDialog = (props) => {
-    const { onClose, open } = props;
-    const session = React.useContext(SessionContext);
+    const { onClose, open, onLogin } = props;
 
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
@@ -19,7 +17,6 @@ const SignupDialog = (props) => {
     }
 
     const handleSignup = async () => {
-        // check if passwords match
         if (password !== passwordConfirm) {
             setSignupError(true);
             return;
@@ -30,7 +27,7 @@ const SignupDialog = (props) => {
             password: password,
         }).then((result) => {
             console.log(result);
-            session.setUserData(result.data);
+            onLogin();
             handleClose();
             console.log("Signup successful");
         }).catch((e) => {

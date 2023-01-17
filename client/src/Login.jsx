@@ -3,7 +3,8 @@ import { Button, Typography } from '@mui/material';
 import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 
-const Login = () => {
+const Login = (props) => {
+    const { onLogin } = props;
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 
@@ -23,6 +24,10 @@ const Login = () => {
         setSignupOpen(false);
     };
 
+    const handleLogin = () => {
+        onLogin();
+    };
+
     return (
         <>
         <Button onClick={handleOpenLogin} variant="text" color="inherit">
@@ -31,8 +36,8 @@ const Login = () => {
         <Button onClick={handleOpenLSignup} variant="text" color="inherit">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Signup</Typography>
         </Button>
-        <LoginDialog open={loginOpen} onClose={handleCloseLogin} /> 
-        <SignupDialog open={signupOpen} onClose={handleCloseSignup} />
+        <LoginDialog open={loginOpen} onClose={handleCloseLogin} onLogin={handleLogin} />
+        <SignupDialog open={signupOpen} onClose={handleCloseSignup} onLogin={handleLogin} />
         </>
     )
 };
