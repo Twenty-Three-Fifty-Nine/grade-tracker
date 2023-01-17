@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, Stack,Box, IconButton, Icon, TextField } from '@mui/material';
 
 const CreateAssessmentCard = (props) => {
-    const {index, removeAssessment, details} = props;
+    const {index, removeAssessment, details, checkFormat} = props;
     const [updater, setUpdater] = React.useState(false);
 
     const addLeadingZeros = (num, totalLength) => {
@@ -29,7 +29,7 @@ const CreateAssessmentCard = (props) => {
 
     const updateValidity = () => {
         details.valid = details.name.length > 0 && details.name.length < 31 && details.weight > 0 && details.weight <= 100;
-        console.log(details.valid)
+        checkFormat();
     }
 
     return (

@@ -9,7 +9,6 @@ class Assessment {
         this.weight = weight;
         this.deadline = deadline;
         this.valid = false;
-        console.log(this.name.length)
     }
 
     dateToSQLDate = () => {
@@ -31,6 +30,34 @@ const NewCourseDialog = (props) => {
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [scrollActive, setScrollActive] = React.useState(false);
+
+    const [nameValid, setNameValid] = React.useState(false);
+    const [codeValid, setCodeValid] = React.useState(false);
+    const [formatValid, setFormatValid] = React.useState(false);
+
+    useEffect(() => {
+        checkFormat();
+    }, [nameValid, codeValid, assessments])
+
+    const handleNameChange = (e) => {
+        setCourseName(e.target.value);
+        setNameValid(e.target.value.length > 0 && e.target.value.length < 51);
+    }
+
+    const handleCodeChange = (e) => {
+        setCourseCode(e.target.value);
+        const exp = new RegExp('[a-zA-Z]{4}[0-9]{3}', 'g');
+        let match = e.target.value.match(exp);
+        setCodeValid(match !== null && match[0] === e.target.value);
+    }
+
+    const checkFormat = () => {
+        let valid = nameValid && codeValid;
+        for(const assessment of assessments){
+            if(!assessment.valid) valid = false;
+        }
+        setFormatValid(valid);
+    }
 
     const addAssessment = () => {
         setScrollActive(true);
@@ -85,16 +112,21 @@ const NewCourseDialog = (props) => {
                         <Icon>close</Icon>
                     </IconButton>
                     <Typography sx={{ flex: 1, paddingLeft: 1 }} variant="h6"> Create New Course for Trimester {activeTri.tri} </Typography>
-                    <Button color="inherit" onClick={createCourse}> Create </Button>
+                    <Button color="inherit" onClick={createCourse} disabled={!formatValid}> Create </Button>
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", marginTop: 0}}>
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
-                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={(e) => setCourseName(e.target.value)}/>
+                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={handleNameChange} error={!nameValid} 
+                        helperText={courseName.length === 0 ? "This field cannot be empty" : courseName.length > 50 ? "This field  is too long" : ""} 
+                    />
                     <Box>
-                        <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={(e) => setCourseCode(e.target.value)} />
+                        <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={handleCodeChange} 
+                            error={!codeValid} 
+                            helperText={!codeValid ? "Invalid course code" : ""} 
+                        />
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{padding: 0.7, paddingLeft: 6}}/>
                     </Box>
                 </Stack>
@@ -104,7 +136,7 @@ const NewCourseDialog = (props) => {
                 <Stack spacing={2}>
                     {assessments.map((assessment, i) => {
                         return (
-                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} />
+                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} />
                         )
                     })}
                     <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
