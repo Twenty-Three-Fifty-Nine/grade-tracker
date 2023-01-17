@@ -1,5 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography } from '@mui/material';
+import Login from './Login';
+import WelcomePage from './WelcomePage';
 import GradesOverview from './GradesOverview';
 
 const App = () => {
@@ -10,10 +12,12 @@ const App = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Temp Grade Tracker Thingy Thing
                     </Typography>
+                    <Login />
                 </Toolbar>
             </AppBar>
 
-            <GradesOverview />
+            <WelcomePage />
+            {/* <GradesOverview /> */}
         </>
     )
 }
