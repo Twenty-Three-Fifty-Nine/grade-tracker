@@ -19,12 +19,15 @@ const App = () => {
                     >
                         Temp Grade Tracker Thingy Thing
                     </Typography>
-                    <Login />
+                    {isLoggedIn ? (
+                        <Logout onLogout={() => setIsLoggedIn(false)} />
+                    ) : (
                         <Login onLogin={() => setIsLoggedIn(true)} />
+                    )}
                 </Toolbar>
             </AppBar>
 
-            <WelcomePage />
+            {isLoggedIn ? <GradesOverview /> : <WelcomePage />}
         </>
     );
 }
