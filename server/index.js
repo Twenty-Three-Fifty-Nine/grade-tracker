@@ -60,7 +60,12 @@ app.post('/api/users', (req, res) => {
     const sqlInsert = "INSERT INTO users (Email, Password, Salt, DisplayName) VALUES (?, ?, ?, ?)";
     db.query(sqlInsert, [email, hashedPassword.hash, hashedPassword.salt, name], (err, result) => {
         if (err) {
-            res.sendStatus(500);
+            if (err.code === 'ER_DUP_ENTRY') {
+                res.sendStatus(409);
+            } else {
+                console.log(err);
+                res.sendStatus(500);
+            }
         } else {
             res.sendStatus(200);
         }

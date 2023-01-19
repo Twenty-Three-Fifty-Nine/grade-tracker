@@ -1,12 +1,20 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
-import Logout from './Logout';
-import Login from './Login';
-import WelcomePage from './WelcomePage';
-import GradesOverview from './GradesOverview';
+import React, { useCallback } from "react";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import Logout from "./Logout";
+import Login from "./Login";
+import WelcomePage from "./WelcomePage";
+import GradesOverview from "./GradesOverview";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+    const login = useCallback(() => {
+        setIsLoggedIn(true);
+    }, []);
+
+    const logout = useCallback(() => {
+        setIsLoggedIn(false);
+    }, []);
 
     return (
         <>
@@ -20,9 +28,9 @@ const App = () => {
                         Temp Grade Tracker Thingy Thing
                     </Typography>
                     {isLoggedIn ? (
-                        <Logout onLogout={() => setIsLoggedIn(false)} />
+                        <Logout loggedIn={logout} />
                     ) : (
-                        <Login onLogin={() => setIsLoggedIn(true)} />
+                        <Login loggedIn={login} />
                     )}
                 </Toolbar>
             </AppBar>
@@ -30,6 +38,6 @@ const App = () => {
             {isLoggedIn ? <GradesOverview /> : <WelcomePage />}
         </>
     );
-}
+};
 
 export default App;

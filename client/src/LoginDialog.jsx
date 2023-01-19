@@ -1,27 +1,29 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Axios from 'axios';
 
 const LoginDialog = (props) => {
-    const { onClose, open, onLogin } = props;
+    const { onClose, open, login} = props;
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState(false);
-
-    const handleClose = () => {
-        onClose();
-    }
     
-    const handleLogin = async () => {
+    const handleClose = useCallback(() => {
+        onClose();
+        setLoginError(false);
+    }, [onClose]);
+
+    const handleLogin = useCallback(async () => {
         await Axios.post("http://localhost:3001/api/authorise", {
             email: email,
             password: password
         }).then((result) => {
-            onLogin();
+            login();
             handleClose();
-        }).catch((e) => {setLoginError(true)})
-    }
+        }).catch((e) => { setLoginError(true) })
+    }, [email, password, login, handleClose]);
+
 
     return (
         <Dialog open={open} onClose={handleClose}>

@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Axios from 'axios';
 
 const SignupDialog = (props) => {
-    const { onClose, open, onLogin } = props;
-
+    const { open, onClose, login } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -12,11 +11,12 @@ const SignupDialog = (props) => {
 
     const [signupError, setSignupError] = React.useState(false);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         onClose();
-    }
+        setSignupError(false);
+    }, [onClose]);
 
-    const handleSignup = async () => {
+    const handleSignup = useCallback(async () => {
         if (password !== passwordConfirm) {
             setSignupError(true);
             return;
@@ -26,15 +26,12 @@ const SignupDialog = (props) => {
             email: email,
             password: password,
         }).then((result) => {
-            console.log(result);
-            onLogin();
+            login();
             handleClose();
-            console.log("Signup successful");
         }).catch((e) => {
-            console.log(e);
             setSignupError(true);
-        })
-    }
+        });
+    }, [displayName, email, password, passwordConfirm, login, handleClose]);
 
     return (
         <Dialog open={open} onClose={handleClose}>

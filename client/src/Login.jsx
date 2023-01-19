@@ -1,32 +1,32 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, Typography } from '@mui/material';
 import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 
 const Login = (props) => {
-    const { onLogin } = props;
+    const { loggedIn } = props;
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 
-    const handleOpenLogin = () => {
+    const handleLogin = useCallback(() => {
+        loggedIn(true);
+    }, [loggedIn]);
+
+    const handleOpenLogin = useCallback(() => {
         setLoginOpen(true);
-    };
+    }, []);
 
-    const handleCloseLogin = () => {
+    const handleCloseLogin = useCallback(() => {
         setLoginOpen(false);
-    };
+    }, []);
 
-    const handleOpenLSignup = () => {
+    const handleOpenLSignup = useCallback(() => {
         setSignupOpen(true);
-    };
+    }, []);
 
-    const handleCloseSignup = () => {
+    const handleCloseSignup = useCallback(() => {
         setSignupOpen(false);
-    };
-
-    const handleLogin = () => {
-        onLogin();
-    };
+    }, []);
 
     return (
         <>
@@ -36,8 +36,8 @@ const Login = (props) => {
         <Button onClick={handleOpenLSignup} variant="text" color="inherit">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Signup</Typography>
         </Button>
-        <LoginDialog open={loginOpen} onClose={handleCloseLogin} onLogin={handleLogin} />
-        <SignupDialog open={signupOpen} onClose={handleCloseSignup} onLogin={handleLogin} />
+        <LoginDialog open={loginOpen} onClose={handleCloseLogin} login={handleLogin} />
+        <SignupDialog open={signupOpen} onClose={handleCloseSignup} login={handleLogin} />
         </>
     )
 };
