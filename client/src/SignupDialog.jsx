@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Axios from 'axios';
+import PasswordChecklist from "react-password-checklist"
 
 const SignupDialog = (props) => {
     const { open, onClose, login } = props;
@@ -8,19 +9,49 @@ const SignupDialog = (props) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
+    const [validPassword, setValidPassword] = React.useState(false);
 
     const [signupError, setSignupError] = React.useState(false);
+    const [signupErrorText, setSignupErrorText] = React.useState("");
 
     const handleClose = useCallback(() => {
         onClose();
+        setSignupErrorText("");
         setSignupError(false);
     }, [onClose]);
 
     const handleSignup = useCallback(async () => {
-        if (password !== passwordConfirm) {
+        setSignupErrorText("");
+        let error = false;
+        let text = "";
+
+        if (displayName === "") {
+            text = "Display name is required - ";
+            error = true;
+        }
+
+        if (email === "") {
+            text += "Email is required - ";
+            error = true;
+        } else if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+            text +=  "Email is not valid. Format should be handle@domain.com - ";
+            error = true;
+        }
+
+        if (password === "") {
+            text += "Password is required";
+            error = true;
+        } else if (!validPassword) {
+            text += "Password is not valid";
+            error = true;
+        }
+
+        if (error) {
+            setSignupErrorText(text);
             setSignupError(true);
             return;
         }
+        
         await Axios.post("http://localhost:3001/api/users", {
             name: displayName,
             email: email,
@@ -29,9 +60,14 @@ const SignupDialog = (props) => {
             login();
             handleClose();
         }).catch((e) => {
+            if (e.response.status === 409) {
+                setSignupErrorText("Email already in use");
+            } else {
+                setSignupErrorText("There was an error signing up. Please try again later or contact support.");
+            }
             setSignupError(true);
         });
-    }, [displayName, email, password, passwordConfirm, login, handleClose]);
+    }, [displayName, email, password, validPassword, login, handleClose]);
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -77,7 +113,15 @@ const SignupDialog = (props) => {
                     value={passwordConfirm}
                     onChange={(e) => { setPasswordConfirm(e.target.value) }}
                 />
-                {signupError && <Alert severity="error">There was an error signing up</Alert>}
+
+                <PasswordChecklist
+				rules={["minLength","specialChar","number","capital","match"]}
+				minLength={5}
+				value={password}
+				valueAgain={passwordConfirm}
+				onChange={(isValid) => { setValidPassword(isValid) }}
+			/>
+                {signupError && <Alert severity="error">{signupErrorText}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
