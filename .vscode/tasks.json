@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Server",
+            "type": "shell",
+            "command": "cd server | npm run devStart",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "start"
+            }
+        },
+        {
+            "label": "Client",
+            "type": "shell",
+            "command": "cd client | npm start",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "start"
+            }
+        },
+        {
+            "label": "Start",
+            "dependsOn": [
+                "Server",
+                "Client"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
