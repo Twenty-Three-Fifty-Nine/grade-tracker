@@ -52,9 +52,9 @@ const getHash = (password, salt) => {
 
 // Add a new user
 app.post("/api/users", (req, res) => {
-    const email = mysql.escape(req.body.email);
+    const email = req.body.email;
     const password = req.body.password;
-    const name = mysql.escape(req.body.name);
+    const name = req.body.name;
 
     const hashedPassword = getSaltHash(password);
 
@@ -81,7 +81,7 @@ app.post("/api/users", (req, res) => {
 // Add a new course
 app.post("/api/courses", (req, res) => {
     const courseCode = req.body.courseCode;
-    const courseName = mysql.escape(req.body.courseName);
+    const courseName = req.body.courseName;
     const trimester = req.body.trimester;
 
     const sqlInsert =
@@ -112,7 +112,7 @@ app.post("/api/assignments", (req, res) => {
 
 // Authenticate a user
 app.post("/api/authorise", (req, res) => {
-    const email = mysql.escape(req.body.email);
+    const email = req.body.email;
     const password = req.body.password;
 
     const sqlSelect = "SELECT * FROM users WHERE Email = ?";
