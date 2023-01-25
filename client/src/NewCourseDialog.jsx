@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FormControlLabel, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
+import { Alert, FormControlLabel, Snackbar, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
 
@@ -30,6 +30,7 @@ const NewCourseDialog = (props) => {
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [scrollActive, setScrollActive] = React.useState(false);
+    const [snackbar, setSnackbar] = React.useState("none");
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
@@ -52,7 +53,7 @@ const NewCourseDialog = (props) => {
     }
 
     const checkFormat = () => {
-        let valid = nameValid && codeValid;
+        let valid = nameValid && codeValid && assessments.length > 0;
         for(const assessment of assessments){
             if(!assessment.valid) valid = false;
         }
@@ -77,13 +78,16 @@ const NewCourseDialog = (props) => {
             courseCode: courseCode,
             courseName: courseName,
             trimester: activeTri.tri
-        })
+        }).then((e) => {
+            setSnackbar("success")
+            addAssessments().then(() => { onClose(courseCode, assessments.length) });
 
-        await addAssessments().then(() => { onClose(courseCode, assessments.length) });
+            setAssessments([]);
+            setCourseName("");
+            setCourseCode("");
+        }).catch((e) => {setSnackbar("error")})
 
-        setAssessments([]);
-        setCourseName("");
-        setCourseCode("");
+        
     }
 
     const addAssessments = async () => {
@@ -105,6 +109,7 @@ const NewCourseDialog = (props) => {
     }
 
     return (
+        <>
         <Dialog fullScreen open={open} onClose={stopCreating}>
             <AppBar position="static" component="nav">
                 <Toolbar>
@@ -144,6 +149,12 @@ const NewCourseDialog = (props) => {
                 </Stack>
             </Box>
         </Dialog>
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
+            <Alert severity={snackbar !== "none" ? snackbar : "success"} sx={{ width: '100%' }}>
+                {snackbar === "success" ? "Course created successfully." : "Course template exists already."}
+            </Alert>
+        </Snackbar>
+        </>
     )
 }
 
