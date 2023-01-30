@@ -4,13 +4,9 @@ import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 
 const Login = (props) => {
-    const { loggedIn } = props;
+    const { setIsLoggedIn } = props;
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
-
-    const handleLogin = useCallback(() => {
-        loggedIn();
-    }, [loggedIn]);
 
     const handleOpenLogin = useCallback(() => {
         setLoginOpen(true);
@@ -36,8 +32,8 @@ const Login = (props) => {
         <Button onClick={handleOpenLSignup} variant="text" color="inherit">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Signup</Typography>
         </Button>
-        <LoginDialog open={loginOpen} onClose={handleCloseLogin} login={handleLogin} />
-        <SignupDialog open={signupOpen} onClose={handleCloseSignup} login={handleLogin} />
+        <LoginDialog open={loginOpen} onClose={handleCloseLogin} setIsLoggedIn={setIsLoggedIn} />
+        <SignupDialog open={signupOpen} onClose={handleCloseSignup} setIsLoggedIn={setIsLoggedIn} />
         </>
     )
 };

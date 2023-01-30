@@ -3,7 +3,7 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText,
 import Axios from 'axios';
 
 const LoginDialog = (props) => {
-    const { onClose, open, login} = props;
+    const { onClose, open, setIsLoggedIn } = props;
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -19,10 +19,10 @@ const LoginDialog = (props) => {
             email: email,
             password: password
         }).then((result) => {
-            login();
+            setIsLoggedIn(true);
             handleClose();
         }).catch((e) => { setLoginError(true) })
-    }, [email, password, login, handleClose]);
+    }, [email, password, setIsLoggedIn, handleClose]);
 
 
     return (

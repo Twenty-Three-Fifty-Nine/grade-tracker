@@ -4,7 +4,7 @@ import Axios from 'axios';
 import PasswordChecklist from "react-password-checklist"
 
 const SignupDialog = (props) => {
-    const { open, onClose, login } = props;
+    const { open, onClose, setIsLoggedIn } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -57,9 +57,10 @@ const SignupDialog = (props) => {
             email: email,
             password: password,
         }).then((result) => {
-            login();
+            setIsLoggedIn(true);
             handleClose();
         }).catch((e) => {
+            console.log(e);
             if (e.response.status === 409) {
                 setSignupErrorText("Email already in use");
             } else {
@@ -67,7 +68,7 @@ const SignupDialog = (props) => {
             }
             setSignupError(true);
         });
-    }, [displayName, email, password, validPassword, login, handleClose]);
+    }, [displayName, email, password, validPassword, setIsLoggedIn, handleClose]);
 
     return (
         <Dialog open={open} onClose={handleClose}>
