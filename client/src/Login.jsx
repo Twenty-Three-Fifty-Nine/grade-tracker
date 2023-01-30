@@ -9,7 +9,7 @@ const Login = (props) => {
     const [signupOpen, setSignupOpen] = React.useState(false);
 
     const handleLogin = useCallback(() => {
-        loggedIn(true);
+        loggedIn();
     }, [loggedIn]);
 
     const handleOpenLogin = useCallback(() => {
