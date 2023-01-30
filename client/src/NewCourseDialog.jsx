@@ -85,6 +85,8 @@ const NewCourseDialog = (props) => {
             setAssessments([]);
             setCourseName("");
             setCourseCode("");
+            setNameValid(false);
+            setCodeValid(false);
         }).catch((e) => {setSnackbar("error")})
 
         
