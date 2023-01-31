@@ -75,12 +75,12 @@ const NewCourseDialog = (props) => {
     const createCourse = async () => {
         console.log("Adding new template");
         await Axios.post("http://localhost:3001/api/courses", {
-            courseCode: courseCode,
+            courseCode: courseCode.toUpperCase(),
             courseName: courseName,
             trimester: activeTri.tri
         }).then((e) => {
             setSnackbar("success")
-            addAssessments().then(() => { onClose(courseCode, assessments.length) });
+            addAssessments().then(() => { onClose(courseCode.toUpperCase(), assessments.length) });
 
             setAssessments([]);
             setCourseName("");
@@ -96,7 +96,7 @@ const NewCourseDialog = (props) => {
         await assessments.forEach(async (assessment) => {
             console.log("Adding new assessment: " + assessment.name);
             await Axios.post("http://localhost:3001/api/assignments", {
-                courseCode: courseCode,
+                courseCode: courseCode.toUpperCase(),
                 trimester: activeTri.tri,
                 assignmentName: assessment.name,
                 weight: assessment.weight,
