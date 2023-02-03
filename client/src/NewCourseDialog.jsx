@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { FormControlLabel, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
+import { Alert, FormControlLabel, Snackbar, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
 
 class Assessment {
-    constructor(name, weight, deadline) {
+    constructor(name, weight, deadline, valid) {
         this.name = name;
         this.weight = weight;
         this.deadline = deadline;
+        this.valid = false;
     }
 
     dateToSQLDate = () => {
@@ -29,12 +30,41 @@ const NewCourseDialog = (props) => {
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [scrollActive, setScrollActive] = React.useState(false);
+    const [snackbar, setSnackbar] = React.useState("none");
+
+    const [nameValid, setNameValid] = React.useState(false);
+    const [codeValid, setCodeValid] = React.useState(false);
+    const [formatValid, setFormatValid] = React.useState(false);
+
+    useEffect(() => {
+        checkFormat();
+    }, [nameValid, codeValid, assessments])
+
+    const handleNameChange = (e) => {
+        setCourseName(e.target.value);
+        setNameValid(e.target.value.length > 0 && e.target.value.length < 51);
+    }
+
+    const handleCodeChange = (e) => {
+        setCourseCode(e.target.value);
+        const exp = new RegExp('[a-zA-Z]{4}[0-9]{3}', 'g');
+        let match = e.target.value.match(exp);
+        setCodeValid(match !== null && match[0] === e.target.value);
+    }
+
+    const checkFormat = () => {
+        let valid = nameValid && codeValid && assessments.length > 0;
+        for(const assessment of assessments){
+            if(!assessment.valid) valid = false;
+        }
+        setFormatValid(valid);
+    }
 
     const addAssessment = () => {
         setScrollActive(true);
         const date = new Date();
         date.setSeconds(0);
-        setAssessments(oldArray => [...oldArray, new Assessment(null, null, date)]);
+        setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
     }
 
     const removeAssessment = (index) => {
@@ -45,23 +75,28 @@ const NewCourseDialog = (props) => {
     const createCourse = async () => {
         console.log("Adding new template");
         await Axios.post("http://localhost:3001/api/courses", {
-            courseCode: courseCode,
+            courseCode: courseCode.toUpperCase(),
             courseName: courseName,
             trimester: activeTri.tri
-        })
+        }).then((e) => {
+            setSnackbar("success")
+            addAssessments().then(() => { onClose(courseCode.toUpperCase(), assessments.length) });
 
-        await addAssessments().then(() => { onClose(courseCode, assessments.length) });
+            setAssessments([]);
+            setCourseName("");
+            setCourseCode("");
+            setNameValid(false);
+            setCodeValid(false);
+        }).catch((e) => {setSnackbar("error")})
 
-        setAssessments([]);
-        setCourseName("");
-        setCourseCode("");
+        
     }
 
     const addAssessments = async () => {
         await assessments.forEach(async (assessment) => {
             console.log("Adding new assessment: " + assessment.name);
             await Axios.post("http://localhost:3001/api/assignments", {
-                courseCode: courseCode,
+                courseCode: courseCode.toUpperCase(),
                 trimester: activeTri.tri,
                 assignmentName: assessment.name,
                 weight: assessment.weight,
@@ -76,6 +111,7 @@ const NewCourseDialog = (props) => {
     }
 
     return (
+        <>
         <Dialog fullScreen open={open} onClose={stopCreating}>
             <AppBar position="static" component="nav">
                 <Toolbar>
@@ -83,16 +119,21 @@ const NewCourseDialog = (props) => {
                         <Icon>close</Icon>
                     </IconButton>
                     <Typography sx={{ flex: 1, paddingLeft: 1 }} variant="h6"> Create New Course for Trimester {activeTri.tri} </Typography>
-                    <Button color="inherit" onClick={createCourse}> Create </Button>
+                    <Button color="inherit" onClick={createCourse} disabled={!formatValid}> Create </Button>
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", marginTop: 0}}>
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
-                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={(e) => setCourseName(e.target.value)}/>
+                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={handleNameChange} error={!nameValid} 
+                        helperText={courseName.length === 0 ? "This field cannot be empty" : courseName.length > 50 ? "This field  is too long" : ""} 
+                    />
                     <Box>
-                        <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={(e) => setCourseCode(e.target.value)} />
+                        <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={handleCodeChange} 
+                            error={!codeValid} 
+                            helperText={!codeValid ? "Invalid course code" : ""} 
+                        />
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{padding: 0.7, paddingLeft: 6}}/>
                     </Box>
                 </Stack>
@@ -102,7 +143,7 @@ const NewCourseDialog = (props) => {
                 <Stack spacing={2}>
                     {assessments.map((assessment, i) => {
                         return (
-                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} />
+                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} />
                         )
                     })}
                     <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
@@ -110,6 +151,12 @@ const NewCourseDialog = (props) => {
                 </Stack>
             </Box>
         </Dialog>
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
+            <Alert severity={snackbar !== "none" ? snackbar : "success"} sx={{ width: '100%' }}>
+                {snackbar === "success" ? "Course created successfully." : "Course template exists already."}
+            </Alert>
+        </Snackbar>
+        </>
     )
 }
 
