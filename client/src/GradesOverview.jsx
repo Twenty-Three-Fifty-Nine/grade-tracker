@@ -5,12 +5,13 @@ import AddCourseDialog from './AddCourseDialog';
 import Axios from 'axios';
 
 class Course {
-    constructor(code, names, weights, deadlines, grades) {
+    constructor(code, names, weights, deadlines, grades, totalGrade) {
         this.code = code;
         this.names = names;
         this.weights = weights;
         this.deadlines = deadlines;
         this.grades = grades;
+        this.totalGrade = totalGrade;
     }
 
     getCourseCompletion() {
@@ -19,6 +20,20 @@ class Course {
             if(!isNaN(grade)) finished++;
         });
         return finished / this.grades.length;
+    }
+
+    getCourseLetter() {
+        if(this.totalGrade >= 90) return "A+";
+        else if(this.totalGrade >= 85) return "A";
+        else if(this.totalGrade >= 80) return "A-";
+        else if(this.totalGrade >= 75) return "B+";
+        else if(this.totalGrade >= 70) return "B";
+        else if(this.totalGrade >= 65) return "B-";
+        else if(this.totalGrade >= 60) return "C+";
+        else if(this.totalGrade >= 55) return "C";
+        else if(this.totalGrade >= 50) return "C-";
+        else if(this.totalGrade >= 40) return "D";
+        return "E";
     }
 } 
 
@@ -67,8 +82,7 @@ const GradesOverview = () => {
                 let courseTemplate;
                 let grades = parseGrades(data.Grades);
                 await getCourseTemplate(data.CourseCode, data.Trimester).then((value) => { courseTemplate = value });
-
-                const course = new Course(data.CourseCode, courseTemplate[0], courseTemplate[1], courseTemplate[2], grades);
+                const course = new Course(data.CourseCode, courseTemplate[0], courseTemplate[1], courseTemplate[2], grades, data.TotalGrade);
                 ret[data.Trimester - 1].push(course);
             }
             return ret;
@@ -79,7 +93,8 @@ const GradesOverview = () => {
         const ret= []
         const splitStr = str.match(/.{1,4}/g);
         splitStr.forEach(grade => {
-            if(grade === null) ret.push(null);
+            if(grade === "null") ret.push(null);
+            else if(grade === "full") ret.push(100);
             else ret.push(parseInt(grade) * 0.01)
         })
         return ret;
