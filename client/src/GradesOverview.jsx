@@ -39,7 +39,7 @@ class Course {
 
 const GradesOverview = () => {
     const baseYear = 2022;
-    const activeTri = {year: 2022, tri: 3};
+    const activeTri = {year: 2023, tri: 1};
 
     const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
     const [sessionData, setSessionData] = React.useState(null);
@@ -93,7 +93,7 @@ const GradesOverview = () => {
         const ret= []
         const splitStr = str.match(/.{1,4}/g);
         splitStr.forEach(grade => {
-            if(grade === "null") ret.push(null);
+            if(grade === "null") ret.push("NaN");
             else if(grade === "full") ret.push(100);
             else ret.push(parseInt(grade) * 0.01)
         })
