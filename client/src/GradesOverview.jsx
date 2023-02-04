@@ -39,7 +39,7 @@ class Course {
 
 const GradesOverview = () => {
     const baseYear = 2022;
-    const activeTri = {year: 2023, tri: 1};
+    const activeTri = {year: 2022, tri: 3};
 
     const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
     const [sessionData, setSessionData] = React.useState(null);
@@ -122,7 +122,7 @@ const GradesOverview = () => {
         </Box>
         <Box sx={{ marginTop: 2 }}>
             <SessionContext.Provider value={sessionData !== null ? sessionData : handleLoadData()}>
-                { baseYear + selectedYear <= new Date().getFullYear() ? 
+                { baseYear + selectedYear <= activeTri.year ? 
                     <YearOverview /> :
                     <Alert severity="warning" sx={{marginTop: 1}}> Academic year is not currently active. </Alert>
                 }
