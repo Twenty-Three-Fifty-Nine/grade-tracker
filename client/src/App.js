@@ -21,14 +21,30 @@ const App = () => {
                         Temp Grade Tracker Thingy Thing
                     </Typography>
                     {isLoggedIn ? (
-                        <Logout setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />
+                        <Logout
+                            setIsLoggedIn={setIsLoggedIn}
+                            setUserDetails={setUserDetails}
+                        />
                     ) : (
-                        <Login setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />
+                        <Login
+                            setIsLoggedIn={setIsLoggedIn}
+                            setUserDetails={setUserDetails}
+                        />
                     )}
                 </Toolbar>
             </AppBar>
 
-            {isLoggedIn ? <GradesOverview userEmail={userDetails.email} userName={userDetails.name} /> : <WelcomePage />}
+            {isLoggedIn ? (
+                <GradesOverview
+                    userEmail={userDetails.email}
+                    userName={userDetails.name}
+                />
+            ) : (
+                <WelcomePage
+                    setIsLoggedIn={setIsLoggedIn}
+                    setUserDetails={setUserDetails}
+                />
+            )}
         </>
     );
 };
