@@ -27,7 +27,7 @@ const App = () => {
                 </Toolbar>
             </AppBar>
 
-            {isLoggedIn ? <GradesOverview /> : <WelcomePage />}
+            {isLoggedIn ? <GradesOverview userEmail="abdz2004@gmail.com" userName="Abood" /> : <WelcomePage />}
         </>
     );
 };

@@ -22,7 +22,8 @@ class Course {
     }
 } 
 
-const GradesOverview = () => {
+const GradesOverview = (props) => {
+    const {userEmail, userName} = props
     const baseYear = 2022;
     const activeTri = {year: 2022, tri: 3};
 
