@@ -7,6 +7,7 @@ import GradesOverview from "./GradesOverview";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    const [userDetails, setUserDetails] = React.useState({});
 
     return (
         <>
@@ -20,14 +21,14 @@ const App = () => {
                         Temp Grade Tracker Thingy Thing
                     </Typography>
                     {isLoggedIn ? (
-                        <Logout setIsLoggedIn={setIsLoggedIn} />
+                        <Logout setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />
                     ) : (
-                        <Login setIsLoggedIn={setIsLoggedIn} />
+                        <Login setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />
                     )}
                 </Toolbar>
             </AppBar>
 
-            {isLoggedIn ? <GradesOverview /> : <WelcomePage />}
+            {isLoggedIn ? <GradesOverview userEmail={userDetails.email} userName={userDetails.name} /> : <WelcomePage />}
         </>
     );
 };

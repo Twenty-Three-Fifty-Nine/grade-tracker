@@ -37,7 +37,8 @@ class Course {
     }
 } 
 
-const GradesOverview = () => {
+const GradesOverview = (props) => {
+    const {userEmail, userName} = props
     const baseYear = 2022;
     const activeTri = {year: 2022, tri: 3};
 
@@ -65,9 +66,9 @@ const GradesOverview = () => {
     const getSessionData = async (year) => {
         console.log("Getting Session Data");
         await setSessionData("Reloading");
-        return parseCourseData("http://localhost:3001/api/user/courses?userId=abdz2004@gmail.com&year=" + (baseYear + year)).then((courseData) => { 
+        return parseCourseData("http://localhost:3001/api/user/courses?userId=" + userEmail + "&year=" + (baseYear + year)).then((courseData) => { 
             return {
-                userData: {email: "abdz2004@gmail.com", displayName: "ABOOBIES"},
+                userData: {email: userEmail, displayName: userName},
                 timeInfo: {activeTri, selectedYear: baseYear + year},
                 courses: courseData
             };
