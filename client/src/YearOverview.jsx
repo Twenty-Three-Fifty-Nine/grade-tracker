@@ -31,6 +31,32 @@ const YearOverview = () => {
         }
     }
 
+    const getGPA = () => {
+        const trimesters = session ? session.courses : null;
+        if(!trimesters) return null;
+        let totalGrade = 0;
+        let totalCourses = 0;
+        trimesters.forEach(trimester => {
+            trimester.forEach(course => {
+                totalGrade += course.totalGrade;
+                totalCourses++;
+            })
+        })
+        let gpa = (totalGrade / totalCourses);
+        if(totalCourses === 0) return "N/A";
+        else if(gpa >= 90) return "A+";
+        else if(gpa >= 85) return "A";
+        else if(gpa >= 80) return "A-";
+        else if(gpa >= 75) return "B+";
+        else if(gpa >= 70) return "B";
+        else if(gpa >= 65) return "B-";
+        else if(gpa >= 60) return "C+";
+        else if(gpa >= 55) return "C";
+        else if(gpa >= 50) return "C-";
+        else if(gpa >= 40) return "D";
+        return "E";
+    }
+
     return (
         <>
         <Stack spacing={1}>
@@ -38,7 +64,7 @@ const YearOverview = () => {
             <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} />
             <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} />
         </Stack>
-        <Alert severity="info" sx={{marginTop: 1}}>Current GPA for the Year: 8.2</Alert>
+        <Alert severity="info" sx={{marginTop: 1}}>Current GPA for the Year: {getGPA()}</Alert>
         </>
     )
 }
