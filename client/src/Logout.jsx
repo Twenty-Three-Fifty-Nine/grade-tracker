@@ -2,11 +2,12 @@ import React, { useCallback } from 'react';
 import { Button, Typography } from '@mui/material';
 
 const Logout = (props) => {
-    const { setIsLoggedIn } = props;
+    const { setIsLoggedIn, setUserDetails } = props;
 
     const handleLogout = useCallback(() => {
         setIsLoggedIn(false);
-    }, [setIsLoggedIn]);
+        setUserDetails(null);
+    }, [setIsLoggedIn, setUserDetails]);
 
     return (
         <Button onClick={handleLogout} variant="text" color="inherit">

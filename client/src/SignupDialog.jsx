@@ -4,7 +4,7 @@ import Axios from 'axios';
 import PasswordChecklist from "react-password-checklist"
 
 const SignupDialog = (props) => {
-    const { open, onClose, setIsLoggedIn } = props;
+    const { open, onClose, setIsLoggedIn, setUserDetails } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -34,7 +34,7 @@ const SignupDialog = (props) => {
             text += "Email is required - ";
             error = true;
         } else if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-            text +=  "Email is not valid. Format should be handle@domain.com - ";
+            text += "Email is not valid. Format should be handle@domain.com - ";
             error = true;
         }
 
@@ -51,24 +51,37 @@ const SignupDialog = (props) => {
             setSignupError(true);
             return;
         }
-        
+
         await Axios.post("http://localhost:3001/api/users", {
             name: displayName,
             email: email,
             password: password,
-        }).then((result) => {
-            setIsLoggedIn(true);
-            handleClose();
-        }).catch((e) => {
-            console.log(e);
-            if (e.response.status === 409) {
-                setSignupErrorText("Email already in use");
-            } else {
-                setSignupErrorText("There was an error signing up. Please try again later or contact support.");
-            }
-            setSignupError(true);
-        });
-    }, [displayName, email, password, validPassword, setIsLoggedIn, handleClose]);
+        })
+            .then((result) => {
+                setIsLoggedIn(true);
+                setUserDetails(result.data);
+                handleClose();
+            })
+            .catch((e) => {
+                console.log(e);
+                if (e.response.status === 409) {
+                    setSignupErrorText("Email already in use");
+                } else {
+                    setSignupErrorText(
+                        "There was an error signing up. Please try again later or contact support."
+                    );
+                }
+                setSignupError(true);
+            });
+    }, [
+        displayName,
+        email,
+        password,
+        validPassword,
+        setIsLoggedIn,
+        handleClose,
+        setUserDetails,
+    ]);
 
     return (
         <Dialog open={open} onClose={handleClose}>
