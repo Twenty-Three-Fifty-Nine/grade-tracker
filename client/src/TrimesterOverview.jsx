@@ -18,7 +18,7 @@ const TrimesterOverview = ({triInfo, open, toggleAccordion}) => {
                             <Chip label="Current" color="success" sx={{marginLeft: 1}} /> :
                             triInfo.isFinished ?
                             <Chip label="Finished" color="secondary" sx={{marginLeft: 1}} /> :
-                            <Chip label="Inactive" color="default" sx={{marginLeft: 1}} /> 
+                            <Chip label="Inactive" color="primary" sx={{marginLeft: 1}} /> 
                         } 
                     </AccordionSummary>
                     <AccordionDetails>
