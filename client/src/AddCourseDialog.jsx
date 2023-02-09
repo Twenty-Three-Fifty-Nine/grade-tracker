@@ -62,7 +62,8 @@ const AddCourseDialog = (props) => {
     }
 
     const getTemplatesList = async () => {
-        if(loading) return;
+        const trimesters = session ? session.courses : null;
+        if(!trimesters || loading) return null;
         console.log("Getting Course Templates");
         
         setLoading(true);
@@ -70,6 +71,7 @@ const AddCourseDialog = (props) => {
         Axios.get("http://localhost:3001/api/courses?trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
                 tempList.push(course.CourseCode);
+                console.log(session)
             });
             setCourseList(tempList);
             setLoading(false);
