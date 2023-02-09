@@ -7,6 +7,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Input,
     TextField,
 } from "@mui/material";
 import Axios from "axios";
@@ -38,8 +39,17 @@ const LoginDialog = (props) => {
             });
     }, [email, password, setIsLoggedIn, handleClose, setUserDetails]);
 
+    const handleKeyDown = useCallback(
+        (event) => {
+            if (event.key === "Enter") {
+                handleLogin();
+            }
+        },
+        [handleLogin]
+    );
+
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Login</DialogTitle>
             <DialogContent>
                 <DialogContentText>Login to your account</DialogContentText>
