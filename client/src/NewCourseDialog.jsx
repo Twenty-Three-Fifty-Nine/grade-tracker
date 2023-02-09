@@ -34,6 +34,8 @@ const NewCourseDialog = (props) => {
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
+    const [nameCheckOn, setNameCheckOn] = React.useState(false);
+    const [codeCheckOn, setCodeCheckOn] = React.useState(false);
     const [formatValid, setFormatValid] = React.useState(false);
 
     useEffect(() => {
@@ -43,6 +45,7 @@ const NewCourseDialog = (props) => {
     const handleNameChange = (e) => {
         setCourseName(e.target.value);
         setNameValid(e.target.value.length > 0 && e.target.value.length < 51);
+        setNameCheckOn(true);
     }
 
     const handleCodeChange = (e) => {
@@ -50,6 +53,7 @@ const NewCourseDialog = (props) => {
         const exp = new RegExp('[a-zA-Z]{4}[0-9]{3}', 'g');
         let match = e.target.value.match(exp);
         setCodeValid(match !== null && match[0] === e.target.value);
+        setCodeCheckOn(true);
     }
 
     const checkFormat = () => {
@@ -87,6 +91,8 @@ const NewCourseDialog = (props) => {
             setCourseCode("");
             setNameValid(false);
             setCodeValid(false);
+            setNameCheckOn(false);
+            setCodeCheckOn(false);
         }).catch((e) => {setSnackbar("error")})   
     }
 
@@ -124,13 +130,13 @@ const NewCourseDialog = (props) => {
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
-                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={handleNameChange} error={!nameValid} 
-                        helperText={courseName.length === 0 ? "This field cannot be empty" : courseName.length > 50 ? "This field  is too long" : ""} 
+                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={handleNameChange} error={!nameValid && nameCheckOn} 
+                        helperText={courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : courseName.length > 50 && nameCheckOn ? "This field  is too long" : ""} 
                     />
                     <Box>
                         <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={handleCodeChange} 
-                            error={!codeValid} 
-                            helperText={!codeValid ? "Invalid course code" : ""} 
+                            error={!codeValid && codeCheckOn} 
+                            helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
                         />
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{padding: 0.7, paddingLeft: 6}}/>
                     </Box>
