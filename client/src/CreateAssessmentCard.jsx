@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardContent, Stack,Box, IconButton, Icon, TextField } from '@mui/material';
+import { Card, CardContent, Stack, Box, IconButton, TextField } from '@mui/material';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CreateAssessmentCard = (props) => {
     const {index, removeAssessment, details, checkFormat} = props;
@@ -43,7 +44,7 @@ const CreateAssessmentCard = (props) => {
                             helperText={details.name.length === 0 ? "This field cannot be empty" : details.name.length > 30 ? "This field  is too long" : ""} 
                         />
                         <IconButton onClick={() => removeAssessment(index)}>
-                            <Icon>delete</Icon>
+                            <DeleteIcon />
                         </IconButton>
                     </Box>
                     <Box sx={{display: 'flex'}}>
