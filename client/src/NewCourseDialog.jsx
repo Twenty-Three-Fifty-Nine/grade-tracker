@@ -114,6 +114,12 @@ const NewCourseDialog = (props) => {
 
     const stopCreating = () => {
         setAssessments([]);
+        setCourseName("");
+        setCourseCode("");
+        setNameValid(false);
+        setCodeValid(false);
+        setNameCheckOn(false);
+        setCodeCheckOn(false);
         onClose();
     }
 
