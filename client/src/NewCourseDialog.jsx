@@ -31,6 +31,7 @@ const NewCourseDialog = (props) => {
     const [courseCode, setCourseCode] = React.useState("");
     const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
+    const [isSuccess, setIsSuccess] = React.useState("success");
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
@@ -80,6 +81,7 @@ const NewCourseDialog = (props) => {
             trimester: activeTri.tri
         }).then((e) => {
             setSnackbar("success")
+            setIsSuccess(true);
             addAssessments().then(() => { onClose(courseCode.toUpperCase(), assessments.length) });
 
             setAssessments([]);
@@ -87,7 +89,10 @@ const NewCourseDialog = (props) => {
             setCourseCode("");
             setNameValid(false);
             setCodeValid(false);
-        }).catch((e) => {setSnackbar("error")})   
+        }).catch((e) => {
+            setSnackbar("error");
+            setIsSuccess(false);
+        })   
     }
 
     const addAssessments = async () => {
@@ -150,8 +155,8 @@ const NewCourseDialog = (props) => {
             </Box>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={snackbar !== "none" ? snackbar : "success"} sx={{ width: '100%' }}>
-                {snackbar === "success" ? "Course created successfully." : "Course template exists already."}
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+                {isSuccess ? "Course created successfully." : "Course template exists already."}
             </Alert>
         </Snackbar>
         </>
