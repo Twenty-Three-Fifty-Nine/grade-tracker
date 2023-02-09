@@ -1,22 +1,14 @@
 import React from 'react';
 import { Card, CardContent, Stack, Box, IconButton, TextField } from '@mui/material';
 import DeleteIcon from "@mui/icons-material/Delete";
+import { DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const CreateAssessmentCard = (props) => {
     const {index, removeAssessment, details, checkFormat} = props;
     const [updater, setUpdater] = React.useState(false);
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [weightCheckOn, setWeightCheckOn] = React.useState(false);
-
-    const addLeadingZeros = (num, totalLength) => {
-        return String(num).padStart(totalLength, '0');
-    }
-
-    const dateToStr = (date) => {
-        if(!date) return null;
-        return date.getFullYear() + "-" + addLeadingZeros(date.getMonth() + 1, 2) + "-" + addLeadingZeros(date.getDate(), 2) + 
-               "T" + addLeadingZeros(date.getHours(), 2) + ":" + addLeadingZeros(date.getMinutes(), 2);
-    }
 
     const handleNameChange = (e) => {
         details.name = e.target.value;
@@ -52,10 +44,19 @@ const CreateAssessmentCard = (props) => {
                         </IconButton>
                     </Box>
                     <Box sx={{display: 'flex'}}>
-                        <TextField label="Due Date" type="datetime-local" defaultValue={dateToStr(details.deadline)} 
-                            onChange={(e) => {details.deadline = new Date(e.target.value)}} sx={{ paddingRight: 2}}
-                        />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DesktopDatePicker label="Due Date"
+                                value={details.deadline}
+                                onChange={(newValue) => {
+                                    details.deadline = newValue.toDate();
+                                    setUpdater(!updater);
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                                
+                            />
+                        </LocalizationProvider>
                         <TextField label="Grade Weight (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
+                            sx={{ marginLeft: 2}}
                             error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
                             helperText={details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? "The value cannot be above 100" : ""} 
                         />
