@@ -30,7 +30,7 @@ const Login = (props) => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Login</Typography>
         </Button>
         <Button onClick={handleOpenLSignup} variant="text" color="inherit">
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Signup</Typography>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Sign Up</Typography>
         </Button>
         <LoginDialog open={loginOpen} onClose={handleCloseLogin} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />
         <SignupDialog open={signupOpen} onClose={handleCloseSignup} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} />

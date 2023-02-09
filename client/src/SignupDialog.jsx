@@ -98,7 +98,7 @@ const SignupDialog = (props) => {
 
     return (
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
-            <DialogTitle>Signup</DialogTitle>
+            <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
