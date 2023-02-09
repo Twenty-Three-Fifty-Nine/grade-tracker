@@ -48,7 +48,7 @@ const CreateAssessmentCard = (props) => {
                             <DesktopDatePicker label="Due Date"
                                 value={details.deadline}
                                 onChange={(newValue) => {
-                                    details.deadline = newValue.toDate();
+                                    details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
                                     setUpdater(!updater);
                                 }}
                                 renderInput={(params) => <TextField {...params} />}
