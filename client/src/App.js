@@ -1,16 +1,20 @@
 import React from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, CssBaseline, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import Logout from "./Logout";
 import Login from "./Login";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
+import { lightTheme, darkTheme } from "./Themes";
+
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [userDetails, setUserDetails] = React.useState({});
+    const [lightMode, setLightMode] = React.useState(true);
 
     return (
-        <>
+        <ThemeProvider theme={lightMode ? lightTheme : darkTheme}>
+            <CssBaseline />
             <AppBar position="static" component="nav">
                 <Toolbar>
                     <Typography
@@ -45,7 +49,7 @@ const App = () => {
                     setUserDetails={setUserDetails}
                 />
             )}
-        </>
+        </ThemeProvider>
     );
 };
 
