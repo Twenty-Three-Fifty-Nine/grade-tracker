@@ -42,7 +42,7 @@ const AddCourseDialog = (props) => {
             grades: emptyGrades,
             totalGrade: 0.0
         }).then(() => {
-            setSnackbar("success");
+            if(!assessmentCount) setSnackbar("success");
             handleClose();
             updateData();
         }).catch((e) => {setSnackbar("error")})
