@@ -59,7 +59,11 @@ const SignupDialog = (props) => {
         })
             .then((result) => {
                 setIsLoggedIn(true);
-                setUserDetails(result.data);
+                const data = {
+                    name: displayName,
+                    email: email,
+                }
+                setUserDetails(data);
                 handleClose();
             })
             .catch((e) => {
