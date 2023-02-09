@@ -26,6 +26,9 @@ const lightTheme = createTheme({
         info: {
             main: "#12394c",
         },
+        highlight: {
+            main: "#c6c0b6",
+        },
     },
     components: {
         MuiAlert: {
@@ -90,6 +93,9 @@ const darkTheme = createTheme({
         },
         error: {
             main: "rgb(200, 100, 0)",
+        },
+        highlight: {
+            main: "#545650",
         },
     },
     components: {
