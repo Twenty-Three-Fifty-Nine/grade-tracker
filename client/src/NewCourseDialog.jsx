@@ -93,6 +93,8 @@ const NewCourseDialog = (props) => {
             setCourseCode("");
             setNameValid(false);
             setCodeValid(false);
+            setNameCheckOn(false);
+            setCodeCheckOn(false);
         }).catch((e) => {
             setSnackbar("error");
             setIsSuccess(false);
