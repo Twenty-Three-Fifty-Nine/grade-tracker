@@ -100,9 +100,6 @@ const SignupDialog = (props) => {
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Signup</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Signup for an account
-                </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
