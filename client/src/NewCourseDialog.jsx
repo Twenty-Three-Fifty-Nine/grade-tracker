@@ -10,11 +10,6 @@ class Assessment {
         this.deadline = deadline;
         this.valid = false;
     }
-
-    dateToSQLDate = () => {
-        const date = this.deadline;
-        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":00";
-    }
 } 
 
 const AlwaysScrollToBottom = ({active}) => {
@@ -93,6 +88,8 @@ const NewCourseDialog = (props) => {
             setCourseCode("");
             setNameValid(false);
             setCodeValid(false);
+            setNameCheckOn(false);
+            setCodeCheckOn(false);
         }).catch((e) => {
             setSnackbar("error");
             setIsSuccess(false);
@@ -107,7 +104,7 @@ const NewCourseDialog = (props) => {
                 trimester: activeTri.tri,
                 assignmentName: assessment.name,
                 weight: assessment.weight,
-                dueDate: assessment.dateToSQLDate()
+                dueDate: assessment.deadline
             })
         })
     }
