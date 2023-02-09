@@ -11,7 +11,8 @@ const lightTheme = createTheme({
             main: "#7E7F34",
         },
         secondary: {
-            main: "rgba(215, 64, 0, .8)",
+            main: "rgba(51, 94, 30, .7)",
+            contrastText: "#ffffff",
         },
         success: {
             main: "#1b440b",
@@ -23,14 +24,14 @@ const lightTheme = createTheme({
             main: "#8e2613",
         },
         info: {
-            main: "#247c72",
+            main: "#12394c",
         },
     },
     components: {
         MuiAlert: {
             styleOverrides: {
                 standardInfo: {
-                    backgroundColor: "rgba(50, 168, 155, 0.3)",
+                    backgroundColor: "rgba(43, 131, 175, .4)",
                     color: "#000000",
                 },
                 standardSuccess: {
@@ -57,7 +58,7 @@ const lightTheme = createTheme({
                     color: "#ffffff",
                 },
                 colorSuccess: {
-                    backgroundColor: "rgba(50, 150, 10, .8)",
+                    backgroundColor: "rgba(43, 131, 175, .8)",
                     color: "#ffffff",
                 },
             },
