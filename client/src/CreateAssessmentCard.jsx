@@ -1,9 +1,12 @@
 import React from 'react';
-import { Card, CardContent, Stack,Box, IconButton, Icon, TextField } from '@mui/material';
+import { Card, CardContent, Stack, Box, IconButton, TextField } from '@mui/material';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CreateAssessmentCard = (props) => {
     const {index, removeAssessment, details, checkFormat} = props;
     const [updater, setUpdater] = React.useState(false);
+    const [nameCheckOn, setNameCheckOn] = React.useState(false);
+    const [weightCheckOn, setWeightCheckOn] = React.useState(false);
 
     const addLeadingZeros = (num, totalLength) => {
         return String(num).padStart(totalLength, '0');
@@ -19,12 +22,14 @@ const CreateAssessmentCard = (props) => {
         details.name = e.target.value;
         setUpdater(!updater);
         updateValidity();
+        setNameCheckOn(true);
     };
 
     const handleWeightChange = (e) => {
         details.weight = e.target.value;
         setUpdater(!updater);
         updateValidity();
+        setWeightCheckOn(true);
     };
 
     const updateValidity = () => {
@@ -39,11 +44,11 @@ const CreateAssessmentCard = (props) => {
                     <Box sx={{display: 'flex'}}>
                         <TextField label="Assessment Name" sx={{ width: 400, paddingRight: 5}} 
                             value={details.name} onChange={handleNameChange} 
-                            error={details.name.length === 0 || details.name.length > 30} 
-                            helperText={details.name.length === 0 ? "This field cannot be empty" : details.name.length > 30 ? "This field  is too long" : ""} 
+                            error={(details.name.length === 0 || details.name.length > 30) && nameCheckOn} 
+                            helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : ""} 
                         />
                         <IconButton onClick={() => removeAssessment(index)}>
-                            <Icon>delete</Icon>
+                            <DeleteIcon />
                         </IconButton>
                     </Box>
                     <Box sx={{display: 'flex'}}>
@@ -51,8 +56,8 @@ const CreateAssessmentCard = (props) => {
                             onChange={(e) => {details.deadline = new Date(e.target.value)}} sx={{ paddingRight: 2}}
                         />
                         <TextField label="Grade Weight (%)" type="number" value={details.weight} onChange={handleWeightChange} 
-                            error={details.weight <= 0 || details.weight > 100} 
-                            helperText={details.weight <= 0 ? "The value must be above 0" : details.weight > 100 ? "The value cannot be above 100" : ""} 
+                            error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
+                            helperText={details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? "The value cannot be above 100" : ""} 
                         />
                     </Box>
                 </Stack>
