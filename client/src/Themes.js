@@ -89,7 +89,7 @@ const darkTheme = createTheme({
             main: "#388c17",
         },
         error: {
-            main: "rgb(250, 0, 0)",
+            main: "rgb(200, 100, 0)",
         },
     },
     components: {
