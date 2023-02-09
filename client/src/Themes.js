@@ -68,9 +68,71 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
     palette: {
         mode: "dark",
+        primary: {
+            main: "#7E7F34",
+        },
         background: {
-            default: "#1e1e1e",
-            paper: "#2e2e2e",
+            default: "#20231c",
+            paper: "#1c2116",
+        },
+        info: {
+            main: "#339ace",
+        },
+        warning: {
+            main: "#d6ae2a",
+        },
+        secondary: {
+            main: "rgba(126, 127, 52, .6)",
+        },
+        success: {
+            main: "#388c17",
+        },
+        error: {
+            main: "rgb(250, 0, 0)",
+        },
+    },
+    components: {
+        MuiAlert: {
+            styleOverrides: {
+                standardInfo: {
+                    backgroundColor: "rgba(36, 112, 150, .3)",
+                    color: "#ffffff",
+                },
+                standardSuccess: {
+                    backgroundColor: "rgba(50, 150, 10, .5)",
+                    color: "#ffffff",
+                },
+                standardWarning: {
+                    backgroundColor: "rgba(126, 127, 52, .8)",
+                    color: "#ffffff",
+                },
+            },
+        },
+        MuiAccordion: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#32382c",
+                },
+            },
+        },
+        MuiChip: {
+            styleOverrides: {
+                colorPrimary: {
+                    backgroundColor: "rgba(100, 100, 100, 0.8)",
+                    color: "#ffffff",
+                },
+                colorSuccess: {
+                    backgroundColor: "rgba(36, 112, 150, .8)",
+                    color: "#ffffff",
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#2c382c",
+                },
+            },
         },
     },
 });
