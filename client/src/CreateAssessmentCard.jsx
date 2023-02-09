@@ -55,7 +55,7 @@ const CreateAssessmentCard = (props) => {
                         <TextField label="Due Date" type="datetime-local" defaultValue={dateToStr(details.deadline)} 
                             onChange={(e) => {details.deadline = new Date(e.target.value)}} sx={{ paddingRight: 2}}
                         />
-                        <TextField label="Grade Weight (%)" type="number" value={details.weight} onChange={handleWeightChange} 
+                        <TextField label="Grade Weight (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
                             error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
                             helperText={details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? "The value cannot be above 100" : ""} 
                         />
