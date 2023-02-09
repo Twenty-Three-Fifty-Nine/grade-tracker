@@ -52,7 +52,6 @@ const LoginDialog = (props) => {
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Login</DialogTitle>
             <DialogContent>
-                <DialogContentText>Login to your account</DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
