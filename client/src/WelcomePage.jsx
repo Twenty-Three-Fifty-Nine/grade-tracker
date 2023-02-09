@@ -13,33 +13,20 @@ const WelcomePage = (props) => {
                     justifyContent="center"
                 >
                     <Typography
-                        variant="h2"
+                        variant="h1"
                         component="div"
-                        sx={{ flexGrow: 1, marginTop: 20, marginBottom: 10 }}
+                        sx={{ flexGrow: 1, marginTop: 20, marginBottom: 1 }}
                     >
-                        Welcome to Grade Tracker!
+                        23:59
                     </Typography>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1 }}
-                    >
-                        Grade Tracker is a website that allows you to keep track
-                        of your grades.
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1 }}
-                    >
-                        Click the Login tab to login to your account or the Sign
-                        Up tab to sign up for a new account.
+                    <Typography variant="h5" component="div" sx={{ flexGrow: 1, mb: 2 }}>
+                        Your grade tracking tool.
                     </Typography>
 
                     <Box
                         display="flex"
                         flexDirection="row"
-                        sx={{ flexGrow: 1, marginTop: 20, marginBottom: 20 }}
+                        sx={{ flexGrow: 1, marginTop: 15, marginBottom: 20 }}
                         color="primary.main"
                     >
                         <Login
