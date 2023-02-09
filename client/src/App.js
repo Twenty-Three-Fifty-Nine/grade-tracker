@@ -22,7 +22,7 @@ const App = () => {
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        Temp Grade Tracker Thingy Thing
+                        23:59 Twenty Three Fifty Nine
                     </Typography>
                     {isLoggedIn ? (
                         <Logout
