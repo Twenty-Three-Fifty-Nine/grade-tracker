@@ -83,8 +83,17 @@ const SignupDialog = (props) => {
         setUserDetails,
     ]);
 
+    const handleKeyDown = useCallback(
+        (event) => {
+            if (event.key === "Enter") {
+                handleSignup();
+            }
+        },
+        [handleSignup]
+    );
+
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Signup</DialogTitle>
             <DialogContent>
                 <DialogContentText>
