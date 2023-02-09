@@ -1,11 +1,11 @@
 import React from "react";
-import { AppBar, CssBaseline, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { AppBar, CssBaseline, FormControlLabel, Switch, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import Logout from "./Logout";
 import Login from "./Login";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
 import { lightTheme, darkTheme } from "./Themes";
-
+import { MaterialUISwitch } from "./ThemeSwitch";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -13,7 +13,7 @@ const App = () => {
     const [lightMode, setLightMode] = React.useState(true);
 
     return (
-        <ThemeProvider theme={lightMode ? lightTheme : darkTheme}>
+        <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
             <AppBar position="static" component="nav">
                 <Toolbar>
@@ -35,6 +35,11 @@ const App = () => {
                             setUserDetails={setUserDetails}
                         />
                     )}
+                    <FormControlLabel
+                        control={
+                            <MaterialUISwitch sx={{ m: 1, ml: 4 }} defaultChecked onChange={() => setLightMode(!lightMode)} />
+                        }
+                    />
                 </Toolbar>
             </AppBar>
 
