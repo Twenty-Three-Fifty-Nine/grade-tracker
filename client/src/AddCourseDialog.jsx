@@ -14,6 +14,7 @@ const AddCourseDialog = (props) => {
     const [courseList, setCourseList] = React.useState(null);
 
     const [snackbar, setSnackbar] = React.useState("none");
+    const [isSuccess, setIsSuccess] = React.useState("success");
   
     const handleClose = () => {
         setCourseCode(null);
@@ -42,12 +43,16 @@ const AddCourseDialog = (props) => {
             grades: emptyGrades,
             totalGrade: 0.0
         }).then(() => {
-            if(!assessmentCount) setSnackbar("success");
-            const newCourseList = courseList.filter((c) => c !== code);
-            setCourseList(newCourseList);
+            if(!assessmentCount){
+                setSnackbar("success");
+                setIsSuccess(true);
+            }
             handleClose();
             updateData();
-        }).catch((e) => {setSnackbar("error")})
+        }).catch((e) => {
+            setSnackbar("error");
+            setIsSuccess(false);
+        })
     }
 
     const handleNewCourse = () => {
@@ -107,8 +112,8 @@ const AddCourseDialog = (props) => {
             </Stack>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={snackbar !== "none" ? snackbar : "success"} sx={{ width: '100%' }}>
-                {snackbar === "success" ? "Course added successfully." : "Course already added."}
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+                {isSuccess ? "Course added successfully." : "Course already added."}
             </Alert>
         </Snackbar>
         <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
