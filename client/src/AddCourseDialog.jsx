@@ -43,6 +43,8 @@ const AddCourseDialog = (props) => {
             totalGrade: 0.0
         }).then(() => {
             if(!assessmentCount) setSnackbar("success");
+            const newCourseList = courseList.filter((c) => c !== code);
+            setCourseList(newCourseList);
             handleClose();
             updateData();
         }).catch((e) => {setSnackbar("error")})
@@ -70,9 +72,13 @@ const AddCourseDialog = (props) => {
         let tempList = [];
         Axios.get("http://localhost:3001/api/courses?trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
-                tempList.push(course.CourseCode);
-                console.log(session)
+                let courseAdded = false;
+                trimesters[activeTri.tri-1].forEach((c) => {
+                    if(course.CourseCode === c.code) courseAdded = true;
+                })
+                if(!courseAdded) tempList.push(course.CourseCode);
             });
+            
             setCourseList(tempList);
             setLoading(false);
         });
