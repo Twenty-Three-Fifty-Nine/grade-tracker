@@ -40,7 +40,7 @@ const CreateAssessmentCard = (props) => {
                             error={(details.name.length === 0 || details.name.length > 30) && nameCheckOn} 
                             helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : ""} 
                         />
-                        <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }}} >
+                        <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>
