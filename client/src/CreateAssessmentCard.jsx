@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, CardContent, Stack, Box, IconButton, TextField } from '@mui/material';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { isMobile } from "react-device-detect";
 
 const CreateAssessmentCard = (props) => {
     const {index, removeAssessment, details, checkFormat} = props;
@@ -45,15 +46,26 @@ const CreateAssessmentCard = (props) => {
                     </Box>
                     <Box sx={{display: 'flex'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DesktopDatePicker label="Due Date"
-                                value={details.deadline}
-                                onChange={(newValue) => {
-                                    details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
-                                    setUpdater(!updater);
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                                
-                            />
+                            {isMobile ? 
+                                <MobileDatePicker label="Due Date"
+                                    value={details.deadline}
+                                    onChange={(newValue) => {
+                                        details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
+                                        setUpdater(!updater);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                    
+                                /> :
+                                <DesktopDatePicker label="Due Date"
+                                    value={details.deadline}
+                                    onChange={(newValue) => {
+                                        details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
+                                        setUpdater(!updater);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                    
+                                />
+                            }
                         </LocalizationProvider>
                         <TextField label="Grade Weight (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
                             sx={{ marginLeft: 2}}

@@ -8,6 +8,7 @@ import { lightTheme, darkTheme } from "./Themes";
 import { MaterialUISwitch } from "./ThemeSwitch";
 import logoLight from "./2359LogoLight.svg";
 import logoDark from "./2359LogoDark.svg";
+import { isMobile } from "react-device-detect";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -22,18 +23,25 @@ const App = () => {
                     <Box
                         component="img"
                         src={!lightMode ? logoLight : logoDark}
-                        sx={{ width: 50, height: 50 }}
+                        sx={{ width: isMobile ? 40 : 50, height: isMobile ? 40 : 50 }}
                     />
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 2 }}>
-                        Twenty Three Fifty Nine
-                    </Typography>
+                    
+                    <Box sx={{ flexGrow: 1, ml: 2 }}>
+                        {
+                            !isMobile && 
+                            <Typography variant="h6" component="div" >
+                                Twenty Three Fifty Nine
+                            </Typography>
+                        }
+                    </Box>
+                    
                     {isLoggedIn ? (
                         <Logout
                             setIsLoggedIn={setIsLoggedIn}
                             setUserDetails={setUserDetails}
                         />
                     ) : (
-                        <Login
+                        !isMobile && <Login
                             setIsLoggedIn={setIsLoggedIn}
                             setUserDetails={setUserDetails}
                         />
@@ -41,7 +49,7 @@ const App = () => {
                     <FormControlLabel
                         control={
                             <MaterialUISwitch
-                                sx={{ m: 1, ml: 4 }}
+                                sx={{ ml: 4, mr: isMobile ? -3 : 0 }}
                                 defaultChecked
                                 onChange={() => setLightMode(!lightMode)}
                             />
