@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Alert, FormControlLabel, Snackbar, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
@@ -35,9 +35,18 @@ const NewCourseDialog = (props) => {
     const [codeCheckOn, setCodeCheckOn] = React.useState(false);
     const [formatValid, setFormatValid] = React.useState(false);
 
+
+    const checkFormat = useCallback(() => {
+        let valid = nameValid && codeValid && assessments.length > 0;
+        for(const assessment of assessments){
+            if(!assessment.valid) valid = false;
+        }
+        setFormatValid(valid);
+    }, [nameValid, codeValid, assessments]);
+    
     useEffect(() => {
         checkFormat();
-    }, [nameValid, codeValid, assessments])
+    }, [nameValid, codeValid, assessments, checkFormat])
 
     const handleNameChange = (e) => {
         setCourseName(e.target.value);
@@ -51,14 +60,6 @@ const NewCourseDialog = (props) => {
         let match = e.target.value.match(exp);
         setCodeValid(match !== null && match[0] === e.target.value);
         setCodeCheckOn(true);
-    }
-
-    const checkFormat = () => {
-        let valid = nameValid && codeValid && assessments.length > 0;
-        for(const assessment of assessments){
-            if(!assessment.valid) valid = false;
-        }
-        setFormatValid(valid);
     }
 
     const addAssessment = () => {

@@ -1,7 +1,6 @@
 import React from "react";
-import { AppBar, Box, CssBaseline, FormControlLabel, Switch, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import Logout from "./Logout";
-import Login from "./Login";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
 import { lightTheme, darkTheme } from "./Themes";
@@ -44,13 +43,8 @@ const App = () => {
                     </Typography>
                     <Box sx={{visibility: "hidden", flexGrow: 1}} />
                     
-                    {isLoggedIn ? (
+                    {isLoggedIn && (
                         <Logout
-                            setIsLoggedIn={setIsLoggedIn}
-                            setUserDetails={setUserDetails}
-                        />
-                    ) : (
-                        !isMobile && <Login
                             setIsLoggedIn={setIsLoggedIn}
                             setUserDetails={setUserDetails}
                         />

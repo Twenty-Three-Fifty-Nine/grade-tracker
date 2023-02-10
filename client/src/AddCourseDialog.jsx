@@ -4,6 +4,7 @@ import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
 import { isMobile } from "react-device-detect";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const AddCourseDialog = (props) => {
     const { onClose, open, activeTri, updateData } = props;
@@ -103,7 +104,7 @@ const AddCourseDialog = (props) => {
                 renderInput={(params) => <TextField {...params} label="Course Code" />}
                 value={courseCode} onChange={(e, value) => { setCourseCode(value); }} />
                 <IconButton onClick={() => getTemplatesList()}>
-                    <Icon fontSize="large" sx={{ paddingTop: 0 }}> refresh </Icon>
+                    <RefreshIcon fontSize='large' />
                 </IconButton>
             </Stack>
             <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3}}> 
