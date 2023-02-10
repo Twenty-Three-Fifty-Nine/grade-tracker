@@ -34,12 +34,12 @@ const CreateAssessmentCard = (props) => {
             <CardContent>
                 <Stack spacing={2}>
                     <Box sx={{display: 'flex'}}>
-                        <TextField label="Assessment Name" sx={{ width: 400, paddingRight: 5}} 
+                        <TextField label="Assessment Name" fullWidth
                             value={details.name} onChange={handleNameChange} 
                             error={(details.name.length === 0 || details.name.length > 30) && nameCheckOn} 
                             helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : ""} 
                         />
-                        <IconButton onClick={() => removeAssessment(index)}>
+                        <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }}} >
                             <DeleteIcon />
                         </IconButton>
                     </Box>
