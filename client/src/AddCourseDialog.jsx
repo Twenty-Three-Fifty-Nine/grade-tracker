@@ -3,6 +3,7 @@ import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Ic
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
+import { isMobile } from "react-device-detect";
 
 const AddCourseDialog = (props) => {
     const { onClose, open, activeTri, updateData } = props;
@@ -94,7 +95,9 @@ const AddCourseDialog = (props) => {
     return (
         <>
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle sx={{ textAlign:"center", padding: 5, paddingBottom: 2 }}>Add Course for Trimester {activeTri.tri} {activeTri.year}</DialogTitle>
+            <DialogTitle sx={{ textAlign:"center", padding: 5, pr: isMobile ? 12 : 5, pl: isMobile ? 12 : 5, paddingBottom: 2}}>
+                Add Course for {isMobile && <br />} Trimester {activeTri.tri} {activeTri.year}
+            </DialogTitle>
             <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
                 <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: 240 }} 
                 renderInput={(params) => <TextField {...params} label="Course Code" />}
@@ -112,7 +115,7 @@ const AddCourseDialog = (props) => {
             </Stack>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
                 {isSuccess ? "Course added successfully." : "Course already added."}
             </Alert>
         </Snackbar>

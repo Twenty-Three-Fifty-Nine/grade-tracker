@@ -3,6 +3,7 @@ import { Box, Fab, Icon, Tab, Tabs, Typography } from '@mui/material';
 import YearOverview from './YearOverview';
 import AddCourseDialog from './AddCourseDialog';
 import Axios from 'axios';
+import { isMobile } from "react-device-detect";
 
 class Course {
     constructor(code, names, weights, deadlines, grades, totalGrade) {
@@ -126,8 +127,8 @@ const GradesOverview = (props) => {
                 { baseYear + selectedYear <= activeTri.year ? 
                         <YearOverview /> :
                         <Box sx={{ mt: 30 }}>
-                            <Typography variant="h5" sx={{ textAlign: 'center', marginTop: 2 }}>Academic year is not currently active.</Typography>
-                            <Typography variant="h5" sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
+                            <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 2 }}>Academic year is not currently active.</Typography>
+                            <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
                         </Box>
                 }
                 <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear > new Date().getFullYear()} sx={{position: 'absolute', bottom: 32, right: 32}}>

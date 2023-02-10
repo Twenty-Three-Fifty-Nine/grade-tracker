@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Alert, FormControlLabel, Snackbar, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
+import { isMobile } from "react-device-detect";
 
 class Assessment {
     constructor(name, weight, deadline, valid) {
@@ -128,7 +129,7 @@ const NewCourseDialog = (props) => {
                     <IconButton color="inherit" onClick={stopCreating}>
                         <Icon>close</Icon>
                     </IconButton>
-                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant="h6"> Create New Course for Trimester {activeTri.tri} </Typography>
+                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> Create New Course for Trimester {activeTri.tri} </Typography>
                     <Button color="inherit" onClick={createCourse} disabled={!formatValid}> Create </Button>
                 </Toolbar>
             </AppBar>
@@ -136,15 +137,15 @@ const NewCourseDialog = (props) => {
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
-                    <TextField value={courseName} label="Course Name" sx={{ width: 500 }} onChange={handleNameChange} error={!nameValid && nameCheckOn} 
+                    <TextField value={courseName} label="Course Name" fullWidth onChange={handleNameChange} error={!nameValid && nameCheckOn} 
                         helperText={courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : courseName.length > 50 && nameCheckOn ? "This field  is too long" : ""} 
                     />
-                    <Box>
-                        <TextField value={courseCode} label="Course Code" sx={{ width: 200 }} onChange={handleCodeChange} 
+                    <Box sx={{ display: "flex", justifyItems: "center" }}>
+                        <TextField value={courseCode} label="Course Code" sx={{ width: isMobile ? "100%" : "40%" }} onChange={handleCodeChange} 
                             error={!codeValid && codeCheckOn} 
                             helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
                         />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{padding: 0.7, paddingLeft: 6}}/>
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{m: isMobile ? "0 auto" : 0.7, ml: isMobile ? "auto" : 3}}/>
                     </Box>
                 </Stack>
 
@@ -162,7 +163,7 @@ const NewCourseDialog = (props) => {
             </Box>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
                 {isSuccess ? "Course created successfully." : "Course template exists already."}
             </Alert>
         </Snackbar>
