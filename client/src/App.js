@@ -44,13 +44,8 @@ const App = () => {
                     </Typography>
                     <Box sx={{visibility: "hidden", flexGrow: 1}} />
                     
-                    {isLoggedIn ? (
+                    {isLoggedIn && (
                         <Logout
-                            setIsLoggedIn={setIsLoggedIn}
-                            setUserDetails={setUserDetails}
-                        />
-                    ) : (
-                        !isMobile && <Login
                             setIsLoggedIn={setIsLoggedIn}
                             setUserDetails={setUserDetails}
                         />
