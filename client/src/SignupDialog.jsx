@@ -143,7 +143,7 @@ const SignupDialog = (props) => {
                     <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordSpecial ? <CheckCircleIcon sx={{color:'success.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one special character</Typography>
                     <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordMatch ? <CheckCircleIcon sx={{color:'success.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must match</Typography>
                 </Box>
-                {signupError && <Alert severity="error">{signupErrorText}</Alert>}
+                {signupError && <Alert severity="error" sx={{ mt: 2 }}>{signupErrorText}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
