@@ -19,21 +19,30 @@ const App = () => {
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
             <AppBar position="static" component="nav">
-                <Toolbar>
+                <Toolbar sx={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <Box
                         component="img"
                         src={!lightMode ? logoLight : logoDark}
                         sx={{ width: isMobile ? 40 : 50, height: isMobile ? 40 : 50 }}
                     />
                     
-                    <Box sx={{ flexGrow: 1, ml: 2 }}>
+                    <Box sx={{ ml: 2 }}>
                         {
                             !isMobile && 
                             <Typography variant="h6" component="div" >
-                                Twenty Three Fifty Nine
+                                Twenty Three Fifty Nine 
                             </Typography>
                         }
                     </Box>
+
+                    <Box sx={{visibility: "hidden", flexGrow: isMobile ? 0 : 0.85}} />
+                    <Typography variant="h6" component="div">
+                            { isLoggedIn ? userDetails.displayName + 
+                                (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "'" : "'s") 
+                                + " Overview") : ""
+                            }
+                    </Typography>
+                    <Box sx={{visibility: "hidden", flexGrow: 1}} />
                     
                     {isLoggedIn ? (
                         <Logout
