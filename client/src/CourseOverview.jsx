@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Chip, Divider, Typography } from '@mui/material';
+import { isMobile } from "react-device-detect";
 
 const CourseOverview = ({courseInfo}) => {
     return (
         <Card sx={{maxWidth: 500}}>
             <CardActionArea>
                 <CardContent sx={{display: 'flex'}}>
-                    <Typography variant="h5" component="div" sx={{minWidth: 130}}>
+                    <Typography variant={isMobile ? "h6" : "h5"} component="div" sx={{minWidth: isMobile ? 110 : 130}}>
                         {courseInfo.code}
                     </Typography>
                     <Divider orientation="vertical" flexItem />
