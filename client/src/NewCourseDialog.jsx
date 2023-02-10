@@ -146,7 +146,7 @@ const NewCourseDialog = (props) => {
                             error={!codeValid && codeCheckOn} 
                             helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
                         />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{m: isMobile ? "0 auto" : 0.7, ml: isMobile ? "auto" : 3}}/>
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{m: isMobile ? "0 auto" : 0.7, ml: isMobile ? "auto" : 3, position: 'relative', top: !codeValid && codeCheckOn ? -11 : 0 }}/>
                     </Box>
                 </Stack>
 
