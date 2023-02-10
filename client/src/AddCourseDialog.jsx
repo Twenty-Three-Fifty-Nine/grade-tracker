@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, Icon, IconButton, Snackbar, Stack, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
@@ -49,6 +49,7 @@ const AddCourseDialog = (props) => {
                 setSnackbar("success");
                 setIsSuccess(true);
             }
+            setCourseList((courseList) => courseList.filter((course) => course !== code));
             handleClose();
             updateData();
         }).catch((e) => {
