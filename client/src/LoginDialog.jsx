@@ -9,6 +9,7 @@ import {
     TextField,
 } from "@mui/material";
 import Axios from "axios";
+import Cookies from 'universal-cookie';
 
 const LoginDialog = (props) => {
     const { onClose, open, setIsLoggedIn, setUserDetails } = props;
@@ -30,6 +31,7 @@ const LoginDialog = (props) => {
             .then((result) => {
                 setIsLoggedIn(true);
                 setUserDetails(result.data);
+                new Cookies().set('userDetails', result.data, { path: '/' });
                 handleClose();
             })
             .catch((e) => {
