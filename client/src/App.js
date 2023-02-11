@@ -29,7 +29,7 @@ const App = () => {
     return (
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
-            <AppBar position="static" component="nav">
+            <AppBar position="fixed" component="nav">
                 <Toolbar sx={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <Box
                         component="img"
@@ -72,20 +72,22 @@ const App = () => {
                     />
                 </Toolbar>
             </AppBar>
-
-            {!isLoggedIn ? 
-                <WelcomePage
-                    setIsLoggedIn={setIsLoggedIn}
-                    setUserDetails={setUserDetails}
-                />
-            : viewedCourse ? 
-                <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} />
-            :   <GradesOverview
-                    userEmail={userDetails.email}
-                    userName={userDetails.name}
-                    setViewedCourse={setViewedCourse}
-                />
-            }
+            
+            <Box sx={{mt: 8.5}}>
+                {!isLoggedIn ? 
+                    <WelcomePage
+                        setIsLoggedIn={setIsLoggedIn}
+                        setUserDetails={setUserDetails}
+                    />
+                : viewedCourse ? 
+                    <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} />
+                :   <GradesOverview
+                        userEmail={userDetails.email}
+                        userName={userDetails.name}
+                        setViewedCourse={setViewedCourse}
+                    />
+                }
+            </Box>
         </ThemeProvider>
     );
 };

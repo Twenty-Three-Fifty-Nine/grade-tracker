@@ -88,7 +88,7 @@ const CourseViewer = (props) => {
                                 <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
-                                <Tooltip title={<h3>Delete Course</h3>} placement="bottom" arrow>
+                                <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
                                     <IconButton color="error" size="medium">
                                         <DeleteIcon />
                                     </IconButton>
