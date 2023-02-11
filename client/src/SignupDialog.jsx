@@ -66,19 +66,22 @@ const SignupDialog = (props) => {
             return;
         }
 
-        await Axios.post("http://localhost:3001/api/users", {
-            name: displayName,
-            email: email,
-            password: password,
-        })
+        await Axios.post(
+            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
+            {
+                displayName: displayName,
+                email: email,
+                password: password,
+            }
+        )
             .then((result) => {
                 setIsLoggedIn(true);
                 const data = {
                     displayName: displayName,
                     email: email,
-                }
+                };
                 setUserDetails(data);
-                new Cookies().set('userDetails', data, { path: '/' });
+                new Cookies().set("userDetails", data, { path: "/" });
                 handleClose();
             })
             .catch((e) => {
