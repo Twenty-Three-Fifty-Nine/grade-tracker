@@ -3,6 +3,7 @@ import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typ
 import Logout from "./Logout";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
+import CourseViewer from "./CourseViewer";
 import { lightTheme, darkTheme } from "./Themes";
 import { MaterialUISwitch } from "./ThemeSwitch";
 import logoLight from "./2359LogoLight.svg";
@@ -14,6 +15,7 @@ const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [userDetails, setUserDetails] = React.useState({});
     const [lightMode, setLightMode] = React.useState(true);
+    const [viewedCourse, setViewedCourse] = React.useState(null);
 
     React.useEffect(() => {
         const cookies = new Cookies();
@@ -44,11 +46,11 @@ const App = () => {
                         }
                     </Box>
 
-                    <Box sx={{visibility: "hidden", flexGrow: isMobile ? 0 : 0.85}} />
+                    <Box sx={{visibility: "hidden", flexGrow: isMobile ? 0 : 0.86}} />
                     <Typography variant="h6" component="div">
                             { isLoggedIn ? userDetails.displayName + 
-                                (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "'" : "'s") 
-                                + " Overview") : ""
+                                (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "'" : "'s ") 
+                                + (viewedCourse ? viewedCourse.code : "Overview")) : ""
                             }
                     </Typography>
                     <Box sx={{visibility: "hidden", flexGrow: 1}} />
@@ -71,17 +73,19 @@ const App = () => {
                 </Toolbar>
             </AppBar>
 
-            {!isLoggedIn ? (
+            {!isLoggedIn ? 
                 <WelcomePage
                     setIsLoggedIn={setIsLoggedIn}
                     setUserDetails={setUserDetails}
                 />
-            ) : (
-                <GradesOverview
+            : viewedCourse ? 
+                <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} />
+            :   <GradesOverview
                     userEmail={userDetails.email}
                     userName={userDetails.name}
+                    setViewedCourse={setViewedCourse}
                 />
-            )}
+            }
         </ThemeProvider>
     );
 };
