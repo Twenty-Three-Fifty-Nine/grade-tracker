@@ -50,12 +50,15 @@ const CourseViewer = (props) => {
                     Introduction to Computer Program Design and Other Long Things
                 </Typography>
                 <Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
-                    <Stack spacing={2} sx={{flexGrow: 1, flexBasis: 0}}>
+                    <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Trimester {courseData.tri} - {courseData.year}
                         </Typography>
+                        <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                            23% Completed
+                        </Typography>
                         <Box sx={{alignSelf:"center"}}>
-                            <Button variant="contained" sx={{fontSize:"large", pt: 1, mt: 2}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
+                            <Button variant="contained" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
                         </Box>
                     </Stack>
 
@@ -76,7 +79,7 @@ const CourseViewer = (props) => {
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Last synced to template: 15/3/2022
                         </Typography>
-                        <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1}}>
+                        <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" sx={{fontSize:"large"}}> Update Course </Button>
                             </Box>
