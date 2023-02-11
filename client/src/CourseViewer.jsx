@@ -5,6 +5,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
@@ -86,6 +87,13 @@ const CourseViewer = (props) => {
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
                             </Box>
+                            <Box sx={{alignSelf:"center"}}>
+                                <Tooltip title={<h3>Delete Course</h3>} placement="bottom" arrow>
+                                    <IconButton color="error" size="medium">
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
                         </Stack>
                     </Stack>
                 </Stack>
@@ -100,6 +108,7 @@ const CourseViewer = (props) => {
                             name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} 
                         />
                     ))} 
+                    <Button variant="contained"> Add Assessment </Button>
                 </Stack>
 
                 <Box sx={{alignSelf:"baseline", flexGrow: 1, flexBasis: 0}}>

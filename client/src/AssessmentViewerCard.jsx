@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton } from "@mui/material";
+import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton, Avatar, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -33,13 +33,18 @@ const AssessmentViewerCard = (props) => {
         <Card>
             <CardContent sx={{display: 'flex'}}>
                 <Stack spacing={1}>
-                    <Stack direction="row" sx={{display:"flex"}}>
-                        <Typography variant={"h5"} component="div" sx={{minWidth: 350}}>
+                    <Stack direction="row"sx={{display:"flex", minWidth: 350}}>
+                        <Typography variant={"h5"} component="div" sx={{mr: 1}}>
                             {name}
                         </Typography>
-                        <IconButton sx={{ml:"auto", mt:-0.5}}>
-                            <EditIcon />
-                        </IconButton>
+                        <Tooltip title={<h3>Assignment</h3>} placement="right" arrow>
+                            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
+                        </Tooltip>
+                        <Tooltip title={<h3>Edit Assessment</h3>} placement="bottom" arrow>
+                            <IconButton sx={{ml:"auto", mt:-0.5}}>
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Stack>
                     <Divider />
                     <Typography variant={"h6"} component="div" >
