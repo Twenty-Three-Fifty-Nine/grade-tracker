@@ -26,24 +26,10 @@ const AddCourseDialog = (props) => {
     const handleAddCourse = async (code = courseCode, assessmentCount) => {
         console.log("Adding course " + code + " to user");
         
-        let emptyGrades = "";
-        if(assessmentCount){
-            for(let i = 0; i < assessmentCount; i++) emptyGrades += "null";
-        }else{
-            await Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + activeTri.tri).then((result) => { 
-                result.data.forEach((a) => {
-                    emptyGrades += "null";
-                })
-            });
-        }
-        
-        await Axios.post("http://localhost:3001/api/user/courses", {
-            userID: session.userData.email,
+        await Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + session.userData.email + "/courses", {
             courseCode: code,
             year: activeTri.year,
             trimester: activeTri.tri,
-            grades: emptyGrades,
-            totalGrade: 0.0
         }).then(() => {
             if(!assessmentCount){
                 setSnackbar("success");
@@ -78,15 +64,17 @@ const AddCourseDialog = (props) => {
         
         setLoading(true);
         let tempList = [];
-        Axios.get("http://localhost:3001/api/courses?trimester=" + activeTri.tri).then((courses) => {
+        Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
+                console.log(course);
                 let courseAdded = false;
-                trimesters[activeTri.tri-1].forEach((c) => {
-                    if(course.CourseCode === c.code) courseAdded = true;
+                const courseCode = course.codeYearTri.split("|")[0];
+                trimesters[activeTri.tri - 1].forEach((c) => {
+                    if (courseCode === c.code) courseAdded = true;
                 })
-                if(!courseAdded) tempList.push(course.CourseCode);
+                if (!courseAdded) tempList.push(courseCode);
             });
-            
+            console.log(tempList);
             setCourseList(tempList);
             setLoading(false);
         });
