@@ -81,7 +81,7 @@ const CourseViewer = (props) => {
                         </Typography>
                         <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}}> Update Course </Button>
+                                <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
@@ -166,6 +166,8 @@ const CourseViewer = (props) => {
                     <ChevronLeftIcon fontSize="large" />
                 </Fab>
             </Tooltip>
+
+            <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained"> Save Changes</Button>
         </Box>
     )
 }
