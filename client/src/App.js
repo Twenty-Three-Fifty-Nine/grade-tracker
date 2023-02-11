@@ -71,15 +71,15 @@ const App = () => {
                 </Toolbar>
             </AppBar>
 
-            {isLoggedIn ? (
-                <GradesOverview
-                    userEmail={userDetails.email}
-                    userName={userDetails.name}
-                />
-            ) : (
+            {!isLoggedIn ? (
                 <WelcomePage
                     setIsLoggedIn={setIsLoggedIn}
                     setUserDetails={setUserDetails}
+                />
+            ) : (
+                <GradesOverview
+                    userEmail={userDetails.email}
+                    userName={userDetails.name}
                 />
             )}
         </ThemeProvider>
