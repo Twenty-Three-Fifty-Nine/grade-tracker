@@ -4,11 +4,17 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
     const [sortType, setSortType] = React.useState("deadline-a");
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+    const [finishedFilter, setFinishedFilter] = React.useState(false);
+    const [missingGradeFilter, setMissingGradeFilter] = React.useState(false);
+    const [pastDeadlineFilter, setPastDeadlineFilter] = React.useState(false);
+    const [testFilter, setTestFilter] = React.useState(false);
+    const [assignmentFilter, setAssignmentFilter] = React.useState(false);
 
     let handleKeyDown = null;
 
@@ -106,14 +112,35 @@ const CourseViewer = (props) => {
                         {filterPanelOpen && <Card sx={{width: 300}}>
                             <CardContent>
                                 <Stack spacing={0.5}>
-                                    <FormControlLabel control={<Checkbox />} label="Finished" sx={{ml:0 }}/>
-                                    <FormControlLabel control={<Checkbox />} label="Missing Grade" />
-                                    <FormControlLabel control={<Checkbox />} label="Past Deadline" />
-                                    <FormControlLabel control={<Checkbox />} label="Test" />
-                                    <FormControlLabel control={<Checkbox />} label="Assignment" />
+                                    <FormControlLabel control={<Checkbox checked={finishedFilter} 
+                                        onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" sx={{ml:0 }}/>
+                                    <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
+                                        onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
+                                    <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
+                                        onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
+                                    <FormControlLabel control={<Checkbox checked={testFilter} 
+                                        onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
+                                    <FormControlLabel control={<Checkbox checked={assignmentFilter} 
+                                        onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
                                 </Stack>
                             </CardContent>
                         </Card>}
+                        <Box sx={{display:"flex", flexWrap:"wrap", gap: 1.5, width:300}}>
+                            {finishedFilter && <Chip label="Finished" deleteIcon={<ClearIcon />} onDelete={() => {setFinishedFilter(false)}} sx={{width: 100}} />}
+                            {missingGradeFilter && <Chip label="Missing Grade" deleteIcon={<ClearIcon />} onDelete={() => {setMissingGradeFilter(false)}} sx={{width: 130}} />}
+                            {pastDeadlineFilter && <Chip label="Past Deadline" deleteIcon={<ClearIcon />} onDelete={() => {setPastDeadlineFilter(false)}} sx={{width: 130}} />}
+                            {testFilter && <Chip label="Test" deleteIcon={<ClearIcon />} onDelete={() => {setTestFilter(false)}} sx={{width: 75}} />}
+                            {assignmentFilter && <Chip label="Assignment" deleteIcon={<ClearIcon />} onDelete={() => {setAssignmentFilter(false)}} sx={{width: 120}} />}
+                            {(finishedFilter || missingGradeFilter || pastDeadlineFilter || testFilter || assignmentFilter) && 
+                                <Chip color="secondary" label="Clear Filters" onClick={() => {
+                                    setFinishedFilter(false);
+                                    setMissingGradeFilter(false);
+                                    setPastDeadlineFilter(false);
+                                    setTestFilter(false);
+                                    setAssignmentFilter(false);
+                                }
+                            } sx={{width: 100}} />}
+                        </Box>
                     </Stack>
                 </Box>  
                 
