@@ -8,11 +8,21 @@ import { MaterialUISwitch } from "./ThemeSwitch";
 import logoLight from "./2359LogoLight.svg";
 import logoDark from "./2359LogoDark.svg";
 import { isMobile } from "react-device-detect";
+import Cookies from 'universal-cookie';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [userDetails, setUserDetails] = React.useState({});
     const [lightMode, setLightMode] = React.useState(true);
+
+    React.useEffect(() => {
+        const cookies = new Cookies();
+        const detailsCookie = cookies.get('userDetails');
+        if(detailsCookie){
+            setUserDetails(detailsCookie);
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     return (
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
