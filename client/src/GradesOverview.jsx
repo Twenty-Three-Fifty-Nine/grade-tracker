@@ -26,7 +26,8 @@ class Course {
     }
 
     getCourseLetter() {
-        if(this.totalGrade >= 90) return "A+";
+        if(isNaN(this.totalGrade)) return "N/A";
+        else if(this.totalGrade >= 90) return "A+";
         else if(this.totalGrade >= 85) return "A";
         else if(this.totalGrade >= 80) return "A-";
         else if(this.totalGrade >= 75) return "B+";
@@ -133,7 +134,7 @@ const GradesOverview = (props) => {
                                 <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
                             </Box>
                     }
-                    <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear !== activeTri.year} sx={{position: 'absolute', bottom: 32, right: 32}}>
+                    <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: 32, right: 32}}>
                         <Icon>add</Icon>
                     </Fab>
                     <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} />

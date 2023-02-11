@@ -2,23 +2,33 @@ import { Typography, Stack, Button, Box, Chip, Divider, Fab} from "@mui/material
 import React, {useCallback} from "react";
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import AssessmentViewerCard from "./AssessmentViewerCard";
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
 
-    React.useEffect(() => {
-        document.addEventListener("keydown", e => handleKeyDown(e), false);
-    }, []);
+    let handleKeyDown = null;
 
-    const handleKeyDown = useCallback(
+    const exitViewer = useCallback(
+        () => {
+            document.removeEventListener("keydown", handleKeyDown, false);
+            setViewedCourse(null);
+        },
+        [handleKeyDown, setViewedCourse]
+    );
+
+    handleKeyDown = useCallback(
         (event) => {
             if(event.key === "Escape") {
-                console.log(1)
-                setViewedCourse(null);
+                exitViewer();
             }
         },
-        [setViewedCourse]
+        [exitViewer]
     );
+
+    React.useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown, false);
+    }, [handleKeyDown]);
 
     return (
         <Box>  
@@ -41,8 +51,8 @@ const CourseViewer = (props) => {
                             Currently Achieved:
                         </Typography>
                         <Stack direction="row" spacing={10} sx={{alignItems:"center", justifyContent:"center"}}>
-                            <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main"}} />
-                            <Chip label={courseData.getCourseLetter()} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main"}} />
+                            <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                            <Chip label={courseData.getCourseLetter()} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                         </Stack>
                     </Stack>
 
@@ -56,8 +66,17 @@ const CourseViewer = (props) => {
                     </Stack>
                 </Stack>
             </Box>
-            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10}} />
-            <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'absolute', bottom: 32, left: 32}}>
+            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10, mb: 5}} />
+
+            <Stack spacing={3} sx={{display:"flex", justifyContent:"center", alignItems:"center", mb: 5}}>
+                {courseData.names.map((name, index) => (
+                    <AssessmentViewerCard sx={{margin:"0 auto"}} key={name}
+                        name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} 
+                    />
+                ))} 
+            </Stack>
+
+            <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
                 <ChevronLeftIcon fontSize="large" />
             </Fab>
         </Box>

@@ -1,0 +1,69 @@
+import React from "react";
+import { Card, CardContent, Typography, Divider, Stack, TextField, Box } from "@mui/material";
+import dayjs from "dayjs";
+
+const AssessmentViewerCard = (props) => {
+    const { name, deadline, weight, constGrade} = props;
+    const [ grade, setGrade ] = React.useState(constGrade);
+    const [ valid, setValid ] = React.useState(isNaN(grade) || (grade >= 0 && grade < 100));
+
+    const getCourseLetter = () => {
+        if(isNaN(grade) || !valid) return "-";
+        else if(grade >= 90) return "A+";
+        else if(grade >= 85) return "A";
+        else if(grade >= 80) return "A-";
+        else if(grade >= 75) return "B+";
+        else if(grade >= 70) return "B";
+        else if(grade >= 65) return "B-";
+        else if(grade >= 60) return "C+";
+        else if(grade >= 55) return "C";
+        else if(grade >= 50) return "C-";
+        else if(grade >= 40) return "D";
+        return "E";
+    }
+
+    const handleGradeChange = (e) => {
+        if(e.target.value === "") setGrade(NaN);
+        else setGrade(e.target.value);
+        setValid(isNaN(e.target.value) || (e.target.value >= 0 && e.target.value <= 100))
+    }
+
+    return (
+        <Card onClick={() => {}} >
+            <CardContent sx={{display: 'flex'}}>
+                <Stack spacing={1}>
+                    <Typography variant={"h5"} component="div" sx={{minWidth: 350}}>
+                        {name}
+                    </Typography>
+                    <Divider sx={{mr: 1000}} />
+                    <Typography variant={"h6"} component="div" >
+                        Due: {new dayjs(deadline).format("DD/MM/YYYY")}
+                    </Typography>
+                    <Typography variant={"h6"} component="div">
+                        Worth: {weight}%
+                    </Typography>
+                </Stack>
+                <Divider orientation="vertical" flexItem sx={{borderRightWidth: 3, mr: 5, ml: 2}} />
+                <Stack spacing={1} sx={{pr: 3, minWidth: 290}} >
+                    <Typography variant={"h5"} component="div">
+                        Grade
+                    </Typography>
+                    <Stack direction="row">
+                        <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35} }} 
+                            value={isNaN(grade) ? "" : grade} sx={{ fontSize:"large", width: 150}} 
+                            error={!valid}
+                            onChange={handleGradeChange}
+                        />
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, color: isNaN(grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
+                            <Typography variant={"h3"} component="div">
+                                {getCourseLetter()}
+                            </Typography>
+                        </Box>
+                    </Stack>
+                </Stack>
+            </CardContent>
+        </Card>
+    );
+}
+
+export default AssessmentViewerCard;
