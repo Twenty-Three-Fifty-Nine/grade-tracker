@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import Axios from 'axios';
+import Cookies from 'universal-cookie';
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -73,10 +74,11 @@ const SignupDialog = (props) => {
             .then((result) => {
                 setIsLoggedIn(true);
                 const data = {
-                    name: displayName,
+                    displayName: displayName,
                     email: email,
                 }
                 setUserDetails(data);
+                new Cookies().set('userDetails', data, { path: '/' });
                 handleClose();
             })
             .catch((e) => {
