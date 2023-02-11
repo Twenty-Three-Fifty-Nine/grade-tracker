@@ -1,6 +1,7 @@
 import React from "react";
-import { Card, CardContent, Typography, Divider, Stack, TextField, Box } from "@mui/material";
+import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton } from "@mui/material";
 import dayjs from "dayjs";
+import EditIcon from '@mui/icons-material/Edit';
 
 const AssessmentViewerCard = (props) => {
     const { name, deadline, weight, constGrade} = props;
@@ -32,10 +33,15 @@ const AssessmentViewerCard = (props) => {
         <Card>
             <CardContent sx={{display: 'flex'}}>
                 <Stack spacing={1}>
-                    <Typography variant={"h5"} component="div" sx={{minWidth: 350}}>
-                        {name}
-                    </Typography>
-                    <Divider sx={{mr: 1000}} />
+                    <Stack direction="row" sx={{display:"flex"}}>
+                        <Typography variant={"h5"} component="div" sx={{minWidth: 350}}>
+                            {name}
+                        </Typography>
+                        <IconButton sx={{ml:"auto", mt:-0.5}}>
+                            <EditIcon />
+                        </IconButton>
+                    </Stack>
+                    <Divider />
                     <Typography variant={"h6"} component="div" >
                         Due: {new dayjs(deadline).format("DD/MM/YYYY")}
                     </Typography>
@@ -44,8 +50,8 @@ const AssessmentViewerCard = (props) => {
                     </Typography>
                 </Stack>
                 <Divider orientation="vertical" flexItem sx={{borderRightWidth: 3, mr: 5, ml: 2}} />
-                <Stack spacing={1} sx={{pr: 3, minWidth: 290}} >
-                    <Typography variant={"h5"} component="div">
+                <Stack spacing={1} sx={{pr: 0, minWidth: 290}} >
+                    <Typography variant={"h5"} component="div" sx={{flex:1}}>
                         Grade
                     </Typography>
                     <Stack direction="row">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Fab, Icon, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { Box, Fab, Icon, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import YearOverview from './YearOverview';
 import AddCourseDialog from './AddCourseDialog';
 import Axios from 'axios';
