@@ -29,7 +29,7 @@ const AssessmentViewerCard = (props) => {
     }
 
     return (
-        <Card onClick={() => {}} >
+        <Card>
             <CardContent sx={{display: 'flex'}}>
                 <Stack spacing={1}>
                     <Typography variant={"h5"} component="div" sx={{minWidth: 350}}>
