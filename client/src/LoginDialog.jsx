@@ -24,14 +24,17 @@ const LoginDialog = (props) => {
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
-        await Axios.post("http://localhost:3001/api/authorise", {
-            email: email,
-            password: password,
-        })
+        await Axios.post(
+            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/authorise",
+            {
+                email: email,
+                password: password,
+            }
+        )
             .then((result) => {
                 setIsLoggedIn(true);
                 setUserDetails(result.data);
-                new Cookies().set('userDetails', result.data, { path: '/' });
+                new Cookies().set("userDetails", result.data, { path: "/" });
                 handleClose();
             })
             .catch((e) => {
