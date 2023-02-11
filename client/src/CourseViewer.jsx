@@ -1,4 +1,4 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox} from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox} from "@mui/material";
 import React, {useCallback} from "react";
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -94,9 +94,11 @@ const CourseViewer = (props) => {
                 <Box sx={{alignSelf:"baseline", flexGrow: 1, flexBasis: 0}}>
                     <Stack spacing={2}>
                         <Stack spacing={2} direction={"row"}>
-                            <IconButton onClick={() => {setFilterPanelOpen(!filterPanelOpen)}}>
-                                <FilterListIcon fontSize="large"/>
-                            </IconButton>
+                            <Tooltip title={<h3>Filter assessments</h3>} placement="top" arrow>
+                                <IconButton onClick={() => {setFilterPanelOpen(!filterPanelOpen)}}>
+                                    <FilterListIcon fontSize="large"/>
+                                </IconButton>
+                            </Tooltip>
                             <FormControl sx={{width:200}}>
                                 <InputLabel> Sort By </InputLabel>
                                 <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
@@ -112,8 +114,10 @@ const CourseViewer = (props) => {
                         {filterPanelOpen && <Card sx={{width: 300}}>
                             <CardContent>
                                 <Stack spacing={0.5}>
+                                    <Typography variant="h5" sx={{ml: 1.3 }}> Assessment Filters </Typography>
+                                    <Divider />
                                     <FormControlLabel control={<Checkbox checked={finishedFilter} 
-                                        onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" sx={{ml:0 }}/>
+                                        onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
                                     <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
                                         onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
                                     <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
@@ -146,9 +150,11 @@ const CourseViewer = (props) => {
                 
             </Stack>
 
-            <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                <ChevronLeftIcon fontSize="large" />
-            </Fab>
+            <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
+                <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                    <ChevronLeftIcon fontSize="large" />
+                </Fab>
+            </Tooltip>
         </Box>
     )
 }
