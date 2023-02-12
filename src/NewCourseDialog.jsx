@@ -43,12 +43,12 @@ const NewCourseDialog = (props) => {
 
 
     const checkFormat = useCallback(() => {
-        let valid = nameValid && codeValid && assessments.length > 0;
+        let valid = nameValid && codeValid && assessments.length > 0 && urlValid;
         for(const assessment of assessments){
             if(!assessment.valid) valid = false;
         }
         setFormatValid(valid);
-    }, [nameValid, codeValid, assessments]);
+    }, [nameValid, codeValid, assessments, urlValid]);
     
     useEffect(() => {
         checkFormat();
@@ -62,15 +62,18 @@ const NewCourseDialog = (props) => {
 
     const handleCodeChange = (e) => {
         setCourseCode(e.target.value);
-        const exp = new RegExp('[a-zA-Z]{4}[0-9]{3}', 'g');
+        const exp = /[a-zA-Z]{4}\d{3}/;
         let match = e.target.value.match(exp);
         setCodeValid(match !== null && match[0] === e.target.value);
         setCodeCheckOn(true);
     }
 
     const handleURLChange = (e) => {
-        setCourseURL(e.target.value);
-        setURLValid(e.target.value.length < 100);
+        const stripped = e.target.value.replace(/\s/g, "");
+        setCourseURL(stripped);
+        const exp = /^(https?:\/\/)?(www\.)?(ecs\.)?wgtn\.ac\.nz\//;
+        let match = stripped.match(exp);
+        setURLValid(match !== null && stripped.startsWith(match[0]));
         setURLCheckOn(true);
     }
 
@@ -87,7 +90,7 @@ const NewCourseDialog = (props) => {
     }
 
     const toTitleCase = (str) => {
-        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        return str.replace(/\w\S*/g, function(str){return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();});
     }
 
     const createCourse = async () => {
