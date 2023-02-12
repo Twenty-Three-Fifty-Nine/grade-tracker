@@ -1,18 +1,20 @@
-import React from "react";
-import { Box, Fab, Icon, Tab, Tabs, Typography } from "@mui/material";
-import YearOverview from "./YearOverview";
-import AddCourseDialog from "./AddCourseDialog";
-import Axios from "axios";
+import React from 'react';
+import { Box, Fab, Icon, Tab, Tabs, Tooltip, Typography } from '@mui/material';
+import YearOverview from './YearOverview';
+import AddCourseDialog from './AddCourseDialog';
+import Axios from 'axios';
 import { isMobile } from "react-device-detect";
 
 class Course {
-    constructor(code, names, weights, deadlines, grades, totalGrade) {
+    constructor(code, names, weights, deadlines, grades, totalGrade, tri, year) {
         this.code = code;
         this.names = names;
         this.weights = weights;
         this.deadlines = deadlines;
         this.grades = grades;
         this.totalGrade = totalGrade;
+        this.tri = tri;
+        this.year = year;
     }
 
     getCourseCompletion() {
@@ -24,22 +26,23 @@ class Course {
     }
 
     getCourseLetter() {
-        if (this.totalGrade >= 90) return "A+";
-        else if (this.totalGrade >= 85) return "A";
-        else if (this.totalGrade >= 80) return "A-";
-        else if (this.totalGrade >= 75) return "B+";
-        else if (this.totalGrade >= 70) return "B";
-        else if (this.totalGrade >= 65) return "B-";
-        else if (this.totalGrade >= 60) return "C+";
-        else if (this.totalGrade >= 55) return "C";
-        else if (this.totalGrade >= 50) return "C-";
-        else if (this.totalGrade >= 40) return "D";
+        if(isNaN(this.totalGrade)) return "N/A";
+        else if(this.totalGrade >= 90) return "A+";
+        else if(this.totalGrade >= 85) return "A";
+        else if(this.totalGrade >= 80) return "A-";
+        else if(this.totalGrade >= 75) return "B+";
+        else if(this.totalGrade >= 70) return "B";
+        else if(this.totalGrade >= 65) return "B-";
+        else if(this.totalGrade >= 60) return "C+";
+        else if(this.totalGrade >= 55) return "C";
+        else if(this.totalGrade >= 50) return "C-";
+        else if(this.totalGrade >= 40) return "D";
         return "E";
     }
 }
 
 const GradesOverview = (props) => {
-    const { userEmail, userName } = props;
+    const {userEmail, userName, setViewedCourse} = props
     const baseYear = 2022;
     const activeTri = { year: 2022, tri: 3 };
 
@@ -126,70 +129,33 @@ const GradesOverview = (props) => {
     };
 
     return (
-        <>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box>        
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={selectedYear} onChange={handleChangedYear}>
                     <Tab label="2022" />
                     <Tab label="2023" />
                 </Tabs>
             </Box>
             <Box sx={{ marginTop: 2 }}>
-                <SessionContext.Provider
-                    value={
-                        sessionData !== null ? sessionData : handleLoadData()
+                <SessionContext.Provider value={sessionData !== null ? sessionData : handleLoadData()}>
+                    { baseYear + selectedYear <= activeTri.year ? 
+                            <YearOverview setViewedCourse={setViewedCourse} /> :
+                            <Box sx={{ mt: 30 }}>
+                                <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 2 }}>Academic year is not currently active.</Typography>
+                                <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
+                            </Box>
                     }
-                >
-                    {baseYear + selectedYear <= activeTri.year ? (
-                        <YearOverview />
-                    ) : (
-                        <Box sx={{ mt: 30 }}>
-                            <Typography
-                                variant={isMobile ? "h6" : "h5"}
-                                sx={{ textAlign: "center", marginTop: 2 }}
-                            >
-                                Academic year is not currently active.
-                            </Typography>
-                            <Typography
-                                variant={isMobile ? "h6" : "h5"}
-                                sx={{ textAlign: "center", marginTop: 1 }}
-                            >
-                                It will be available on the{" "}
-                                <Box
-                                    sx={{
-                                        display: "inline",
-                                        backgroundColor: "highlight.main",
-                                        borderRadius: 1,
-                                        pl: 1,
-                                        pr: 1,
-                                    }}
-                                >
-                                    20th of February
-                                </Box>
-                                .
-                            </Typography>
-                        </Box>
-                    )}
-                    <Fab
-                        color="primary"
-                        onClick={handleOpenAddCourse}
-                        disabled={
-                            baseYear + selectedYear > new Date().getFullYear()
-                        }
-                        sx={{ position: "absolute", bottom: 32, right: 32 }}
-                    >
-                        <Icon>add</Icon>
-                    </Fab>
-                    <AddCourseDialog
-                        open={addCourseOpen}
-                        onClose={handleCloseAddCourse}
-                        activeTri={activeTri}
-                        updateData={handleLoadData}
-                    />
-                </SessionContext.Provider>
+                    <Tooltip title={<h3>Add a new course</h3>} placement="left" arrow>
+                        <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: 32, right: 32}}>
+                            <Icon>add</Icon>
+                        </Fab>
+                    </Tooltip>
+                    <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} />
+                </SessionContext.Provider> 
             </Box>
-        </>
-    );
-};
+        </Box>
+    )
+}
 
 export default GradesOverview;
 export const SessionContext = React.createContext();

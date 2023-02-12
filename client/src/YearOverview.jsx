@@ -4,7 +4,8 @@ import TrimesterOverview from './TrimesterOverview';
 import { SessionContext } from './GradesOverview';
 import { useEffect } from 'react';
 
-const YearOverview = () => {
+const YearOverview = (props) => {
+    const {setViewedCourse} = props;
     const session = React.useContext(SessionContext);
 
     const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
@@ -60,9 +61,9 @@ const YearOverview = () => {
     return (
         <>
         <Stack spacing={1}>
-            <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} />
-            <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} />
-            <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} />
+            <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+            <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+            <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
         </Stack>
         <Alert severity="info" sx={{marginTop: 1}}>Current GPA for the Year: {getGPA()}</Alert>
         </>

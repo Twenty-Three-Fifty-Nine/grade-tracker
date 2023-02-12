@@ -131,7 +131,7 @@ const darkTheme = createTheme({
                 colorSuccess: {
                     backgroundColor: "rgba(36, 112, 150, .8)",
                     color: "#ffffff",
-                },
+                }
             },
         },
         MuiAppBar: {

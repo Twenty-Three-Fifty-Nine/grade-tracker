@@ -3,7 +3,7 @@ import { Accordion, AccordionSummary, AccordionDetails, Alert, Chip, Icon, Skele
 import CourseOverview from './CourseOverview';
 import { SessionContext } from './GradesOverview';
 
-const TrimesterOverview = ({triInfo, open, toggleAccordion}) => {
+const TrimesterOverview = ({triInfo, open, toggleAccordion, setViewedCourse}) => {
     const courses = React.useContext(SessionContext).courses;
     
     return (
@@ -27,7 +27,7 @@ const TrimesterOverview = ({triInfo, open, toggleAccordion}) => {
                                 courses[triInfo.tri - 1][0] ?
                                 courses[triInfo.tri - 1].map((courseInfo) => {
                                     return (
-                                        <CourseOverview key={courseInfo.code} courseInfo={courseInfo} />
+                                        <CourseOverview key={courseInfo.code} courseInfo={courseInfo} setViewedCourse={setViewedCourse} />
                                     )
                                 }) :
                                 <Alert severity="warning" sx={{marginTop: 1}}> 

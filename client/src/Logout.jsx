@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { Button, Typography } from '@mui/material';
-import Cookies from 'universal-cookie';
 
 const Logout = (props) => {
     const { setIsLoggedIn, setUserDetails } = props;
@@ -8,7 +7,6 @@ const Logout = (props) => {
     const handleLogout = useCallback(() => {
         setIsLoggedIn(false);
         setUserDetails(null);
-        new Cookies().remove('userDetails', { path: '/' });
     }, [setIsLoggedIn, setUserDetails]);
 
     return (
