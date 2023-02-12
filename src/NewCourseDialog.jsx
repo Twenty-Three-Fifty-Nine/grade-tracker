@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Alert, FormControlLabel, Snackbar, Stack, AppBar, Box, Button, Checkbox, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
+import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import Axios from 'axios';
 import { isMobile } from "react-device-detect";
@@ -26,6 +26,7 @@ const NewCourseDialog = (props) => {
     const [assessments, setAssessments] = React.useState([]);
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
+    const [courseURL, setCourseURL] = React.useState("");
     const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
@@ -33,8 +34,10 @@ const NewCourseDialog = (props) => {
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
+    const [urlValid, setURLValid] = React.useState(false);
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [codeCheckOn, setCodeCheckOn] = React.useState(false);
+    const [urlCheckOn, setURLCheckOn] = React.useState(false);
     const [formatValid, setFormatValid] = React.useState(false);
 
 
@@ -64,6 +67,12 @@ const NewCourseDialog = (props) => {
         setCodeCheckOn(true);
     }
 
+    const handleURLChange = (e) => {
+        setCourseURL(e.target.value);
+        setURLValid(e.target.value.length < 100);
+        setURLCheckOn(true);
+    }
+
     const addAssessment = () => {
         setScrollActive(true);
         const date = new Date();
@@ -82,6 +91,7 @@ const NewCourseDialog = (props) => {
         await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
             name: courseName,
+            url: courseURL,
             assignments: assessments.map((a) => {
                 return {
                     name: a.name,
@@ -139,11 +149,14 @@ const NewCourseDialog = (props) => {
                         helperText={courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : courseName.length > 50 && nameCheckOn ? "This field  is too long" : ""} 
                     />
                     <Box sx={{ display: "flex", justifyItems: "center" }}>
-                        <TextField value={courseCode} label="Course Code" sx={{ width: isMobile ? "100%" : "40%" }} onChange={handleCodeChange} 
+                        <TextField value={courseCode} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
                             error={!codeValid && codeCheckOn} 
                             helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
                         />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Course Info Incomplete" sx={{m: isMobile ? "0 auto" : 0.7, ml: isMobile ? "auto" : 3, position: 'relative', top: !codeValid && codeCheckOn ? -11 : 0 }}/>
+                        <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
+                            error={!urlValid && urlCheckOn} 
+                            helperText={!urlValid && urlCheckOn ? "URL is too long" : ""} 
+                        />
                     </Box>
                 </Stack>
 
