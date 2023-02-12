@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 const AssessmentViewerCard = (props) => {
     const { name, deadline, weight, constGrade} = props;
     const [ grade, setGrade ] = React.useState(constGrade);
-    const [ valid, setValid ] = React.useState(isNaN(grade) || (grade >= 0 && grade < 100));
+    const [ valid, setValid ] = React.useState(isNaN(grade) || (grade >= 0 && grade <= 100));
 
     const getCourseLetter = () => {
         if(isNaN(grade) || !valid) return "-";
@@ -25,7 +25,7 @@ const AssessmentViewerCard = (props) => {
 
     const handleGradeChange = (e) => {
         if(e.target.value === "") setGrade(NaN);
-        else setGrade(e.target.value);
+        else setGrade(e.target.value.substring(0, 5));
         setValid(isNaN(e.target.value) || (e.target.value >= 0 && e.target.value <= 100))
     }
 

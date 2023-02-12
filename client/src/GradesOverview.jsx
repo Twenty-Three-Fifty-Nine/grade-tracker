@@ -19,8 +19,8 @@ class Course {
 
     getCourseCompletion() {
         let finished = 0;
-        this.grades.forEach(grade => {
-            if(!isNaN(grade)) finished++;
+        this.grades.forEach((grade) => {
+            if (grade !== -1) finished++;
         });
         return finished / this.grades.length;
     }
@@ -39,12 +39,12 @@ class Course {
         else if(this.totalGrade >= 40) return "D";
         return "E";
     }
-} 
+}
 
 const GradesOverview = (props) => {
     const {userEmail, userName, setViewedCourse} = props
     const baseYear = 2022;
-    const activeTri = {year: 2022, tri: 3};
+    const activeTri = { year: 2022, tri: 3 };
 
     const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
     const [sessionData, setSessionData] = React.useState(null);
@@ -52,11 +52,15 @@ const GradesOverview = (props) => {
 
     const handleChangedYear = async (event, newValue) => {
         setYear(newValue);
-        getSessionData(newValue).then((data) => { setSessionData(data); }); 
+        getSessionData(newValue).then((data) => {
+            setSessionData(data);
+        });
     };
 
     const handleLoadData = async () => {
-        getSessionData(selectedYear).then((data) => { setSessionData(data); }); 
+        getSessionData(selectedYear).then((data) => {
+            setSessionData(data);
+        });
     };
 
     const handleOpenAddCourse = () => {
@@ -70,52 +74,59 @@ const GradesOverview = (props) => {
     const getSessionData = async (year) => {
         console.log("Getting Session Data");
         await setSessionData("Reloading");
-        return parseCourseData("http://localhost:3001/api/user/courses?userId=" + userEmail + "&year=" + (baseYear + year)).then((courseData) => { 
+        return parseCourseData(
+            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
+                userEmail +
+                "/courses?year=" +
+                (baseYear + year)
+        ).then((courseData) => {
             return {
-                userData: {email: userEmail, displayName: userName},
-                timeInfo: {activeTri, selectedYear: baseYear + year},
-                courses: courseData
+                userData: { email: userEmail, displayName: userName },
+                timeInfo: { activeTri, selectedYear: baseYear + year },
+                courses: courseData,
             };
         });
-    }
+    };
 
     const parseCourseData = async (request) => {
         return Axios.get(request).then(async (result) => {
             const ret = [[], [], []];
-            for(let i = 0; i < result.data.length; i++){
-                const data = result.data[i];
-                let courseTemplate;
-                let grades = parseGrades(data.Grades);
-                await getCourseTemplate(data.CourseCode, data.Trimester).then((value) => { courseTemplate = value });
-                const course = new Course(data.CourseCode, courseTemplate[0], courseTemplate[1], courseTemplate[2], grades, data.TotalGrade, data.Trimester, data.Year);
-                ret[data.Trimester - 1].push(course);
+            if (result.data[0] === undefined) return ret;
+            for (const element of result.data[0].courses) {
+                const data = element;
+                let grades = parseGrades(data.assignments);
+                const assignmentNames = data.assignments.map(
+                    (assignment) => assignment.assignment
+                );
+                const assignmentWeights = data.assignments.map(
+                    (assignment) => assignment.weight
+                );
+                const assignmentDeadlines = data.assignments.map(
+                    (assignment) => assignment.dueDate
+                );
+                const course = new Course(
+                    data.course,
+                    assignmentNames,
+                    assignmentWeights,
+                    assignmentDeadlines,
+                    grades,
+                    data.finalGrade
+                );
+                ret[data.trimester - 1].push(course);
             }
             return ret;
         });
-    }
+    };
 
-    const parseGrades = (str) => {
-        const ret= []
-        const splitStr = str.match(/.{1,4}/g);
-        splitStr.forEach(grade => {
-            if(grade === "null") ret.push("NaN");
-            else if(grade === "full") ret.push(100);
-            else ret.push(parseInt(grade) * 0.01)
-        })
+    const parseGrades = (assignments) => {
+        const ret = [];
+        assignments.forEach((assignment) => {
+            const grade = assignment.grade;
+            if (grade === -1) ret.push(-1);
+            else ret.push(grade);
+        });
         return ret;
-    }
-
-    const getCourseTemplate = async (code, tri) => {
-        return Axios.get("http://localhost:3001/api/" + code + "/assignments?trimester=" + tri).then((result) => {
-            const ret = [[], [], []]
-            for(let i = 0; i < result.data.length; i++){
-                ret[0].push(result.data[i].AssignmentName);
-                ret[1].push(result.data[i].Weight);
-                ret[2].push(result.data[i].DueDate);
-            }
-            return ret;
-        });
-    }
+    };
 
     return (
         <Box>        
