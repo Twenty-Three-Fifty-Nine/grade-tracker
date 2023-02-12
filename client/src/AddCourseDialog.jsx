@@ -51,7 +51,7 @@ const AddCourseDialog = (props) => {
 
     const handleCancelCreation = async (newCourse, isNewTemplate) => {
         if(newCourse){
-            handleAddCourse(newCourse, assessmentCount);
+            handleAddCourse(newCourse, isNewTemplate);
         }
         setCourseCreator(false);
     }
