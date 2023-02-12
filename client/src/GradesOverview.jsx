@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Box, Fab, Icon, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import YearOverview from './YearOverview';
 import AddCourseDialog from './AddCourseDialog';
@@ -42,25 +42,77 @@ class Course {
 }
 
 const GradesOverview = (props) => {
-    const {userEmail, userName, setViewedCourse} = props
+    const {userEmail, userName, setViewedCourse, sessionData, setSessionData, courseList, setCourseList} = props
     const baseYear = 2022;
-    const activeTri = { year: 2022, tri: 3 };
+    const activeTri = useMemo(() => { return {year: 2022, tri: 3} }, []);
 
     const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
-    const [sessionData, setSessionData] = React.useState(null);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
 
-    const handleChangedYear = async (event, newValue) => {
-        setYear(newValue);
-        getSessionData(newValue).then((data) => {
-            setSessionData(data);
+    const parseCourseData = useCallback(async (request) => {
+        return Axios.get(request).then(async (result) => {
+            const ret = {}
+            if (result.data[0] === undefined) return ret;
+            for(const yearPair of result.data){
+                ret[yearPair.year] = [[], [], []];
+                for (const element of yearPair.courses) {
+                    const data = element;
+                    let grades = parseGrades(data.assignments);
+                    const assignmentNames = data.assignments.map(
+                        (assignment) => assignment.name
+                    );
+                    const assignmentWeights = data.assignments.map(
+                        (assignment) => assignment.weight
+                    );
+                    const assignmentDeadlines = data.assignments.map(
+                        (assignment) => assignment.dueDate
+                    );
+                    const course = new Course(
+                        data.course,
+                        assignmentNames,
+                        assignmentWeights,
+                        assignmentDeadlines,
+                        grades,
+                        data.finalGrade
+                    );
+                    ret[yearPair.year][data.trimester - 1].push(course);
+                }
+            }
+            return ret;
         });
-    };
+    }, []);
 
-    const handleLoadData = async () => {
+    const getSessionData = useCallback(async (year) => {
+        console.log("Getting Session Data");
+        await setSessionData("Reloading");
+        return parseCourseData(
+            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
+                userEmail +
+                "/courses"
+        ).then((courseData) => {
+            return {
+                userData: { email: userEmail, displayName: userName },
+                timeInfo: { activeTri, selectedYear: baseYear + year },
+                courses: courseData,
+            };
+        });
+    }, [activeTri, parseCourseData, setSessionData, userEmail, userName]);
+
+    const handleLoadData = useCallback(async () => {
         getSessionData(selectedYear).then((data) => {
             setSessionData(data);
         });
+    }, [getSessionData, selectedYear, setSessionData]);
+
+    React.useEffect(() => {
+        if(!sessionData) handleLoadData();
+    }, [handleLoadData, sessionData]);
+
+    const handleChangedYear = async (event, newValue) => {
+        setYear(newValue);
+        const tempData = sessionData;
+        tempData.timeInfo.selectedYear = baseYear + newValue;
+        setSessionData(tempData);
     };
 
     const handleOpenAddCourse = () => {
@@ -69,53 +121,6 @@ const GradesOverview = (props) => {
 
     const handleCloseAddCourse = () => {
         setAddCourseOpen(false);
-    };
-
-    const getSessionData = async (year) => {
-        console.log("Getting Session Data");
-        await setSessionData("Reloading");
-        return parseCourseData(
-            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
-                userEmail +
-                "/courses?year=" +
-                (baseYear + year)
-        ).then((courseData) => {
-            return {
-                userData: { email: userEmail, displayName: userName },
-                timeInfo: { activeTri, selectedYear: baseYear + year },
-                courses: courseData,
-            };
-        });
-    };
-
-    const parseCourseData = async (request) => {
-        return Axios.get(request).then(async (result) => {
-            const ret = [[], [], []];
-            if (result.data[0] === undefined) return ret;
-            for (const element of result.data[0].courses) {
-                const data = element;
-                let grades = parseGrades(data.assignments);
-                const assignmentNames = data.assignments.map(
-                    (assignment) => assignment.name
-                );
-                const assignmentWeights = data.assignments.map(
-                    (assignment) => assignment.weight
-                );
-                const assignmentDeadlines = data.assignments.map(
-                    (assignment) => assignment.dueDate
-                );
-                const course = new Course(
-                    data.course,
-                    assignmentNames,
-                    assignmentWeights,
-                    assignmentDeadlines,
-                    grades,
-                    data.finalGrade
-                );
-                ret[data.trimester - 1].push(course);
-            }
-            return ret;
-        });
     };
 
     const parseGrades = (assignments) => {
@@ -137,7 +142,7 @@ const GradesOverview = (props) => {
                 </Tabs>
             </Box>
             <Box sx={{ marginTop: 2 }}>
-                <SessionContext.Provider value={sessionData !== null ? sessionData : handleLoadData()}>
+                <SessionContext.Provider value={sessionData !== null ? sessionData : "Reloading"}>
                     { baseYear + selectedYear <= activeTri.year ? 
                             <YearOverview setViewedCourse={setViewedCourse} /> :
                             <Box sx={{ mt: 30 }}>
@@ -150,7 +155,7 @@ const GradesOverview = (props) => {
                             <Icon>add</Icon>
                         </Fab>
                     </Tooltip>
-                    <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} />
+                    <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} courseList={courseList} setCourseList={setCourseList} />
                 </SessionContext.Provider> 
             </Box>
         </Box>

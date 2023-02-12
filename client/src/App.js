@@ -17,6 +17,9 @@ const App = () => {
     const [lightMode, setLightMode] = React.useState(true);
     const [viewedCourse, setViewedCourse] = React.useState(null);
 
+    const [sessionData, setSessionData] = React.useState(null);
+    const [courseList, setCourseList] = React.useState(null);
+
     React.useEffect(() => {
         const cookies = new Cookies();
         const detailsCookie = cookies.get('userDetails');
@@ -85,6 +88,10 @@ const App = () => {
                         userEmail={userDetails.email}
                         userName={userDetails.name}
                         setViewedCourse={setViewedCourse}
+                        sessionData={sessionData}
+                        setSessionData={setSessionData}
+                        courseList={courseList}
+                        setCourseList={setCourseList}
                     />
                 }
             </Box>

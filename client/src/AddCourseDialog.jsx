@@ -7,13 +7,13 @@ import { isMobile } from "react-device-detect";
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 const AddCourseDialog = (props) => {
-    const { onClose, open, activeTri, updateData } = props;
+    const { onClose, open, activeTri, updateData, courseList, setCourseList } = props;
     const session = React.useContext(SessionContext);
 
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [courseList, setCourseList] = React.useState(null);
+    // const [courseList, setCourseList] = React.useState(null);
 
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
@@ -52,13 +52,12 @@ const AddCourseDialog = (props) => {
     const handleCancelCreation = async (newCourse, isNewTemplate) => {
         if(newCourse){
             handleAddCourse(newCourse, isNewTemplate);
-            getTemplatesList();
         }
         setCourseCreator(false);
     }
 
     const getTemplatesList = async () => {
-        const trimesters = session ? session.courses : null;
+        const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if(!trimesters || loading) return null;
         console.log("Getting Course Templates");
         
