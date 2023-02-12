@@ -5,12 +5,13 @@ import Axios from 'axios';
 import { isMobile } from "react-device-detect";
 
 class Assessment {
-    constructor(name, weight, deadline, valid) {
+    constructor(name, weight, deadline) {
         this.name = name;
         this.weight = weight;
         this.deadline = deadline;
         this.valid = false;
         this.duplicate = false;
+        this.isAssignment = true;
     }
 } 
 
@@ -97,7 +98,8 @@ const NewCourseDialog = (props) => {
                     name: a.name,
                     weight: a.weight,
                     dueDate: a.deadline,
-                    grade: -1
+                    grade: -1,
+                    isAssignment: a.isAssignment
                 }
             })
         }).then((e) => {
