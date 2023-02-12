@@ -69,6 +69,18 @@ const CourseViewer = (props) => {
 
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
+        if(e.target.value === "name-a") nameSort(true, "name");
+        else if(e.target.value === "name-d") nameSort(false, "name");
+        else if(e.target.value === "deadline-a") nameSort(true, "deadline");
+        else if(e.target.value === "deadline-d") nameSort(false, "deadline");
+        else if(e.target.value === "weight-a") nameSort(false, "weight");
+        else if(e.target.value === "weight-d") nameSort(true, "weight");
+    }
+
+    const nameSort = (isAsc, value) => {
+        let temp = assessments;
+        temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
+        setAssessments(temp);
     }
 
     return (
