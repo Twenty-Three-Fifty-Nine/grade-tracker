@@ -57,7 +57,7 @@ const CreateAssessmentCard = (props) => {
                     <Box sx={{display: 'flex'}}>
                         <TextField label="Assessment Name" fullWidth
                             value={details.name} onChange={handleNameChange} 
-                            error={(details.name.length === 0 || details.name.length > 30) && nameCheckOn} 
+                            error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
                             helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : details.duplicate && nameCheckOn ? "Another assessment has the same name" : ""} 
                         />
                         <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
