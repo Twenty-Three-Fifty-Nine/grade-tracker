@@ -58,7 +58,7 @@ const AddCourseDialog = (props) => {
     }
 
     const getTemplatesList = async () => {
-        const trimesters = session ? session.courses : null;
+        const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if(!trimesters || loading) return null;
         console.log("Getting Course Templates");
         

@@ -22,7 +22,7 @@ const YearOverview = (props) => {
     }
 
     const getTriInfo = (tri) => {
-        const timeInfo = session ? session.timeInfo : null;
+        const timeInfo = session && session !== "Reloading" ? session.timeInfo : null;
         if(!timeInfo) return null;
         return {
             tri,
@@ -33,8 +33,9 @@ const YearOverview = (props) => {
     }
 
     const getGPA = () => {
-        const trimesters = session ? session.courses : null;
+        const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if(!trimesters) return null;
+        
         let totalGrade = 0;
         let totalCourses = 0;
         trimesters.forEach(trimester => {

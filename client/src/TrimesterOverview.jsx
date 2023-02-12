@@ -24,8 +24,8 @@ const TrimesterOverview = ({triInfo, open, toggleAccordion, setViewedCourse}) =>
                     <AccordionDetails>
                         <Stack spacing={2}>
                             {
-                                courses[triInfo.tri - 1][0] ?
-                                courses[triInfo.tri - 1].map((courseInfo) => {
+                                courses[triInfo.year][triInfo.tri - 1][0] ?
+                                courses[triInfo.year][triInfo.tri - 1].map((courseInfo) => {
                                     return (
                                         <CourseOverview key={courseInfo.code} courseInfo={courseInfo} setViewedCourse={setViewedCourse} />
                                     )

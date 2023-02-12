@@ -52,9 +52,9 @@ const GradesOverview = (props) => {
 
     const handleChangedYear = async (event, newValue) => {
         setYear(newValue);
-        getSessionData(newValue).then((data) => {
-            setSessionData(data);
-        });
+        const tempData = sessionData;
+        tempData.timeInfo.selectedYear = baseYear + newValue;
+        setSessionData(tempData);
     };
 
     const handleLoadData = async () => {
@@ -77,8 +77,7 @@ const GradesOverview = (props) => {
         return parseCourseData(
             "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
                 userEmail +
-                "/courses?year=" +
-                (baseYear + year)
+                "/courses"
         ).then((courseData) => {
             return {
                 userData: { email: userEmail, displayName: userName },
@@ -90,30 +89,35 @@ const GradesOverview = (props) => {
 
     const parseCourseData = async (request) => {
         return Axios.get(request).then(async (result) => {
-            const ret = [[], [], []];
+            const ret = {}
             if (result.data[0] === undefined) return ret;
-            for (const element of result.data[0].courses) {
-                const data = element;
-                let grades = parseGrades(data.assignments);
-                const assignmentNames = data.assignments.map(
-                    (assignment) => assignment.assignment
-                );
-                const assignmentWeights = data.assignments.map(
-                    (assignment) => assignment.weight
-                );
-                const assignmentDeadlines = data.assignments.map(
-                    (assignment) => assignment.dueDate
-                );
-                const course = new Course(
-                    data.course,
-                    assignmentNames,
-                    assignmentWeights,
-                    assignmentDeadlines,
-                    grades,
-                    data.finalGrade
-                );
-                ret[data.trimester - 1].push(course);
+            for(const yearPair of result.data){
+                ret[yearPair.year] = [[], [], []];
+                for (const element of yearPair.courses) {
+                    const data = element;
+                    let grades = parseGrades(data.assignments);
+                    const assignmentNames = data.assignments.map(
+                        (ass) => ass.name
+                    );
+                    const assignmentWeights = data.assignments.map(
+                        (assignment) => assignment.weight
+                    );
+                    const assignmentDeadlines = data.assignments.map(
+                        (assignment) => assignment.dueDate
+                    );
+                    const course = new Course(
+                        data.course,
+                        assignmentNames,
+                        assignmentWeights,
+                        assignmentDeadlines,
+                        grades,
+                        data.finalGrade
+                    );
+                    ret[yearPair.year][data.trimester - 1].push(course);
+                }
             }
+            console.log(ret)
+            console.log(result)
             return ret;
         });
     };
