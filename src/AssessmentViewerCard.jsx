@@ -39,7 +39,7 @@ const AssessmentViewerCard = (props) => {
                         <Typography variant={"h5"} component="div" sx={{mr: 1}}>
                             {name}
                         </Typography>
-                        <Tooltip title={<h3>{isAss ? "Assignment" : "Exam"}</h3>} placement="right" arrow>
+                        <Tooltip title={<h3>{isAss ? "Assignment" : "Test"}</h3>} placement="right" arrow>
                             {isAss ? <MenuBookRoundedIcon sx={{mt: 0.3}}/> :
                             <DescriptionRoundedIcon sx={{mt: 0.4}}/>}
                         </Tooltip>
