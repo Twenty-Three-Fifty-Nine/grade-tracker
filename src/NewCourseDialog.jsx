@@ -120,7 +120,7 @@ const NewCourseDialog = (props) => {
     return (
         <>
         <Dialog fullScreen open={open} onClose={stopCreating}>
-            <AppBar position="static" component="nav">
+            <AppBar position="fixed" component="nav">
                 <Toolbar>
                     <IconButton color="inherit" onClick={stopCreating}>
                         <Icon>close</Icon>
@@ -129,7 +129,7 @@ const NewCourseDialog = (props) => {
                     <Button color="inherit" onClick={createCourse} disabled={!formatValid}> Create </Button>
                 </Toolbar>
             </AppBar>
-            <Box sx={{padding: 3, margin: "auto", marginTop: 0, width: 548}}>
+            <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: 548}}>
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
