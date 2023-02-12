@@ -70,25 +70,19 @@ const CourseViewer = (props) => {
     }, [courseData, handleKeyDown]);
 
     React.useEffect(() => {
-        console.log("Filter?")
         if(assessments.length === 0) return;
         let temp = [];
-        console.log(assessments)
         assessments.forEach((assessment) => {
             if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
-                // temp.push(assessment)
                 if((pastDeadlineFilter && assessment.deadline < new Date()) || !pastDeadlineFilter){
                     if((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)){
                         temp.push(assessment)
                     }
                 }
             }
-            console.log(1)
-            // else if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) temp.push(assessment)
-
         })
         setFilteredAssessments(temp);
-    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter]);
+    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, assessments]);
 
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
