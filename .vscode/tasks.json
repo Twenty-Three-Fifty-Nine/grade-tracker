@@ -2,29 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Server",
-            "type": "shell",
-            "command": "npm run devStart",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/server"
-            },
-            "problemMatcher": [],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "start"
-            }
-        },
-        {
-            "label": "Client",
+            "label": "StartClient",
             "type": "shell",
             "command": "npm start",
             "group": {
@@ -32,7 +10,7 @@
                 "isDefault": true
             },
             "options": {
-                "cwd": "${workspaceFolder}/client"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -44,14 +22,6 @@
                 "clear": false,
                 "group": "start"
             }
-        },
-        {
-            "label": "Start",
-            "dependsOn": [
-                "Server",
-                "Client"
-            ],
-            "problemMatcher": []
         }
     ]
 }
