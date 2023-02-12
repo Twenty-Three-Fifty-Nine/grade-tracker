@@ -7,13 +7,13 @@ import { isMobile } from "react-device-detect";
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 const AddCourseDialog = (props) => {
-    const { onClose, open, activeTri, updateData } = props;
+    const { onClose, open, activeTri, updateData, courseList, setCourseList } = props;
     const session = React.useContext(SessionContext);
 
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [courseList, setCourseList] = React.useState(null);
+    // const [courseList, setCourseList] = React.useState(null);
 
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
@@ -52,7 +52,6 @@ const AddCourseDialog = (props) => {
     const handleCancelCreation = async (newCourse, assessmentCount) => {
         if(newCourse){
             handleAddCourse(newCourse, assessmentCount);
-            getTemplatesList();
         }
         setCourseCreator(false);
     }
