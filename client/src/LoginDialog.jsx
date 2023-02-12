@@ -34,7 +34,7 @@ const LoginDialog = (props) => {
             .then((result) => {
                 setIsLoggedIn(true);
                 setUserDetails(result.data);
-                new Cookies().set("userDetails", result.data, { path: "/" });
+                new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
                 handleClose();
             })
             .catch((e) => {
