@@ -23,7 +23,7 @@ const AddCourseDialog = (props) => {
         onClose();
     };
 
-    const handleAddCourse = async (code = courseCode, assessmentCount) => {
+    const handleAddCourse = async (code = courseCode, isNewTemplate) => {
         console.log("Adding course " + code + " to user");
         
         await Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + session.userData.email + "/courses", {
@@ -31,7 +31,7 @@ const AddCourseDialog = (props) => {
             year: activeTri.year,
             trimester: activeTri.tri,
         }).then(() => {
-            if(!assessmentCount){
+            if(!isNewTemplate){
                 setSnackbar("success");
                 setIsSuccess(true);
             }
@@ -49,9 +49,9 @@ const AddCourseDialog = (props) => {
         setCourseCreator(true);
     }
 
-    const handleCancelCreation = async (newCourse, assessmentCount) => {
+    const handleCancelCreation = async (newCourse, isNewTemplate) => {
         if(newCourse){
-            handleAddCourse(newCourse, assessmentCount);
+            handleAddCourse(newCourse, isNewTemplate);
             getTemplatesList();
         }
         setCourseCreator(false);

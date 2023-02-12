@@ -76,14 +76,22 @@ const NewCourseDialog = (props) => {
 
     const createCourse = async () => {
         console.log("Adding new template");
-        await Axios.post("http://localhost:3001/api/courses", {
-            courseCode: courseCode.toUpperCase(),
-            courseName: courseName,
-            trimester: activeTri.tri
+        const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
+        await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
+            codeYearTri: codeYearTri,
+            name: courseName,
+            assignments: assessments.map((a) => {
+                return {
+                    name: a.name,
+                    weight: a.weight,
+                    dueDate: a.deadline,
+                    grade: -1
+                }
+            })
         }).then((e) => {
             setSnackbar("success")
             setIsSuccess(true);
-            addAssessments().then(() => { onClose(courseCode.toUpperCase(), assessments.length) });
+            onClose(courseCode.toUpperCase(), true);
 
             setAssessments([]);
             setCourseName("");
@@ -95,19 +103,6 @@ const NewCourseDialog = (props) => {
         }).catch((e) => {
             setSnackbar("error");
             setIsSuccess(false);
-        })
-    }
-
-    const addAssessments = async () => {
-        await assessments.forEach(async (assessment) => {
-            console.log("Adding new assessment: " + assessment.name);
-            await Axios.post("http://localhost:3001/api/assignments", {
-                courseCode: courseCode.toUpperCase(),
-                trimester: activeTri.tri,
-                assignmentName: assessment.name,
-                weight: assessment.weight,
-                dueDate: assessment.deadline
-            })
         })
     }
 
