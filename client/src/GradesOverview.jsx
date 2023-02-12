@@ -119,7 +119,7 @@ const GradesOverview = (props) => {
         const ret = [];
         assignments.forEach((assignment) => {
             const grade = assignment.grade;
-            if (grade === -1) ret.push(0);
+            if (grade === -1) ret.push(-1);
             else ret.push(grade);
         });
         return ret;
