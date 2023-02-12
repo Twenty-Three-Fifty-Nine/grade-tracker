@@ -1,10 +1,12 @@
 import React from "react";
-import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton, Avatar, Tooltip } from "@mui/material";
+import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
+import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 const AssessmentViewerCard = (props) => {
-    const { name, deadline, weight, constGrade} = props;
+    const { name, deadline, weight, isAss, constGrade} = props;
     const [ grade, setGrade ] = React.useState(constGrade === -1 ? NaN : constGrade);
     const [ valid, setValid ] = React.useState(isNaN(grade) || (grade >= 0 && grade <= 100));
 
@@ -37,8 +39,9 @@ const AssessmentViewerCard = (props) => {
                         <Typography variant={"h5"} component="div" sx={{mr: 1}}>
                             {name}
                         </Typography>
-                        <Tooltip title={<h3>Assignment</h3>} placement="right" arrow>
-                            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
+                        <Tooltip title={<h3>{isAss ? "Assignment" : "Exam"}</h3>} placement="right" arrow>
+                            {isAss ? <MenuBookRoundedIcon sx={{mt: 0.3}}/> :
+                            <DescriptionRoundedIcon sx={{mt: 0.4}}/>}
                         </Tooltip>
                         <Tooltip title={<h3>Edit Assessment</h3>} placement="bottom" arrow>
                             <IconButton sx={{ml:"auto", mt:-0.5}}>

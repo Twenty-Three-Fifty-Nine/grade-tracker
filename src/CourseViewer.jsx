@@ -50,7 +50,7 @@ const CourseViewer = (props) => {
         <Box>  
             <Box sx={{mt: 3, pb: 3}}>
                 <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                    Introduction to Computer Program Design and Other Long Things
+                    {courseData.name}
                 </Typography>
                 <Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
@@ -107,7 +107,7 @@ const CourseViewer = (props) => {
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
                     {courseData.names.map((name, index) => (
                         <AssessmentViewerCard key={name}
-                            name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} 
+                            name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} isAss={courseData.isAssList[index]}
                         />
                     ))} 
                     <Button variant="contained"> Add Assessment </Button>

@@ -6,18 +6,19 @@ import Axios from 'axios';
 import { isMobile } from "react-device-detect";
 
 class Course {
-    constructor(code, names, weights, deadlines, grades, totalGrade, tri, year, url, lastUpdated) {
+    constructor(code, name, names, weights, deadlines, grades, isAssList, totalGrade, tri, year, url, lastUpdated) {
         this.code = code;
+        this.name = name;
         this.names = names;
         this.weights = weights;
         this.deadlines = deadlines;
         this.grades = grades;
+        this.isAssList = isAssList;
         this.totalGrade = totalGrade;
         this.tri = tri;
         this.year = year;
         this.url = url;
         this.lastUpdated = new Date(lastUpdated);
-        // console.log(this.lastUpdated)
     }
 
     getCourseCompletion() {
@@ -70,12 +71,17 @@ const GradesOverview = (props) => {
                     const assignmentDeadlines = data.assignments.map(
                         (assignment) => assignment.dueDate
                     );
+                    const assignmentIsAssValues = data.assignments.map(
+                        (assignment) => assignment.isAssignment
+                    );
                     const course = new Course(
-                        data.course,
+                        data.courseCode,
+                        data.courseName,
                         assignmentNames,
                         assignmentWeights,
                         assignmentDeadlines,
                         grades,
+                        assignmentIsAssValues,
                         data.finalGrade,
                         data.trimester,
                         yearPair.year,

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, CardContent, Stack, Box, IconButton, TextField } from '@mui/material';
+import { Card, CardContent, Stack, Box, IconButton, TextField, ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
 import DeleteIcon from "@mui/icons-material/Delete";
+import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { isMobile } from "react-device-detect";
@@ -60,6 +62,21 @@ const CreateAssessmentCard = (props) => {
                             error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
                             helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : details.duplicate && nameCheckOn ? "Another assessment has the same name" : ""} 
                         />
+                        <Stack sx={{ ml: 2 }}>
+                            <ToggleButtonGroup
+                                exclusive size="small"
+                                value={details.isAssignment ? "ass" : "exam"}
+                                onChange={(e, newValue) => { details.isAssignment = newValue === "ass"; setUpdater(!updater); }}
+                            >
+                                <ToggleButton value="ass">
+                                    <MenuBookRoundedIcon />
+                                </ToggleButton>
+                                <ToggleButton value="exam">
+                                    <DescriptionRoundedIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                            <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAssignment ? "Assignment" : "Exam" } </Typography>
+                        </Stack>
                         <IconButton onClick={() => {
                             removeAssessment(index); 
                             let oldName = details.name;
