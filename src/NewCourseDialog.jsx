@@ -86,16 +86,20 @@ const NewCourseDialog = (props) => {
         setAssessments(assessments.filter((a, i) => i !== index));
     }
 
+    const toTitleCase = (str) => {
+        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
     const createCourse = async () => {
         console.log("Adding new template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
         await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
-            name: courseName,
+            name: toTitleCase(courseName),
             url: courseURL,
             assignments: assessments.map((a) => {
                 return {
-                    name: a.name,
+                    name: toTitleCase(a.name),
                     weight: a.weight,
                     dueDate: a.deadline,
                     grade: -1,
