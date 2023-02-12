@@ -66,7 +66,6 @@ const AddCourseDialog = (props) => {
         let tempList = [];
         Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
-                console.log(course);
                 let courseAdded = false;
                 const courseCode = course.codeYearTri.split("|")[0];
                 trimesters[activeTri.tri - 1].forEach((c) => {
@@ -74,7 +73,6 @@ const AddCourseDialog = (props) => {
                 })
                 if (!courseAdded) tempList.push(courseCode);
             });
-            console.log(tempList);
             setCourseList(tempList);
             setLoading(false);
         });
