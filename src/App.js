@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typography, Stack } from "@mui/material";
 import Logout from "./Logout";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
@@ -33,47 +33,49 @@ const App = () => {
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
             <AppBar position="fixed" component="nav">
-                <Toolbar sx={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                    <Box
-                        component="img"
-                        src={!lightMode ? logoLight : logoDark}
-                        sx={{ width: isMobile ? 40 : 50, height: isMobile ? 40 : 50 }}
-                    />
-                    
-                    <Box sx={{ ml: 2 }}>
-                        {
-                            !isMobile && 
-                            <Typography variant="h6" component="div" >
-                                Twenty Three Fifty Nine 
-                            </Typography>
-                        }
-                    </Box>
+                <Toolbar>
+                    <Stack direction={"row"} sx={{position: isMobile ? "relative" : "fixed"}}>
+                        <Box
+                            component="img"
+                            src={!lightMode ? logoLight : logoDark}
+                            sx={{ width: isMobile ? 40 : 50, height: isMobile ? 40 : 50 }}
+                        />
+                        
+                        <Box sx={{ ml: 2, mt: 1}}>
+                            {
+                                !isMobile && 
+                                <Typography variant="h6" component="div" >
+                                    Twenty Three Fifty Nine 
+                                </Typography>
+                            }
+                        </Box>
+                    </Stack>
 
-                    <Box sx={{visibility: "hidden", flexGrow: isMobile ? 0 : 0.86}} />
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h6" component="div" sx={{textAlign:"center", m: isMobile ? 0 : "auto"}}>
                             { isLoggedIn ? userDetails.displayName + 
                                 (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "' " : "'s ") 
                                 + (viewedCourse ? viewedCourse.code : "Overview")) : ""
                             }
                     </Typography>
-                    <Box sx={{visibility: "hidden", flexGrow: 1}} />
                     
-                    {isLoggedIn && (
-                        <Logout
-                            setIsLoggedIn={setIsLoggedIn}
-                            setUserDetails={setUserDetails}
-                            setSessionData={setSessionData}
-                        />
-                    )}
-                    <FormControlLabel
-                        control={
-                            <MaterialUISwitch
-                                sx={{ ml: 4, mr: isMobile ? -3 : 0 }}
-                                defaultChecked
-                                onChange={() => setLightMode(!lightMode)}
+                    <Stack direction={"row"} sx={{position:"fixed", right: isMobile ? 10 : 0}}>
+                        {isLoggedIn && (
+                            <Logout
+                                setIsLoggedIn={setIsLoggedIn}
+                                setUserDetails={setUserDetails}
+                                setSessionData={setSessionData}
                             />
-                        }
-                    />
+                        )}
+                        <FormControlLabel
+                            control={
+                                <MaterialUISwitch
+                                    sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
+                                    defaultChecked
+                                    onChange={() => setLightMode(!lightMode)}
+                                />
+                            }
+                        />
+                    </Stack>
                 </Toolbar>
             </AppBar>
             
