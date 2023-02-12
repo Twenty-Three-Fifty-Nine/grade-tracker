@@ -6,27 +6,47 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { isMobile } from "react-device-detect";
 
 const CreateAssessmentCard = (props) => {
-    const {index, removeAssessment, details, checkFormat} = props;
+    const {index, removeAssessment, details, checkFormat, assessments, setParentUpdater, parentUpdater} = props;
     const [updater, setUpdater] = React.useState(false);
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [weightCheckOn, setWeightCheckOn] = React.useState(false);
 
     const handleNameChange = (e) => {
+        let oldName = details.name;
         details.name = e.target.value;
         setUpdater(!updater);
-        updateValidity();
+        updateValidity(oldName);
         setNameCheckOn(true);
     };
 
     const handleWeightChange = (e) => {
         details.weight = e.target.value;
         setUpdater(!updater);
-        updateValidity();
+        updateValidity(details.name);
         setWeightCheckOn(true);
     };
 
-    const updateValidity = () => {
+    const updateValidity = (oldName) => {
         details.valid = details.name.length > 0 && details.name.length < 31 && details.weight > 0 && details.weight <= 100;
+        let matches = 0;
+        let oldMatches = 0;
+        assessments.forEach((ass) => {
+            if(details.name === ass.name && details.name !== ""){
+                matches++;
+                ass.duplicate = true;
+            }else if(ass.name === oldName) oldMatches++;
+        })
+        if(matches > 1){
+            details.valid = false;
+        }else{
+            details.duplicate = false;
+            if(oldMatches === 1){
+                assessments.forEach((ass) => {
+                    if(ass.name === oldName) ass.duplicate = false;
+                })
+            }
+        }
+        setParentUpdater(!parentUpdater)
         checkFormat();
     }
 
@@ -37,10 +57,15 @@ const CreateAssessmentCard = (props) => {
                     <Box sx={{display: 'flex'}}>
                         <TextField label="Assessment Name" fullWidth
                             value={details.name} onChange={handleNameChange} 
-                            error={(details.name.length === 0 || details.name.length > 30) && nameCheckOn} 
-                            helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : ""} 
+                            error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
+                            helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : details.duplicate && nameCheckOn ? "Another assessment has the same name" : ""} 
                         />
-                        <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
+                        <IconButton onClick={() => {
+                            removeAssessment(index); 
+                            let oldName = details.name;
+                            details.name = "";
+                            updateValidity(oldName);
+                        }} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>

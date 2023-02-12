@@ -10,6 +10,7 @@ class Assessment {
         this.weight = weight;
         this.deadline = deadline;
         this.valid = false;
+        this.duplicate = false;
     }
 } 
 
@@ -28,6 +29,7 @@ const NewCourseDialog = (props) => {
     const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
+    const [updater, setUpdater] = React.useState(false);
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
@@ -150,7 +152,7 @@ const NewCourseDialog = (props) => {
                 <Stack spacing={2}>
                     {assessments.map((assessment, i) => {
                         return (
-                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} />
+                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
                         )
                     })}
                     <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
