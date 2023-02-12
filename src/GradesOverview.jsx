@@ -6,7 +6,7 @@ import Axios from 'axios';
 import { isMobile } from "react-device-detect";
 
 class Course {
-    constructor(code, names, weights, deadlines, grades, totalGrade, tri, year) {
+    constructor(code, names, weights, deadlines, grades, totalGrade, tri, year, url) {
         this.code = code;
         this.names = names;
         this.weights = weights;
@@ -15,6 +15,7 @@ class Course {
         this.totalGrade = totalGrade;
         this.tri = tri;
         this.year = year;
+        this.url = url;
     }
 
     getCourseCompletion() {
@@ -73,7 +74,10 @@ const GradesOverview = (props) => {
                         assignmentWeights,
                         assignmentDeadlines,
                         grades,
-                        data.finalGrade
+                        data.finalGrade,
+                        data.trimester,
+                        yearPair.year,
+                        data.url
                     );
                     ret[yearPair.year][data.trimester - 1].push(course);
                 }
