@@ -8,15 +8,31 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+class Assessment {
+    constructor(name, weight, grade, deadline, isAss) {
+        this.name = name;
+        this.weight = weight;
+        this.initGrade = -1 ? NaN : grade;
+        this.grade = -1 ? NaN : grade;
+        this.deadline = deadline;
+        this.valid = false;
+        this.duplicate = false;
+        this.isAss = isAss;
+    }
+} 
+
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
-    const [sortType, setSortType] = React.useState("deadline-a");
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+
+    const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
     const [missingGradeFilter, setMissingGradeFilter] = React.useState(false);
     const [pastDeadlineFilter, setPastDeadlineFilter] = React.useState(false);
     const [testFilter, setTestFilter] = React.useState(false);
     const [assignmentFilter, setAssignmentFilter] = React.useState(false);
+
+    const [assessments, setAssessments] = React.useState([]);
 
     let handleKeyDown = null;
 
@@ -40,7 +56,16 @@ const CourseViewer = (props) => {
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
         window.scrollTo(0, 0);
-    }, [handleKeyDown]);
+        for(let i = 0; i < courseData.names.length; i++){
+            const name = courseData.names[i];
+            const weight = courseData.weights[i];
+            const deadline = courseData.deadlines[i];
+            const grade = courseData.grades[i];
+            const isAss = courseData.isAssList[i];
+            const assessment = new Assessment(name, weight, grade, deadline, isAss);
+            setAssessments(current => [...current, assessment]);
+        };
+    }, [courseData, handleKeyDown]);
 
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
@@ -105,10 +130,8 @@ const CourseViewer = (props) => {
             <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"center", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {courseData.names.map((name, index) => (
-                        <AssessmentViewerCard key={name}
-                            name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} isAss={courseData.isAssList[index]}
-                        />
+                    {assessments.map((assessment, index) => (
+                        <AssessmentViewerCard key={assessment.name} assData={assessment}/>
                     ))} 
                     <Button variant="contained"> Add Assessment </Button>
                 </Stack>
