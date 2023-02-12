@@ -59,7 +59,7 @@ const GradesOverview = (props) => {
                     const data = element;
                     let grades = parseGrades(data.assignments);
                     const assignmentNames = data.assignments.map(
-                        (ass) => ass.name
+                        (assignment) => assignment.name
                     );
                     const assignmentWeights = data.assignments.map(
                         (assignment) => assignment.weight
