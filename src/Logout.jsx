@@ -3,13 +3,14 @@ import { Button, Typography } from '@mui/material';
 import Cookies from 'universal-cookie';
 
 const Logout = (props) => {
-    const { setIsLoggedIn, setUserDetails } = props;
+    const { setIsLoggedIn, setUserDetails, setSessionData } = props;
 
     const handleLogout = useCallback(() => {
         setIsLoggedIn(false);
         setUserDetails(null);
+        setSessionData(null);
         new Cookies().remove('userDetails', { path: '/', sameSite: 'strict' });
-    }, [setIsLoggedIn, setUserDetails]);
+    }, [setIsLoggedIn, setUserDetails, setSessionData]);
 
     return (
         <Button onClick={handleLogout} variant="text" color="inherit">
