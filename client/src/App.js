@@ -49,7 +49,7 @@ const App = () => {
                     <Box sx={{visibility: "hidden", flexGrow: isMobile ? 0 : 0.86}} />
                     <Typography variant="h6" component="div">
                             { isLoggedIn ? userDetails.displayName + 
-                                (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "'" : "'s ") 
+                                (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "' " : "'s ") 
                                 + (viewedCourse ? viewedCourse.code : "Overview")) : ""
                             }
                     </Typography>

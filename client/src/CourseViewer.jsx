@@ -38,6 +38,7 @@ const CourseViewer = (props) => {
 
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
+        window.scrollTo(0, 0);
     }, [handleKeyDown]);
 
     const handleChangeSort = (e) => {
