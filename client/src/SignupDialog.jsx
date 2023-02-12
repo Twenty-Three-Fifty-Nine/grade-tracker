@@ -81,7 +81,7 @@ const SignupDialog = (props) => {
                     email: email,
                 };
                 setUserDetails(data);
-                new Cookies().set("userDetails", data, { path: "/" });
+                new Cookies().set("userDetails", data, { path: '/', sameSite: 'strict' });
                 handleClose();
             })
             .catch((e) => {
