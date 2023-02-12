@@ -80,7 +80,7 @@ const CourseViewer = (props) => {
                             Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            Last synced to template: 15/3/2022
+                            Last synced to template: {new dayjs(courseData.lastSynced).format("DD/MM/YYYY")}
                         </Typography>
                         <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
