@@ -74,6 +74,7 @@ const CreateAssessmentCard = (props) => {
                             {isMobile ? 
                                 <MobileDatePicker label="Due Date"
                                     value={details.deadline}
+                                    inputFormat="DD/MM/YYYY"
                                     onChange={(newValue) => {
                                         details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
                                         setUpdater(!updater);
@@ -83,6 +84,7 @@ const CreateAssessmentCard = (props) => {
                                 /> :
                                 <DesktopDatePicker label="Due Date"
                                     value={details.deadline}
+                                    inputFormat="DD/MM/YYYY"
                                     onChange={(newValue) => {
                                         details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
                                         setUpdater(!updater);

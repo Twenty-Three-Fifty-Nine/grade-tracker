@@ -131,7 +131,7 @@ const NewCourseDialog = (props) => {
                     <Button color="inherit" onClick={createCourse} disabled={!formatValid}> Create </Button>
                 </Toolbar>
             </AppBar>
-            <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: 548}}>
+            <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: isMobile ? "100%" : 548}}>
                 <Typography variant="h5"> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
