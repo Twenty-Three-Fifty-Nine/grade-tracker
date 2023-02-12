@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardActionArea, CardContent, Chip, Divider, Typography } from '@mui/material';
 import { isMobile } from "react-device-detect";
 
-const CourseOverview = ({courseInfo}) => {
+const CourseOverview = ({courseInfo, setViewedCourse}) => {
     return (
-        <Card sx={{maxWidth: 500}}>
+        <Card sx={{maxWidth: 500}} onClick={() => {setViewedCourse(courseInfo)}} >
             <CardActionArea>
                 <CardContent sx={{display: 'flex'}}>
                     <Typography variant={isMobile ? "h6" : "h5"} component="div" sx={{minWidth: isMobile ? 110 : 130}}>
