@@ -1,5 +1,6 @@
 import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox} from "@mui/material";
 import React, {useCallback} from "react";
+import dayjs from "dayjs";
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -57,7 +58,7 @@ const CourseViewer = (props) => {
                             Trimester {courseData.tri} - {courseData.year}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            23% Completed
+                            {courseData.getCourseCompletion()}% Completed
                         </Typography>
                         <Box sx={{alignSelf:"center"}}>
                             <Button variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
@@ -76,7 +77,7 @@ const CourseViewer = (props) => {
 
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            Template last updated: 21/11/2022
+                            Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Last synced to template: 15/3/2022
