@@ -33,6 +33,7 @@ const CourseViewer = (props) => {
     const [assignmentFilter, setAssignmentFilter] = React.useState(false);
 
     const [assessments, setAssessments] = React.useState([]);
+    const [filteredAssessments, setFilteredAssessments] = React.useState([]);
 
     let handleKeyDown = null;
 
@@ -64,23 +65,49 @@ const CourseViewer = (props) => {
             const isAss = courseData.isAssList[i];
             const assessment = new Assessment(name, weight, grade, deadline, isAss);
             setAssessments(current => [...current, assessment]);
+            setFilteredAssessments(current => [...current, assessment]);
         };
     }, [courseData, handleKeyDown]);
 
+    React.useEffect(() => {
+        console.log("Filter?")
+        if(assessments.length === 0) return;
+        let temp = [];
+        console.log(assessments)
+        assessments.forEach((assessment) => {
+            if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
+                // temp.push(assessment)
+                if((pastDeadlineFilter && assessment.deadline < new Date()) || !pastDeadlineFilter){
+                    if((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)){
+                        temp.push(assessment)
+                    }
+                }
+            }
+            console.log(1)
+            // else if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) temp.push(assessment)
+
+        })
+        setFilteredAssessments(temp);
+    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter]);
+
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
-        if(e.target.value === "name-a") nameSort(true, "name");
-        else if(e.target.value === "name-d") nameSort(false, "name");
-        else if(e.target.value === "deadline-a") nameSort(true, "deadline");
-        else if(e.target.value === "deadline-d") nameSort(false, "deadline");
-        else if(e.target.value === "weight-a") nameSort(false, "weight");
-        else if(e.target.value === "weight-d") nameSort(true, "weight");
+        sort(e.target.value);
+    }
+
+    const sort = (type = sortType) => {
+        if(type === "name-a") nameSort(true, "name");
+        else if(type === "name-d") nameSort(false, "name");
+        else if(type === "deadline-a") nameSort(true, "deadline");
+        else if(type === "deadline-d") nameSort(false, "deadline");
+        else if(type === "weight-a") nameSort(false, "weight");
+        else if(type === "weight-d") nameSort(true, "weight");
     }
 
     const nameSort = (isAsc, value) => {
-        let temp = assessments;
+        let temp = filteredAssessments;
         temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
-        setAssessments(temp);
+        setFilteredAssessments(temp);
     }
 
     return (
@@ -142,7 +169,7 @@ const CourseViewer = (props) => {
             <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"center", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {assessments.map((assessment, index) => (
+                    {filteredAssessments.map((assessment, index) => (
                         <AssessmentViewerCard key={assessment.name} assData={assessment}/>
                     ))} 
                     <Button variant="contained"> Add Assessment </Button>
