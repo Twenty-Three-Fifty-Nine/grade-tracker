@@ -31,7 +31,7 @@ const CreateAssessmentCard = (props) => {
         let matches = 0;
         let oldMatches = 0;
         assessments.forEach((ass) => {
-            if(details.name === ass.name){
+            if(details.name === ass.name && details.name !== ""){
                 matches++;
                 ass.duplicate = true;
             }else if(ass.name === oldName) oldMatches++;
@@ -60,7 +60,12 @@ const CreateAssessmentCard = (props) => {
                             error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
                             helperText={details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? "This field  is too long" : details.duplicate && nameCheckOn ? "Another assessment has the same name" : ""} 
                         />
-                        <IconButton onClick={() => removeAssessment(index)} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
+                        <IconButton onClick={() => {
+                            removeAssessment(index); 
+                            let oldName = details.name;
+                            details.name = "";
+                            updateValidity(oldName);
+                        }} sx={{marginLeft: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: 'relative', top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0}}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>
