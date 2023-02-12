@@ -91,6 +91,9 @@ const GradesOverview = (props) => {
                         data.lastSynced
                     );
                     ret[yearPair.year][data.trimester - 1].push(course);
+                    ret[yearPair.year][data.trimester - 1].sort((a, b) => {
+                        return a.code.localeCompare(b.code);
+                    });
                 }
             }
             return ret;
