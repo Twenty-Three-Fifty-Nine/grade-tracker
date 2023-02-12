@@ -72,7 +72,7 @@ const AddCourseDialog = (props) => {
                 })
                 if (!courseAdded) tempList.push(courseCode);
             });
-            setCourseList(tempList);
+            setCourseList(tempList.sort());
             setLoading(false);
         });
         
