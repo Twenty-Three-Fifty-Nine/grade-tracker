@@ -148,7 +148,7 @@ const CourseViewer = (props) => {
         setShowSave(false);
 
         assessments.forEach((assessment) => {
-            assessment.grade = assessment.grade ? NaN -1 : assessment.grade;
+            assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
         });
 
         Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
