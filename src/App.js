@@ -64,6 +64,7 @@ const App = () => {
                                 setIsLoggedIn={setIsLoggedIn}
                                 setUserDetails={setUserDetails}
                                 setSessionData={setSessionData}
+                                setViewedCourse={setViewedCourse}
                             />
                         )}
                         <FormControlLabel
@@ -86,7 +87,7 @@ const App = () => {
                         setUserDetails={setUserDetails}
                     />
                 : viewedCourse ? 
-                    <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} />
+                    <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails} />
                 :   <GradesOverview
                         userEmail={userDetails.email}
                         userName={userDetails.name}

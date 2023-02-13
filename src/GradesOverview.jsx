@@ -25,7 +25,7 @@ class Course {
     getCourseCompletion() {
         let finished = 0;
         this.grades.forEach((grade) => {
-            if (grade !== -1) finished++;
+            if (grade !== -1 && !isNaN(grade)) finished++;
         });
         return finished / this.grades.length;
     }
@@ -43,6 +43,15 @@ class Course {
         else if(this.totalGrade >= 50) return "C-";
         else if(this.totalGrade >= 40) return "D";
         return "E";
+    }
+
+    updateTotal() {
+        let temp = 0;
+        for(let i = 0; i < this.grades.length; i++){
+            let num = isNaN(this.grades[i]) ? 0 : this.grades[i];
+            temp += (num * this.weights[i] * 0.01);
+        }
+        this.totalGrade = temp.toFixed(2);
     }
 }
 
@@ -83,7 +92,7 @@ const GradesOverview = (props) => {
                         assignmentDeadlines,
                         grades,
                         assignmentIsAssValues,
-                        data.finalGrade,
+                        data.totalGrade,
                         data.trimester,
                         yearPair.year,
                         data.url,

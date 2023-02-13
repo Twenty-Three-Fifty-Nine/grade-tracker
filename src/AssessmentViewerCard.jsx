@@ -6,7 +6,7 @@ import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 const AssessmentViewerCard = (props) => {
-    const { assData } = props;
+    const { assData, checkChanges } = props;
     const [updater, setUpdater] = React.useState(false);
     const [ valid, setValid ] = React.useState(isNaN(assData.grade) || (assData.grade >= 0 && assData.grade <= 100));
 
@@ -26,8 +26,9 @@ const AssessmentViewerCard = (props) => {
     }
 
     const handleGradeChange = (e) => {
-        if(e.target.value === "") assData.grade = NaN;
-        else assData.grade = e.target.value.substring(0, 5);
+        if(e.target.value === "") assData.setGrade(NaN);
+        else assData.setGrade(e.target.value.substring(0, 5));
+        checkChanges();
         setValid(isNaN(e.target.value) || (e.target.value >= 0 && e.target.value <= 100))
         setUpdater(!updater);
     }
