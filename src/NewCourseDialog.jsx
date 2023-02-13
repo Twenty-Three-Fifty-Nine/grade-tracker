@@ -73,7 +73,7 @@ const NewCourseDialog = (props) => {
         setCourseURL(stripped);
         const exp = /^(https?:\/\/)?(www\.)?(ecs\.)?wgtn\.ac\.nz\//;
         let match = stripped.match(exp);
-        setURLValid(match !== null && stripped.startsWith(match[0]));
+        setURLValid((match !== null && stripped.startsWith(match[0]) && stripped.length < 200) || stripped.length === 0);
         setURLCheckOn(true);
     }
 
@@ -164,7 +164,7 @@ const NewCourseDialog = (props) => {
                         />
                         <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
                             error={!urlValid && urlCheckOn} 
-                            helperText={!urlValid && urlCheckOn ? "URL is too long" : ""} 
+                            helperText={!urlValid && urlCheckOn ? courseURL.length > 200 ? "URL is too long" : "Invalid URL" : ""}
                         />
                     </Box>
                 </Stack>
