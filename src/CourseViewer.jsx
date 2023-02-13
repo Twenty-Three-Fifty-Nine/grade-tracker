@@ -12,18 +12,28 @@ class Assessment {
     constructor(name, weight, grade, deadline, isAss) {
         this.name = name;
         this.weight = weight;
-        this.initGrade = -1 ? NaN : grade;
-        this.grade = -1 ? NaN : grade;
+        this.initGrade = grade === -1 ? NaN : grade;
+        this.grade = grade === -1 ? NaN : grade;
         this.deadline = deadline;
         this.valid = false;
         this.duplicate = false;
         this.isAss = isAss;
+        this.hasChanged = false;
+    }
+
+    setGrade(grade) {
+        this.grade = grade;
+        this.hasChanged = isNaN(this.grade) ? !isNaN(this.initGrade) : this.grade !== this.initGrade;
     }
 } 
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+    const [showSave, setShowSave] = React.useState(false);
+
+    const [courseCompletion, setCourseCompletion] = React.useState(NaN);
+    const [courseLetter, setCourseLetter] = React.useState(null);
 
     const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
@@ -55,8 +65,13 @@ const CourseViewer = (props) => {
     );
 
     React.useEffect(() => {
+        console.log(courseData)
         document.addEventListener("keydown", handleKeyDown, false);
         window.scrollTo(0, 0);
+
+        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
+        setCourseLetter(courseData.getCourseLetter());
+
         for(let i = 0; i < courseData.names.length; i++){
             const name = courseData.names[i];
             const weight = courseData.weights[i];
@@ -107,6 +122,36 @@ const CourseViewer = (props) => {
         return temp;
     }
 
+    const checkChanges = () => {
+        let changes = false;
+        assessments.forEach((assessment) => {
+            if(assessment.hasChanged) changes = true;
+        })
+        setShowSave(changes);
+    }
+
+    const saveChanges = () => {
+        console.log(assessments)
+        assessments.forEach((assessment) => {
+            let index = assessments.indexOf(assessment);
+            courseData.names[index] = assessment.name;
+            courseData.weights[index] = assessment.weight;
+            courseData.deadlines[index] = assessment.deadline;
+            courseData.grades[index] = assessment.grade;
+            courseData.isAssList[index] = assessment.isAss;
+            assessment.hasChanged = false;
+            assessment.initGrade = assessment.grade;
+        })
+
+        // console.log(courseData.getCourseCompletion());
+
+        courseData.updateTotal();
+        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
+        setCourseLetter(courseData.getCourseLetter());
+        setShowSave(false);
+        console.log(courseData)
+    }
+
     return (
         <Box>  
             <Box sx={{mt: 3, pb: 3}}>
@@ -119,7 +164,7 @@ const CourseViewer = (props) => {
                             Trimester {courseData.tri} - {courseData.year}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            {courseData.getCourseCompletion()}% Completed
+                            {!isNaN(courseCompletion) ? courseCompletion : "?" }% Completed
                         </Typography>
                         <Box sx={{alignSelf:"center"}}>
                             <Button variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
@@ -132,7 +177,7 @@ const CourseViewer = (props) => {
                         </Typography>
                         <Stack direction="row" spacing={10} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
-                            <Chip label={courseData.getCourseLetter()} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                            <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                         </Stack>
                     </Stack>
 
@@ -167,7 +212,7 @@ const CourseViewer = (props) => {
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
                     {filteredAssessments.length > 0 ? filteredAssessments.map((assessment, index) => (
-                        <AssessmentViewerCard key={assessment.name} assData={assessment} />
+                        <AssessmentViewerCard key={assessment.name} assData={assessment} checkChanges={checkChanges} />
                     )) : 
                     <Card>
                         <CardContent sx={{minWidth: 731}}>
@@ -244,7 +289,7 @@ const CourseViewer = (props) => {
                 </Fab>
             </Tooltip>
 
-            <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained"> Save Changes</Button>
+            {showSave && <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
         </Box>
     )
 }
