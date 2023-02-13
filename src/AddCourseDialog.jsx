@@ -13,7 +13,6 @@ const AddCourseDialog = (props) => {
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    // const [courseList, setCourseList] = React.useState(null);
 
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
