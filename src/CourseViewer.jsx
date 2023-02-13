@@ -168,7 +168,7 @@ const CourseViewer = (props) => {
                             {!isNaN(courseCompletion) ? courseCompletion : "?" }% Completed
                         </Typography>
                         <Box sx={{alignSelf:"center"}}>
-                            <Button variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
+                            <Button disabled={courseData.url === ""} variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
                         </Box>
                     </Stack>
 
