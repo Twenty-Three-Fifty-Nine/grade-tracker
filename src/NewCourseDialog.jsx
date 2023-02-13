@@ -117,10 +117,13 @@ const NewCourseDialog = (props) => {
             setAssessments([]);
             setCourseName("");
             setCourseCode("");
+            setCourseURL("");
             setNameValid(false);
             setCodeValid(false);
+            setURLValid(false);
             setNameCheckOn(false);
             setCodeCheckOn(false);
+            setURLCheckOn(false);
         }).catch((e) => {
             setSnackbar("error");
             setIsSuccess(false);
@@ -131,10 +134,13 @@ const NewCourseDialog = (props) => {
         setAssessments([]);
         setCourseName("");
         setCourseCode("");
+        setCourseURL("");
         setNameValid(false);
         setCodeValid(false);
+        setURLValid(false);
         setNameCheckOn(false);
         setCodeCheckOn(false);
+        setURLCheckOn(false);
         onClose();
     }
 
