@@ -166,6 +166,7 @@ const CourseViewer = (props) => {
             totalGrade: courseData.totalGrade,
             year: courseData.year,
         }).then(() => {
+            checkChanges();
             setChangesMade(false);
             setSnackbar("success")
             setIsSuccess(true);
