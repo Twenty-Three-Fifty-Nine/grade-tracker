@@ -173,7 +173,7 @@ const CourseViewer = (props) => {
             temp.courses[courseData.year][courseData.tri - 1].forEach((course => {
                 if(course.code === courseData.code){
                     let index = temp.courses[courseData.year][courseData.tri - 1].indexOf(course)
-                    delete temp.courses[courseData.year][courseData.tri - 1][index];
+                    temp.courses[courseData.year][courseData.tri - 1].splice(index, 1);
                 }
             }))
             setSessionData(temp);
