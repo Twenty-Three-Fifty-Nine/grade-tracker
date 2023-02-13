@@ -92,7 +92,7 @@ const GradesOverview = (props) => {
                         assignmentDeadlines,
                         grades,
                         assignmentIsAssValues,
-                        data.finalGrade,
+                        data.totalGrade,
                         data.trimester,
                         yearPair.year,
                         data.url,
