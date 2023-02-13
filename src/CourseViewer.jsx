@@ -166,13 +166,10 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = () => {
-        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/", {
-            courseCode: courseData.code,
-            year: courseData.year
-        })
+        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.year + "/" + courseData.code)
         setConfirmDelete(false);
         exitViewer();
-        setSessionData(null);
+        // setSessionData(null);
     }
 
     return (
