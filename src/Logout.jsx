@@ -11,7 +11,7 @@ const Logout = (props) => {
         setSessionData(null);
         setViewedCourse(null);
         new Cookies().remove('userDetails', { path: '/', sameSite: 'strict' });
-    }, [setIsLoggedIn, setUserDetails, setSessionData]);
+    }, [setIsLoggedIn, setUserDetails, setSessionData, setViewedCourse]);
 
     return (
         <Button onClick={handleLogout} variant="text" color="inherit">
