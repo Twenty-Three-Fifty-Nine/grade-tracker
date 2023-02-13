@@ -102,7 +102,7 @@ const AddCourseDialog = (props) => {
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
             <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
-                {isSuccess ? "Course added successfully." : "Course already added."}
+                {isSuccess ? "Course added successfully." : "Error adding course."}
             </Alert>
         </Snackbar>
         <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
