@@ -74,7 +74,7 @@ const CourseViewer = (props) => {
         let temp = [];
         assessments.forEach((assessment) => {
             if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
-                if((pastDeadlineFilter && assessment.deadline < new Date()) || !pastDeadlineFilter){
+                if((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter){
                     if((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)){
                         temp.push(assessment)
                     }
@@ -160,12 +160,19 @@ const CourseViewer = (props) => {
             </Box>
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10, mb: 5}} />
 
-            <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"center", mb: 5}}>
+            <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.map((assessment, index) => (
-                        <AssessmentViewerCard key={assessment.name} assData={assessment}/>
-                    ))} 
+                    {filteredAssessments.length > 0 ? filteredAssessments.map((assessment, index) => (
+                        <AssessmentViewerCard key={assessment.name} assData={assessment} />
+                    )) : 
+                    <Card>
+                        <CardContent sx={{minWidth: 731}}>
+                            <Typography variant="h5" component="div" sx={{textAlign:"center"}}>
+                                No Assessments Match Filter
+                            </Typography>
+                        </CardContent>
+                    </Card>} 
                     <Button variant="contained"> Add Assessment </Button>
                 </Stack>
 
