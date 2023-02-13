@@ -7,6 +7,7 @@ import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from "./ConfirmDialog";
 
 class Assessment {
     constructor(name, weight, grade, deadline, isAss) {
@@ -24,6 +25,7 @@ class Assessment {
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+    const [confirmDelete, setConfirmDelete] = React.useState(false);
 
     const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
@@ -107,6 +109,15 @@ const CourseViewer = (props) => {
         return temp;
     }
 
+    const closeDelete = () => {
+        setConfirmDelete(false);
+    }
+
+    const deleteCourse = () => {
+        console.log("Deleting");
+        closeDelete();
+    }
+
     return (
         <Box>  
             <Box sx={{mt: 3, pb: 3}}>
@@ -152,7 +163,7 @@ const CourseViewer = (props) => {
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
-                                    <IconButton color="error" size="medium">
+                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Tooltip>
@@ -235,8 +246,9 @@ const CourseViewer = (props) => {
                         </Box>
                     </Stack>
                 </Box>  
-                
             </Stack>
+
+            <ConfirmDialog open={confirmDelete} handleClose={closeDelete} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
 
             <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
                 <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
