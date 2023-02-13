@@ -34,6 +34,7 @@ const CourseViewer = (props) => {
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [showSave, setShowSave] = React.useState(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
+    const [confirmExit, setConfirmExit] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -50,22 +51,21 @@ const CourseViewer = (props) => {
 
     let handleKeyDown = null;
 
-    const exitViewer = useCallback(
-        () => {
-            document.removeEventListener("keydown", handleKeyDown, false);
-            setViewedCourse(null);
-        },
-        [handleKeyDown, setViewedCourse]
-    );
+    const exitViewer = useCallback(() => {
+        document.removeEventListener("keydown", handleKeyDown, false);
+        setViewedCourse(null);
+    }, [handleKeyDown, setViewedCourse]);
 
-    handleKeyDown = useCallback(
-        (event) => {
-            if(event.key === "Escape") {
-                exitViewer();
-            }
-        },
-        [exitViewer]
-    );
+    const attemptClose = useCallback(() => {
+        if(true) setConfirmExit(true);
+        else exitViewer();
+    }, [exitViewer]);
+
+    handleKeyDown = useCallback((event) => {
+        if(event.key === "Escape") {
+            attemptClose();
+        }
+    }, [attemptClose]);
 
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
@@ -304,9 +304,10 @@ const CourseViewer = (props) => {
             </Stack>
 
             <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
+            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
             <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
                     <ChevronLeftIcon fontSize="large" />
                 </Fab>
             </Tooltip>
