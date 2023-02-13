@@ -30,7 +30,7 @@ class Assessment {
 } 
 
 const CourseViewer = (props) => {
-    const { courseData, setViewedCourse, userDetails } = props;
+    const { courseData, setViewedCourse, userDetails, setSessionData } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [showSave, setShowSave] = React.useState(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -130,6 +130,7 @@ const CourseViewer = (props) => {
             if(assessment.hasChanged) changes = true;
         })
         setShowSave(changes);
+        return changes;
     }
 
     const saveChanges = () => {
@@ -164,13 +165,14 @@ const CourseViewer = (props) => {
         });
     }
 
-    const closeDelete = () => {
-        setConfirmDelete(false);
-    }
-
     const deleteCourse = () => {
-        console.log("Deleting");
+        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/", {
+            courseCode: courseData.code,
+            year: courseData.year
+        })
         setConfirmDelete(false);
+        exitViewer();
+        setSessionData(null);
     }
 
     return (
