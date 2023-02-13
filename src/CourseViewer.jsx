@@ -90,15 +90,15 @@ const CourseViewer = (props) => {
     }
 
     const sort = (type = sortType) => {
-        if(type === "name-a") nameSort(true, "name");
-        else if(type === "name-d") nameSort(false, "name");
-        else if(type === "deadline-a") nameSort(true, "deadline");
-        else if(type === "deadline-d") nameSort(false, "deadline");
-        else if(type === "weight-a") nameSort(false, "weight");
-        else if(type === "weight-d") nameSort(true, "weight");
+        if(type === "name-a") sortAlgorithm(true, "name");
+        else if(type === "name-d") sortAlgorithm(false, "name");
+        else if(type === "deadline-a") sortAlgorithm(true, "deadline");
+        else if(type === "deadline-d") sortAlgorithm(false, "deadline");
+        else if(type === "weight-a") sortAlgorithm(false, "weight");
+        else if(type === "weight-d") sortAlgorithm(true, "weight");
     }
 
-    const nameSort = (isAsc, value) => {
+    const sortAlgorithm = (isAsc, value) => {
         let temp = filteredAssessments;
         temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
         setFilteredAssessments(temp);
