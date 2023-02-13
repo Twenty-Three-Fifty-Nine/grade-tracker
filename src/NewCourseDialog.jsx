@@ -99,7 +99,7 @@ const NewCourseDialog = (props) => {
     const createCourse = async () => {
         console.log("Adding new template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
-        await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
+        await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses  ", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
             url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
@@ -123,12 +123,12 @@ const NewCourseDialog = (props) => {
             setCourseURL("");
             setNameValid(false);
             setCodeValid(false);
-            setURLValid(false);
+            setURLValid(true);
             setNameCheckOn(false);
             setCodeCheckOn(false);
             setURLCheckOn(false);
         }).catch((e) => {
-            if(true) setErrorText("There is already a template with this course code")
+            if(e.response && e.response.status === 409) setErrorText("There is already a template with this course code")
             else setErrorText("There was an error creating a course")
             setSnackbar("error");
             setIsSuccess(false);
@@ -147,7 +147,7 @@ const NewCourseDialog = (props) => {
         setCourseURL("");
         setNameValid(false);
         setCodeValid(false);
-        setURLValid(false);
+        setURLValid(true);
         setNameCheckOn(false);
         setCodeCheckOn(false);
         setURLCheckOn(false);
@@ -204,7 +204,7 @@ const NewCourseDialog = (props) => {
 
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
             <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
-                {isSuccess ? "Course created successfully" : {errorText}}
+                {isSuccess ? "Course created successfully" : errorText}
             </Alert>
         </Snackbar>
         </>
