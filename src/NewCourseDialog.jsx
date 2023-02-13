@@ -99,7 +99,7 @@ const NewCourseDialog = (props) => {
         await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
-            url: courseURL,
+            url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
             assignments: assessments.map((a) => {
                 return {
                     name: toTitleCase(a.name),
