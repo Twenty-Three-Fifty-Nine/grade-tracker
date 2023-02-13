@@ -109,13 +109,9 @@ const CourseViewer = (props) => {
         return temp;
     }
 
-    const closeDelete = () => {
-        setConfirmDelete(false);
-    }
-
     const deleteCourse = () => {
         console.log("Deleting");
-        closeDelete();
+        setConfirmDelete(false);
     }
 
     return (
@@ -248,7 +244,7 @@ const CourseViewer = (props) => {
                 </Box>  
             </Stack>
 
-            <ConfirmDialog open={confirmDelete} handleClose={closeDelete} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
 
             <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
                 <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
