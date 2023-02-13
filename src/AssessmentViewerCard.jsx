@@ -28,7 +28,7 @@ const AssessmentViewerCard = (props) => {
     const handleGradeChange = (e) => {
         if(e.target.value === "") assData.setGrade(NaN);
         else if(!isNaN(e.target.value)) assData.setGrade(e.target.value.substring(0, 5));
-        assData.valid = (isNaN(e.target.value) && e.target.value === "") || (e.target.value >= 0 && e.target.value <= 100);
+        assData.valid = (isNaN(e.target.value) && e.target.value === "") || (!isNaN(e.target.value) && e.target.value >= 0 && e.target.value <= 100);
         setValid(assData.valid);
         checkChanges();
         setUpdater(!updater);
@@ -66,10 +66,15 @@ const AssessmentViewerCard = (props) => {
                         Grade
                     </Typography>
                     <Stack direction="row">
-                        <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35} }} 
+                        <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
                             value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 150}} 
                             error={!valid}
                             onChange={handleGradeChange}
+                            onKeyDown={(e) => {
+                                if(((isNaN(e.key) && e.key !== ".") || assData.grade.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
+                                  e.preventDefault();
+                                } 
+                            }}
                         />
                         <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
                             <Typography variant={"h3"} component="div">
