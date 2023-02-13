@@ -132,7 +132,17 @@ const CourseViewer = (props) => {
 
     const saveChanges = () => {
         assessments.forEach((assessment) => {
+            assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
+        });
+
+        Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
+            assignments: assessments,
+            year: courseData.year
+        });
+
+        assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
+            assessment.grade = assessment.grade === -1 ? NaN : assessment.grade;
             courseData.names[index] = assessment.name;
             courseData.weights[index] = assessment.weight;
             courseData.deadlines[index] = assessment.deadline;
@@ -141,11 +151,6 @@ const CourseViewer = (props) => {
             assessment.hasChanged = false;
             assessment.initGrade = assessment.grade;
         })
-        
-        Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
-            assignments: assessments,
-            year: courseData.year
-        });
 
         courseData.updateTotal();
         setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
