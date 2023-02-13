@@ -19,7 +19,7 @@ class Assessment {
         this.initGrade = grade === -1 ? NaN : grade;
         this.grade = grade === -1 ? NaN : grade;
         this.deadline = deadline;
-        this.valid = false;
+        this.valid = true;
         this.duplicate = false;
         this.isAss = isAss;
         this.hasChanged = false;
@@ -34,6 +34,7 @@ class Assessment {
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+    const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
     const changesMadeR = React.useRef(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -134,10 +135,13 @@ const CourseViewer = (props) => {
 
     const checkChanges = () => {
         let changes = false;
+        let valid = true;
         assessments.forEach((assessment) => {
             if(assessment.hasChanged) changes = true;
+            if(!assessment.valid) valid = false;
         })
         setChangesMade(changes);
+        setValidChanges(valid);
         changesMadeR.changes = changes;
     }
 
@@ -343,7 +347,7 @@ const CourseViewer = (props) => {
                 </Fab>
             </Tooltip>
 
-            {changesMade && <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+            {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
 
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal:"right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
