@@ -1,5 +1,6 @@
 import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox} from "@mui/material";
 import React, {useCallback} from "react";
+import Axios from "axios";
 import dayjs from "dayjs";
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -28,7 +29,7 @@ class Assessment {
 } 
 
 const CourseViewer = (props) => {
-    const { courseData, setViewedCourse } = props;
+    const { courseData, setViewedCourse, userDetails } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [showSave, setShowSave] = React.useState(false);
 
@@ -65,7 +66,6 @@ const CourseViewer = (props) => {
     );
 
     React.useEffect(() => {
-        console.log(courseData)
         document.addEventListener("keydown", handleKeyDown, false);
         window.scrollTo(0, 0);
 
@@ -131,7 +131,6 @@ const CourseViewer = (props) => {
     }
 
     const saveChanges = () => {
-        console.log(assessments)
         assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
             courseData.names[index] = assessment.name;
@@ -142,14 +141,16 @@ const CourseViewer = (props) => {
             assessment.hasChanged = false;
             assessment.initGrade = assessment.grade;
         })
-
-        // console.log(courseData.getCourseCompletion());
+        
+        Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
+            assignments: assessments,
+            year: courseData.year
+        });
 
         courseData.updateTotal();
         setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
         setCourseLetter(courseData.getCourseLetter());
         setShowSave(false);
-        console.log(courseData)
     }
 
     return (
