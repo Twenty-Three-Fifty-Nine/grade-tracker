@@ -71,11 +71,11 @@ const CreateAssessmentCard = (props) => {
                                 <ToggleButton value="ass">
                                     <MenuBookRoundedIcon />
                                 </ToggleButton>
-                                <ToggleButton value="exam">
+                                <ToggleButton value="test">
                                     <DescriptionRoundedIcon />
                                 </ToggleButton>
                             </ToggleButtonGroup>
-                            <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAssignment ? "Assignment" : "Exam" } </Typography>
+                            <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAssignment ? "Assignment" : "Test" } </Typography>
                         </Stack>
                         <IconButton onClick={() => {
                             removeAssessment(index); 

@@ -8,15 +8,32 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+class Assessment {
+    constructor(name, weight, grade, deadline, isAss) {
+        this.name = name;
+        this.weight = weight;
+        this.initGrade = -1 ? NaN : grade;
+        this.grade = -1 ? NaN : grade;
+        this.deadline = deadline;
+        this.valid = false;
+        this.duplicate = false;
+        this.isAss = isAss;
+    }
+} 
+
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse } = props;
-    const [sortType, setSortType] = React.useState("deadline-a");
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+
+    const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
     const [missingGradeFilter, setMissingGradeFilter] = React.useState(false);
     const [pastDeadlineFilter, setPastDeadlineFilter] = React.useState(false);
     const [testFilter, setTestFilter] = React.useState(false);
     const [assignmentFilter, setAssignmentFilter] = React.useState(false);
+
+    const [assessments, setAssessments] = React.useState([]);
+    const [filteredAssessments, setFilteredAssessments] = React.useState([]);
 
     let handleKeyDown = null;
 
@@ -40,10 +57,54 @@ const CourseViewer = (props) => {
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
         window.scrollTo(0, 0);
-    }, [handleKeyDown]);
+        for(let i = 0; i < courseData.names.length; i++){
+            const name = courseData.names[i];
+            const weight = courseData.weights[i];
+            const deadline = courseData.deadlines[i];
+            const grade = courseData.grades[i];
+            const isAss = courseData.isAssList[i];
+            const assessment = new Assessment(name, weight, grade, deadline, isAss);
+            setAssessments(current => [...current, assessment]);
+            setFilteredAssessments(current => [...current, assessment]);
+        };
+    }, [courseData, handleKeyDown]);
+
+    const sort = useCallback((type = sortType, list = filteredAssessments) => {
+        if(type === "name-a") return sortAlgorithm(true, "name", list);
+        else if(type === "name-d") return sortAlgorithm(false, "name", list);
+        else if(type === "deadline-a") return sortAlgorithm(true, "deadline", list);
+        else if(type === "deadline-d") return sortAlgorithm(false, "deadline", list);
+        else if(type === "weight-a") return sortAlgorithm(false, "weight", list);
+        else if(type === "weight-d") return sortAlgorithm(true, "weight", list);
+    }, [filteredAssessments, sortType])
+
+    const filter = useCallback(() => {
+        let temp = [];
+        assessments.forEach((assessment) => {
+            if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
+                if((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter){
+                    if((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)){
+                        temp.push(assessment)
+                    }
+                }
+            }
+        })
+        setFilteredAssessments(sort(sortType, temp));
+    }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
+
+    React.useEffect(() => {
+        if(assessments.length === 0) return;
+        filter();
+    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, filter, assessments.length]);
 
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
+        setFilteredAssessments(sort(e.target.value));
+    }
+
+    const sortAlgorithm = (isAsc, value, temp) => {
+        temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
+        return temp;
     }
 
     return (
@@ -102,14 +163,19 @@ const CourseViewer = (props) => {
             </Box>
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10, mb: 5}} />
 
-            <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"center", mb: 5}}>
+            <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {courseData.names.map((name, index) => (
-                        <AssessmentViewerCard key={name}
-                            name={name} deadline={courseData.deadlines[index]} weight={courseData.weights[index]} constGrade={courseData.grades[index]} isAss={courseData.isAssList[index]}
-                        />
-                    ))} 
+                    {filteredAssessments.length > 0 ? filteredAssessments.map((assessment, index) => (
+                        <AssessmentViewerCard key={assessment.name} assData={assessment} />
+                    )) : 
+                    <Card>
+                        <CardContent sx={{minWidth: 731}}>
+                            <Typography variant="h5" component="div" sx={{textAlign:"center"}}>
+                                No Assessments Match Filter
+                            </Typography>
+                        </CardContent>
+                    </Card>} 
                     <Button variant="contained"> Add Assessment </Button>
                 </Stack>
 
