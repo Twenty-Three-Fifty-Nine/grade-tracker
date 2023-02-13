@@ -64,6 +64,7 @@ const App = () => {
                                 setIsLoggedIn={setIsLoggedIn}
                                 setUserDetails={setUserDetails}
                                 setSessionData={setSessionData}
+                                setViewedCourse={setViewedCourse}
                             />
                         )}
                         <FormControlLabel
