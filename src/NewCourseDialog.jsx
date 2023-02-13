@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
 import CreateAssessmentCard from './CreateAssessmentCard';
+import ConfirmDialog from './ConfirmDialog';
 import Axios from 'axios';
 import { isMobile } from "react-device-detect";
 
@@ -40,7 +41,8 @@ const NewCourseDialog = (props) => {
     const [codeCheckOn, setCodeCheckOn] = React.useState(false);
     const [urlCheckOn, setURLCheckOn] = React.useState(false);
     const [formatValid, setFormatValid] = React.useState(false);
-
+    
+    const [closeDialog, setCloseDialog] = React.useState(false);
 
     const checkFormat = useCallback(() => {
         let valid = nameValid && codeValid && assessments.length > 0 && urlValid;
@@ -130,6 +132,11 @@ const NewCourseDialog = (props) => {
         })
     }
 
+    const attemptClose = () => {
+        if(assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "") setCloseDialog(true);
+        else stopCreating();
+    }
+
     const stopCreating = () => {
         setAssessments([]);
         setCourseName("");
@@ -141,15 +148,16 @@ const NewCourseDialog = (props) => {
         setNameCheckOn(false);
         setCodeCheckOn(false);
         setURLCheckOn(false);
+        setCloseDialog(false);
         onClose();
     }
 
     return (
         <>
-        <Dialog fullScreen open={open} onClose={stopCreating}>
+        <Dialog fullScreen open={open} onClose={attemptClose}>
             <AppBar position="fixed" component="nav">
                 <Toolbar>
-                    <IconButton color="inherit" onClick={stopCreating}>
+                    <IconButton color="inherit" onClick={attemptClose}>
                         <Icon>close</Icon>
                     </IconButton>
                     <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> Create New Course for Trimester {activeTri.tri} </Typography>
@@ -188,6 +196,9 @@ const NewCourseDialog = (props) => {
                 </Stack>
             </Box>
         </Dialog>
+
+        <ConfirmDialog open={closeDialog} handleClose={() => {setCloseDialog(false)}} buttonText={"Stop"} message={"Stop template creation?"} subMessage={"Any inputted data will be lost."} confirmAction={stopCreating} />
+
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
             <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
                 {isSuccess ? "Course created successfully." : "Course template exists already."}
