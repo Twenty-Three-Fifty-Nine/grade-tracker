@@ -115,6 +115,11 @@ const CreateAssessmentCard = (props) => {
                             sx={{ marginLeft: 2}}
                             error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
                             helperText={details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? "The value cannot be above 100" : ""} 
+                            onKeyDown={(e) => {
+                                if(((isNaN(e.key) && e.key !== ".") || details.weight.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
+                                  e.preventDefault();
+                                } 
+                            }}
                         />
                     </Box>
                 </Stack>
