@@ -87,7 +87,7 @@ const App = () => {
                         setUserDetails={setUserDetails}
                     />
                 : viewedCourse ? 
-                    <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails} setSessionData={setSessionData} />
+                    <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails} setSessionData={setSessionData} sessionData={sessionData} />
                 :   <GradesOverview
                         userEmail={userDetails.email}
                         userName={userDetails.name}

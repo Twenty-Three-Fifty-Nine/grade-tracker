@@ -30,7 +30,7 @@ class Assessment {
 } 
 
 const CourseViewer = (props) => {
-    const { courseData, setViewedCourse, userDetails, setSessionData } = props;
+    const { courseData, setViewedCourse, userDetails, setSessionData, sessionData} = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [showSave, setShowSave] = React.useState(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -166,10 +166,18 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = () => {
+        let temp = sessionData;
+        temp.courses[courseData.year][courseData.tri - 1].forEach((course => {
+            if(course.code === courseData.code){
+                let index = temp.courses[courseData.year][courseData.tri - 1].indexOf(course)
+                delete temp.courses[courseData.year][courseData.tri - 1][index];
+            }
+        }))
+        setSessionData(temp);
+
         Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.year + "/" + courseData.code)
         setConfirmDelete(false);
         exitViewer();
-        // setSessionData(null);
     }
 
     return (
