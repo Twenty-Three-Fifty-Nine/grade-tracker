@@ -32,11 +32,12 @@ const NewCourseDialog = (props) => {
     const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
+    const [errorText, setErrorText] = React.useState("");
     const [updater, setUpdater] = React.useState(false);
 
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
-    const [urlValid, setURLValid] = React.useState(false);
+    const [urlValid, setURLValid] = React.useState(true);
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [codeCheckOn, setCodeCheckOn] = React.useState(false);
     const [urlCheckOn, setURLCheckOn] = React.useState(false);
@@ -127,6 +128,8 @@ const NewCourseDialog = (props) => {
             setCodeCheckOn(false);
             setURLCheckOn(false);
         }).catch((e) => {
+            if(true) setErrorText("There is already a template with this course code")
+            else setErrorText("There was an error creating a course")
             setSnackbar("error");
             setIsSuccess(false);
         })
@@ -201,7 +204,7 @@ const NewCourseDialog = (props) => {
 
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
             <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
-                {isSuccess ? "Course created successfully." : "Course template exists already."}
+                {isSuccess ? "Course created successfully" : {errorText}}
             </Alert>
         </Snackbar>
         </>

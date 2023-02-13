@@ -1,7 +1,9 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox} from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert } from "@mui/material";
 import React, {useCallback} from "react";
 import Axios from "axios";
 import dayjs from "dayjs";
+import { isMobile } from "react-device-detect";
+
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -35,6 +37,10 @@ const CourseViewer = (props) => {
     const [showSave, setShowSave] = React.useState(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
+    const [snackbar, setSnackbar] = React.useState("none");
+    const [isSuccess, setIsSuccess] = React.useState("success");
+    const [successText, setSuccessText] = React.useState("");
+    const [errorText, setErrorText] = React.useState("");
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -148,7 +154,6 @@ const CourseViewer = (props) => {
         courseData.updateTotal();
         setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
         setCourseLetter(courseData.getCourseLetter());
-        setShowSave(false);
 
         assessments.forEach((assessment) => {
             assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
@@ -158,6 +163,15 @@ const CourseViewer = (props) => {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
+        }).then(() => {
+            setShowSave(false);
+            setSnackbar("success")
+            setIsSuccess(true);
+            setSuccessText("Changes saved successfully");
+        }).catch(() => {
+            setSnackbar("error");
+            setIsSuccess(false);
+            setErrorText("Saving to server failed, try again later");
         });
 
         assessments.forEach((assessment) => {
@@ -180,6 +194,10 @@ const CourseViewer = (props) => {
 
             setConfirmDelete(false);
             exitViewer();
+        }).catch((e) => {
+            setSnackbar("error");
+            setIsSuccess(false);
+            setErrorText("Removing course failed, try again later");
         });
     }
 
@@ -323,6 +341,12 @@ const CourseViewer = (props) => {
             </Tooltip>
 
             {showSave && <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb:10 }}>
+                    {isSuccess ? successText : errorText}
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }
