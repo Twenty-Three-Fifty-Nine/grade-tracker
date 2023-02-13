@@ -8,6 +8,7 @@ import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from "./ConfirmDialog";
 
 class Assessment {
     constructor(name, weight, grade, deadline, isAss) {
@@ -29,9 +30,11 @@ class Assessment {
 } 
 
 const CourseViewer = (props) => {
-    const { courseData, setViewedCourse, userDetails } = props;
+    const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [showSave, setShowSave] = React.useState(false);
+    const [confirmDelete, setConfirmDelete] = React.useState(false);
+    const [confirmExit, setConfirmExit] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -48,22 +51,21 @@ const CourseViewer = (props) => {
 
     let handleKeyDown = null;
 
-    const exitViewer = useCallback(
-        () => {
-            document.removeEventListener("keydown", handleKeyDown, false);
-            setViewedCourse(null);
-        },
-        [handleKeyDown, setViewedCourse]
-    );
+    const exitViewer = useCallback(() => {
+        document.removeEventListener("keydown", handleKeyDown, false);
+        setViewedCourse(null);
+    }, [handleKeyDown, setViewedCourse]);
 
-    handleKeyDown = useCallback(
-        (event) => {
-            if(event.key === "Escape") {
-                exitViewer();
-            }
-        },
-        [exitViewer]
-    );
+    const attemptClose = useCallback(() => {
+        if(true) setConfirmExit(true);
+        else exitViewer();
+    }, [exitViewer]);
+
+    handleKeyDown = useCallback((event) => {
+        if(event.key === "Escape") {
+            attemptClose();
+        }
+    }, [attemptClose]);
 
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
@@ -128,6 +130,7 @@ const CourseViewer = (props) => {
             if(assessment.hasChanged) changes = true;
         })
         setShowSave(changes);
+        return changes;
     }
 
     const saveChanges = () => {
@@ -159,6 +162,24 @@ const CourseViewer = (props) => {
 
         assessments.forEach((assessment) => {
             assessment.grade = assessment.grade === -1 ? NaN : assessment.grade;
+        });
+    }
+
+    const deleteCourse = async () => {
+        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.year + "/" + courseData.code).then((response) => {
+            setCourseList(current => [...current, courseData.code].sort());
+
+            let temp = sessionData;
+            temp.courses[courseData.year][courseData.tri - 1].forEach((course => {
+                if(course.code === courseData.code){
+                    let index = temp.courses[courseData.year][courseData.tri - 1].indexOf(course)
+                    temp.courses[courseData.year][courseData.tri - 1].splice(index, 1);
+                }
+            }))
+            setSessionData(temp);
+
+            setConfirmDelete(false);
+            exitViewer();
         });
     }
 
@@ -207,7 +228,7 @@ const CourseViewer = (props) => {
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
-                                    <IconButton color="error" size="medium">
+                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Tooltip>
@@ -290,11 +311,13 @@ const CourseViewer = (props) => {
                         </Box>
                     </Stack>
                 </Box>  
-                
             </Stack>
 
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
+            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
+
             <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                <Fab color="primary" onClick={() => {setViewedCourse(null)}} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
                     <ChevronLeftIcon fontSize="large" />
                 </Fab>
             </Tooltip>
