@@ -7,9 +7,11 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
+    IconButton
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from 'universal-cookie';
+import CloseIcon from '@mui/icons-material/Close';
 
 const LoginDialog = (props) => {
     const { onClose, open, setIsLoggedIn, setUserDetails } = props;
@@ -79,7 +81,17 @@ const LoginDialog = (props) => {
                     }}
                 />
                 {loginError && (
-                    <Alert severity="error">
+                    <Alert severity="error"
+                        action={
+                            <IconButton color="inherit" size="small"
+                            onClick={() => {
+                                setLoginError(false);
+                            }}
+                            >
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                    >
                         There was an error logging in
                     </Alert>
                 )}
