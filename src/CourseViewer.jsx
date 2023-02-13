@@ -69,8 +69,16 @@ const CourseViewer = (props) => {
         };
     }, [courseData, handleKeyDown]);
 
-    React.useEffect(() => {
-        if(assessments.length === 0) return;
+    const sort = useCallback((type = sortType, list = filteredAssessments) => {
+        if(type === "name-a") return sortAlgorithm(true, "name", list);
+        else if(type === "name-d") return sortAlgorithm(false, "name", list);
+        else if(type === "deadline-a") return sortAlgorithm(true, "deadline", list);
+        else if(type === "deadline-d") return sortAlgorithm(false, "deadline", list);
+        else if(type === "weight-a") return sortAlgorithm(false, "weight", list);
+        else if(type === "weight-d") return sortAlgorithm(true, "weight", list);
+    }, [filteredAssessments, sortType])
+
+    const filter = useCallback(() => {
         let temp = [];
         assessments.forEach((assessment) => {
             if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
@@ -81,27 +89,22 @@ const CourseViewer = (props) => {
                 }
             }
         })
-        setFilteredAssessments(temp);
-    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, assessments]);
+        setFilteredAssessments(sort(sortType, temp));
+    }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
+
+    React.useEffect(() => {
+        if(assessments.length === 0) return;
+        filter();
+    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, filter, assessments.length]);
 
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
-        sort(e.target.value);
+        setFilteredAssessments(sort(e.target.value));
     }
 
-    const sort = (type = sortType) => {
-        if(type === "name-a") sortAlgorithm(true, "name");
-        else if(type === "name-d") sortAlgorithm(false, "name");
-        else if(type === "deadline-a") sortAlgorithm(true, "deadline");
-        else if(type === "deadline-d") sortAlgorithm(false, "deadline");
-        else if(type === "weight-a") sortAlgorithm(false, "weight");
-        else if(type === "weight-d") sortAlgorithm(true, "weight");
-    }
-
-    const sortAlgorithm = (isAsc, value) => {
-        let temp = filteredAssessments;
+    const sortAlgorithm = (isAsc, value, temp) => {
         temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
-        setFilteredAssessments(temp);
+        return temp;
     }
 
     return (
