@@ -34,7 +34,8 @@ class Assessment {
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
-    const [showSave, setShowSave] = React.useState(false);
+    const [changesMade, setChangesMade] = React.useState(false);
+    const changesMadeR = React.useRef(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
@@ -63,7 +64,7 @@ const CourseViewer = (props) => {
     }, [handleKeyDown, setViewedCourse]);
 
     const attemptClose = useCallback(() => {
-        if(true) setConfirmExit(true);
+        if(changesMadeR.changes) setConfirmExit(true);
         else exitViewer();
     }, [exitViewer]);
 
@@ -74,6 +75,7 @@ const CourseViewer = (props) => {
     }, [attemptClose]);
 
     React.useEffect(() => {
+        if(assessments.length > 0) return;
         document.addEventListener("keydown", handleKeyDown, false);
         window.scrollTo(0, 0);
 
@@ -90,7 +92,7 @@ const CourseViewer = (props) => {
             setAssessments(current => [...current, assessment]);
             setFilteredAssessments(current => [...current, assessment]);
         };
-    }, [courseData, handleKeyDown]);
+    }, [assessments.length, courseData, handleKeyDown]);
 
     const sort = useCallback((type = sortType, list = filteredAssessments) => {
         if(type === "name-a") return sortAlgorithm(true, "name", list);
@@ -135,8 +137,8 @@ const CourseViewer = (props) => {
         assessments.forEach((assessment) => {
             if(assessment.hasChanged) changes = true;
         })
-        setShowSave(changes);
-        return changes;
+        setChangesMade(changes);
+        changesMadeR.changes = changes;
     }
 
     const saveChanges = () => {
@@ -164,7 +166,7 @@ const CourseViewer = (props) => {
             totalGrade: courseData.totalGrade,
             year: courseData.year,
         }).then(() => {
-            setShowSave(false);
+            setChangesMade(false);
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
@@ -340,7 +342,7 @@ const CourseViewer = (props) => {
                 </Fab>
             </Tooltip>
 
-            {showSave && <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+            {changesMade && <Button sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
 
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb:10 }}>
