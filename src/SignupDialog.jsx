@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, IconButton } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CloseIcon from '@mui/icons-material/Close';
 
 const SignupDialog = (props) => {
     const { open, onClose, setIsLoggedIn, setUserDetails } = props;
@@ -148,7 +149,20 @@ const SignupDialog = (props) => {
                     <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordSpecial ? <CheckCircleIcon sx={{color:'success.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one special character</Typography>
                     <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordMatch ? <CheckCircleIcon sx={{color:'success.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must match</Typography>
                 </Box>
-                {signupError && <Alert severity="error" sx={{ mt: 2 }}>{signupErrorText}</Alert>}
+                {signupError && 
+                    <Alert severity="error" sx={{ mt: 2 }}
+                        action={
+                            <IconButton color="inherit" size="small"
+                            onClick={() => {
+                                setSignupError(false);
+                            }}
+                            >
+                            <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                    >
+                    {signupErrorText}   
+                </Alert>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
