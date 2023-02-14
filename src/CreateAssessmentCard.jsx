@@ -65,7 +65,7 @@ const CreateAssessmentCard = (props) => {
                         <Stack sx={{ ml: 2 }}>
                             <ToggleButtonGroup
                                 exclusive size="small"
-                                value={details.isAssignment ? "ass" : "exam"}
+                                value={details.isAssignment ? "ass" : "test"}
                                 onChange={(e, newValue) => { details.isAssignment = newValue === "ass"; setUpdater(!updater); }}
                             >
                                 <ToggleButton value="ass">

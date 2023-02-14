@@ -54,7 +54,7 @@ const App = () => {
                     </Stack>
 
                     <Typography variant="h6" component="div" sx={{textAlign:"center", m: isMobile ? 0 : "auto"}}>
-                            { isLoggedIn ? userDetails.displayName + 
+                            { isLoggedIn ? isMobile && viewedCourse ? viewedCourse.code  : userDetails.displayName + 
                                 (isMobile ? "" : (userDetails.displayName[userDetails.displayName.length-1] === 's' ? "' " : "'s ") 
                                 + (viewedCourse ? viewedCourse.code : "Overview")) : ""
                             }

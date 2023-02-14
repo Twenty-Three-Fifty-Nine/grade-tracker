@@ -1,6 +1,8 @@
 import React from "react";
 import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton, Tooltip } from "@mui/material";
 import dayjs from "dayjs";
+import { isMobile } from "react-device-detect";
+
 import EditIcon from '@mui/icons-material/Edit';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
@@ -38,7 +40,7 @@ const AssessmentViewerCard = (props) => {
         <Card>
             <CardContent sx={{display: 'flex'}}>
                 <Stack spacing={1}>
-                    <Stack direction="row"sx={{display:"flex", minWidth: 350}}>
+                    <Stack direction="row"sx={{display:"flex", minWidth: isMobile ? 300 :350}}>
                         <Typography variant={"h5"} component="div" sx={{mr: 1}}>
                             {assData.name}
                         </Typography>
@@ -59,15 +61,38 @@ const AssessmentViewerCard = (props) => {
                     <Typography variant={"h6"} component="div">
                         Worth: {assData.weight}%
                     </Typography>
+                    {isMobile && (<>
+                    <Divider />
+                    <Typography variant={"h5"} component="div" sx={{flex:1}}>
+                        Grade:
+                    </Typography>
+                    <Stack direction="row">
+                        <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
+                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 180}} 
+                            error={!valid}
+                            onChange={handleGradeChange}
+                            onKeyDown={(e) => {
+                                if(((isNaN(e.key) && e.key !== ".") || assData.grade.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
+                                e.preventDefault();
+                                } 
+                            }}
+                        />
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
+                            <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
+                                {getCourseLetter()}
+                            </Typography>
+                        </Box>
+                    </Stack></>)}
                 </Stack>
+                {!isMobile && (<>
                 <Divider orientation="vertical" flexItem sx={{borderRightWidth: 3, mr: 5, ml: 2}} />
-                <Stack spacing={1} sx={{pr: 0, minWidth: 290}} >
+                <Stack spacing={1} sx={{pr: 0, minWidth: isMobile ? 0 : 290}} >
                     <Typography variant={"h5"} component="div" sx={{flex:1}}>
                         Grade
                     </Typography>
                     <Stack direction="row">
                         <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
-                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 150}} 
+                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: isMobile ? 50 : 150}} 
                             error={!valid}
                             onChange={handleGradeChange}
                             onKeyDown={(e) => {
@@ -76,13 +101,13 @@ const AssessmentViewerCard = (props) => {
                                 } 
                             }}
                         />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
-                            <Typography variant={"h3"} component="div">
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
+                            <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
                                 {getCourseLetter()}
                             </Typography>
                         </Box>
                     </Stack>
-                </Stack>
+                </Stack></>)}
             </CardContent>
         </Card>
     );

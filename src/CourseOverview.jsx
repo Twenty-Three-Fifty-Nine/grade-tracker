@@ -11,7 +11,7 @@ const CourseOverview = ({courseInfo, setViewedCourse}) => {
                         {courseInfo.code}
                     </Typography>
                     <Divider orientation="vertical" flexItem />
-                    <Chip label={Math.round(courseInfo.getCourseCompletion() * 100) + "% Completed"} sx={{marginRight: 2, marginLeft: 2}} />
+                    <Chip label={Math.round(courseInfo.getCourseCompletion() * 100) + "% " + (isMobile ? "Done" : "Completed")} sx={{marginRight: isMobile ? 1 : 2, marginLeft: isMobile ? 1 : 2}} />
                     <Chip label={courseInfo.totalGrade + "% | " + courseInfo.getCourseLetter()} sx={{marginRight: 2}} />
                 </CardContent>
             </CardActionArea>

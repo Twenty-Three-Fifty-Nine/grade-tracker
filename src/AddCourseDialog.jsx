@@ -81,23 +81,23 @@ const AddCourseDialog = (props) => {
     return (
         <>
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle sx={{ textAlign:"center", padding: 5, pr: isMobile ? 12 : 5, pl: isMobile ? 12 : 5, paddingBottom: 2}}>
+            <DialogTitle sx={{ textAlign:"center", padding: 5, pr: 5, pl: 5, paddingBottom: 2}}>
                 Add Course for {isMobile && <br />} Trimester {activeTri.tri} {activeTri.year}
             </DialogTitle>
             <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
-                <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: 240 }} 
+                <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: isMobile ? 200 : 240 }} 
                 renderInput={(params) => <TextField {...params} label="Course Code" />}
                 value={courseCode} onChange={(e, value) => { setCourseCode(value); }} />
                 <IconButton onClick={() => getTemplatesList()}>
                     <RefreshIcon fontSize='large' />
                 </IconButton>
             </Stack>
-            <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3}}> 
+            <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
                 If your course is not in this list, you can create an entry for the course offering.
             </DialogContentText>
             <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
-                <Button onClick={handleNewCourse} variant="outlined">Create New Course</Button>
-                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained">Add Course</Button>
+                <Button onClick={handleNewCourse} variant="outlined" size={isMobile ? "small" : "medium"}>Create New Course</Button>
+                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained" size={isMobile ? "small" : "medium"}>Add Course</Button>
             </Stack>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>

@@ -6,12 +6,12 @@ import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
 
 import LaunchIcon from '@mui/icons-material/Launch';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "./ConfirmDialog";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 class Assessment {
     constructor(name, weight, grade, deadline, isAss) {
@@ -27,7 +27,7 @@ class Assessment {
     }
 
     setGrade(grade) {
-        this.grade = grade;
+        this.grade = parseInt(grade);
         this.hasChanged = isNaN(this.grade) ? !isNaN(this.initGrade) : this.grade !== this.initGrade;
     }
 } 
@@ -44,6 +44,7 @@ const CourseViewer = (props) => {
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
+    const [sliderPos, setSliderPos] = React.useState(-270);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -155,7 +156,7 @@ const CourseViewer = (props) => {
             courseData.grades[index] = assessment.grade;
             courseData.isAssList[index] = assessment.isAss;
             assessment.hasChanged = false;
-            assessment.initGrade = assessment.grade;
+            assessment.initGrade = parseInt(assessment.grade);
         })
 
         courseData.updateTotal();
@@ -215,7 +216,7 @@ const CourseViewer = (props) => {
                 <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                     {courseData.name}
                 </Typography>
-                <Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
+                {!isMobile ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Trimester {courseData.tri} - {courseData.year}
@@ -261,9 +262,64 @@ const CourseViewer = (props) => {
                             </Box>
                         </Stack>
                     </Stack>
-                </Stack>
+                </Stack>) : (
+                    <Box>
+                        <Stack sx={{flexGrow: 1, flexBasis: 0}}>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                {!isNaN(courseCompletion) ? courseCompletion : "?" }% Completed
+                            </Typography>
+                            <Box sx={{alignSelf:"center"}}>
+                                <Button disabled={courseData.url === ""} variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
+                            </Box>
+                        </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Stack sx={{flexGrow: 1, flexBasis: 0}}>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
+                            </Typography>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                Last synced to template: {new dayjs(courseData.lastSynced).format("DD/MM/YYYY")}
+                            </Typography>
+                            <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                </Box>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                </Box>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
+                                        <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </Stack>
+                        </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Typography variant="h4" component="div" sx={{textAlign:"center"}}> 
+                            Currently Achieved:
+                        </Typography>
+                        <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+                            <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                            <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                        </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+                            <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
+                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                        </Stack>
+                    </Box>
+                )}
             </Box>
-            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10, mb: 5}} />
+
+            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
             <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
@@ -286,7 +342,7 @@ const CourseViewer = (props) => {
                 </Stack>
 
                 <Box sx={{alignSelf:"baseline", flexGrow: 1, flexBasis: 0}}>
-                    <Stack spacing={2}>
+                    {!isMobile && <Stack spacing={2}>
                         <Stack spacing={2} direction={"row"}>
                             <Tooltip title={<h3>Filter assessments</h3>} placement="top" arrow>
                                 <IconButton onClick={() => {setFilterPanelOpen(!filterPanelOpen)}}>
@@ -341,21 +397,79 @@ const CourseViewer = (props) => {
                                 }
                             } sx={{width: 100}} />}
                         </Box>
-                    </Stack>
+                    </Stack>}
                 </Box>  
             </Stack>
+
+            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+            {isMobile && <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
+                <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
+                <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+            </Stack>}
 
             <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
-            <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                    <ChevronLeftIcon fontSize="large" />
-                </Fab>
-            </Tooltip>
+            {isMobile && (
+                <Box sx={{ position:"fixed", top: 90, right: sliderPos, transition: "all 0.3s linear"}}>
+                    <Stack direction="row">
+                        <Stack>
+                            <Box sx={{backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25}}>
+                                <IconButton onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.3s linear", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
+                                    <KeyboardArrowLeftIcon />
+                                </IconButton>
+                            </Box>
+                            <Box sx={{visibility: "hidden"}} />
+                        </Stack>
 
-            {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+                        <Card sx={{width: 270, borderTopLeftRadius: 0, mt: "-1px", backgroundColor:"filterPanel.main"}}>
+                            <CardContent>
+                                <Stack spacing={0.5}>
+                                    <FormControl size="small" sx={{width:200, mb: 1, mt: 1}}>
+                                        <InputLabel> Sort By </InputLabel>
+                                        <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
+                                            <MenuItem value={"name-a"}>Name (Ascending)</MenuItem>
+                                            <MenuItem value={"name-d"}>Name (Descending)</MenuItem>
+                                            <MenuItem value={"deadline-a"}>Due Date (Closest)</MenuItem>
+                                            <MenuItem value={"deadline-d"}>Due Date (Furthest)</MenuItem>
+                                            <MenuItem value={"weight-a"}>Weight (Highest)</MenuItem>
+                                            <MenuItem value={"weight-d"}>Weight (Lowest)</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <Typography variant="body1" sx={{ml: 1.3 }}> Assessment Filters </Typography>
+                                    
+                                    <Divider />
+                                    
+                                    <Box sx={{alignSelf:"self-start", display:"flex", flexDirection:"column"}}>
+                                        <FormControlLabel control={<Checkbox checked={finishedFilter}
+                                            onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
+                                        <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
+                                            onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
+                                        <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
+                                            onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
+                                        <FormControlLabel control={<Checkbox checked={testFilter} 
+                                            onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
+                                        <FormControlLabel control={<Checkbox checked={assignmentFilter} 
+                                            onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
+                                    </Box>
 
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    </Stack>
+                </Box>
+            )}
+
+            {!isMobile && (<>
+                <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
+                    <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                        <KeyboardArrowLeftIcon fontSize="large" />
+                    </Fab>
+                </Tooltip>
+
+                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+            </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal:"right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
                     {isSuccess ? successText : errorText}
