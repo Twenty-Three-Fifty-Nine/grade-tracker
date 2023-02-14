@@ -66,7 +66,7 @@ const YearOverview = (props) => {
             <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
             <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
         </Stack>
-        <Alert severity="info" sx={{marginTop: 1}}>Current GPA for the Year: {getGPA()}</Alert>
+        <Alert severity="info" sx={{marginTop: 1, mb: 2}}>Current GPA for the Year: {getGPA()}</Alert>
         </>
     )
 }
