@@ -6,12 +6,12 @@ import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
 
 import LaunchIcon from '@mui/icons-material/Launch';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "./ConfirmDialog";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 class Assessment {
     constructor(name, weight, grade, deadline, isAss) {
@@ -44,6 +44,7 @@ const CourseViewer = (props) => {
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
+    const [sliderPos, setSliderPos] = React.useState(-270);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -303,7 +304,7 @@ const CourseViewer = (props) => {
                         <Typography variant="h4" component="div" sx={{textAlign:"center"}}> 
                             Currently Achieved:
                         </Typography>
-                        <Stack direction="row" spacing={10} sx={{alignItems:"center", justifyContent:"center"}}>
+                        <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                             <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                         </Stack>
@@ -410,10 +411,60 @@ const CourseViewer = (props) => {
             <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
+            {isMobile && (
+                <Box sx={{ position:"fixed", top: 90, right: sliderPos, transition: "all 0.4s ease-in-out"}}>
+                    <Stack direction="row">
+                        <Stack>
+                            <Box sx={{backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25}}>
+                                <IconButton onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.4s ease-in-out", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
+                                    <KeyboardArrowLeftIcon />
+                                </IconButton>
+                            </Box>
+                            <Box sx={{visibility: "hidden"}} />
+                        </Stack>
+
+                        <Card sx={{width: 270, borderTopLeftRadius: 0, mt: "-1px", backgroundColor:"filterPanel.main"}}>
+                            <CardContent>
+                                <Stack spacing={0.5}>
+                                    <FormControl size="small" sx={{width:200, mb: 1, mt: 1}}>
+                                        <InputLabel> Sort By </InputLabel>
+                                        <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
+                                            <MenuItem value={"name-a"}>Name (Ascending)</MenuItem>
+                                            <MenuItem value={"name-d"}>Name (Descending)</MenuItem>
+                                            <MenuItem value={"deadline-a"}>Due Date (Closest)</MenuItem>
+                                            <MenuItem value={"deadline-d"}>Due Date (Furthest)</MenuItem>
+                                            <MenuItem value={"weight-a"}>Weight (Highest)</MenuItem>
+                                            <MenuItem value={"weight-d"}>Weight (Lowest)</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <Typography variant="body1" sx={{ml: 1.3 }}> Assessment Filters </Typography>
+                                    
+                                    <Divider />
+                                    
+                                    <Box sx={{alignSelf:"self-start", display:"flex", flexDirection:"column"}}>
+                                        <FormControlLabel control={<Checkbox checked={finishedFilter}
+                                            onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
+                                        <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
+                                            onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
+                                        <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
+                                            onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
+                                        <FormControlLabel control={<Checkbox checked={testFilter} 
+                                            onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
+                                        <FormControlLabel control={<Checkbox checked={assignmentFilter} 
+                                            onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
+                                    </Box>
+
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    </Stack>
+                </Box>
+            )}
+
             {!isMobile && (<>
                 <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
                     <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                        <ChevronLeftIcon fontSize="large" />
+                        <KeyboardArrowLeftIcon fontSize="large" />
                     </Fab>
                 </Tooltip>
 

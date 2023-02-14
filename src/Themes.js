@@ -29,6 +29,9 @@ const lightTheme = createTheme({
         highlight: {
             main: "#c6c0b6",
         },
+        filterPanel: {
+            main: "#c4c389"
+        }
     },
     components: {
         MuiAlert: {
@@ -97,6 +100,9 @@ const darkTheme = createTheme({
         highlight: {
             main: "#545650",
         },
+        filterPanel: {
+            main: "#32382c"
+        }
     },
     components: {
         MuiAlert: {
