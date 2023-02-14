@@ -136,8 +136,8 @@ async function updateCourseDates(courses) {
 async function getUserCourse(courseCode, year, years) {
     const yearIndex = years.findIndex((y) => y["year"] === Number(year));
     const courses = years[yearIndex]["courses"];
-    const courseIndex = courses.findIndex((c) => c["course"] === courseCode);
-
+    const courseIndex = courses.findIndex((c) => c["courseCode"] === courseCode);
+    
     return {
         courseIndex: courseIndex,
         courses: courses,
