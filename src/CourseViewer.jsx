@@ -286,7 +286,7 @@ const CourseViewer = (props) => {
                 </Stack>
 
                 <Box sx={{alignSelf:"baseline", flexGrow: 1, flexBasis: 0}}>
-                    <Stack spacing={2}>
+                    {!isMobile && <Stack spacing={2}>
                         <Stack spacing={2} direction={"row"}>
                             <Tooltip title={<h3>Filter assessments</h3>} placement="top" arrow>
                                 <IconButton onClick={() => {setFilterPanelOpen(!filterPanelOpen)}}>
@@ -341,7 +341,7 @@ const CourseViewer = (props) => {
                                 }
                             } sx={{width: 100}} />}
                         </Box>
-                    </Stack>
+                    </Stack>}
                 </Box>  
             </Stack>
 
