@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
+import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse } from '@mui/material';
+import { TransitionGroup } from 'react-transition-group';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import ConfirmDialog from './ConfirmDialog';
 import Axios from 'axios';
@@ -188,15 +189,19 @@ const NewCourseDialog = (props) => {
 
                 <Typography variant="h5" sx={{paddingTop: 5}}> Course Assessments </Typography>
                 <Divider sx={{marginBottom: 3}}></Divider>
-                <Stack spacing={2}>
-                    {assessments.map((assessment, i) => {
-                        return (
-                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
-                        )
-                    })}
-                    <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
-                    <AlwaysScrollToBottom active={scrollActive} />
-                </Stack>
+                
+                    <Stack spacing={2}>
+                        <TransitionGroup>
+                        {assessments.map((assessment, i) => (
+                            <Collapse key={i} sx={{mb: 2}}>
+                                <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
+                            </Collapse>
+                        ))}
+                        </TransitionGroup>
+                        <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
+                        <AlwaysScrollToBottom active={scrollActive} />
+                    </Stack>
+                
             </Box>
         </Dialog>
 
