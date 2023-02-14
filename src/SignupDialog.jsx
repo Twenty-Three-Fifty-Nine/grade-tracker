@@ -8,7 +8,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CloseIcon from '@mui/icons-material/Close';
 
 const SignupDialog = (props) => {
-    const { open, onClose, setIsLoggedIn, setUserDetails } = props;
+    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -73,6 +73,7 @@ const SignupDialog = (props) => {
                 displayName: displayName,
                 email: email,
                 password: password,
+                activeTri: activeTri
             }
         )
             .then((result) => {
@@ -96,19 +97,7 @@ const SignupDialog = (props) => {
                 }
                 setSignupError(true);
             });
-    }, [
-        displayName,
-        email,
-        password,
-        validPasswordLength,
-        validPasswordNumber,
-        validPasswordSpecial,
-        validPasswordCapital,
-        validPasswordMatch,
-        setIsLoggedIn,
-        handleClose,
-        setUserDetails,
-    ]);
+    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {
