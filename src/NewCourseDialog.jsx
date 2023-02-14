@@ -17,12 +17,6 @@ class Assessment {
     }
 } 
 
-const AlwaysScrollToBottom = ({active}) => {
-    const elementRef = React.useRef();
-    useEffect(() => {if(active) elementRef.current.scrollIntoView()});
-    return <div ref={elementRef} />;
-  };
-
 const NewCourseDialog = (props) => {
     const { onClose, open, activeTri } = props;
 
@@ -30,7 +24,6 @@ const NewCourseDialog = (props) => {
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [courseURL, setCourseURL] = React.useState("");
-    const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [errorText, setErrorText] = React.useState("");
@@ -82,14 +75,12 @@ const NewCourseDialog = (props) => {
     }
 
     const addAssessment = () => {
-        setScrollActive(true);
         const date = new Date();
         date.setSeconds(0);
         setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
     }
 
     const removeAssessment = (index) => {
-        setScrollActive(false);
         setAssessments(assessments.filter((a, i) => i !== index));
     }
 
@@ -199,7 +190,6 @@ const NewCourseDialog = (props) => {
                         ))}
                         </TransitionGroup>
                         <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
-                        <AlwaysScrollToBottom active={scrollActive} />
                     </Stack>
                 
             </Box>
