@@ -402,7 +402,7 @@ const CourseViewer = (props) => {
 
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
 
-            {isMobile && <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+            {isMobile && <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
                 <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
                 <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
             </Stack>}
