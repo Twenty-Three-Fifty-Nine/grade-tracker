@@ -215,7 +215,7 @@ const CourseViewer = (props) => {
                 <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                     {courseData.name}
                 </Typography>
-                <Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
+                {!isMobile ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Trimester {courseData.tri} - {courseData.year}
@@ -261,9 +261,57 @@ const CourseViewer = (props) => {
                             </Box>
                         </Stack>
                     </Stack>
-                </Stack>
+                </Stack>) : (
+                    <Box>
+                        <Stack sx={{flexGrow: 1, flexBasis: 0}}>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                {!isNaN(courseCompletion) ? courseCompletion : "?" }% Completed
+                            </Typography>
+                            <Box sx={{alignSelf:"center"}}>
+                                <Button disabled={courseData.url === ""} variant="contained" href={courseData.url} target="_blank" sx={{fontSize:"large", pt: 1, mt: 1}}> {courseData.code} Course Page <LaunchIcon sx={{ml: 1, mt: -0.2}} /> </Button>
+                            </Box>
+                        </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Stack sx={{flexGrow: 1, flexBasis: 0}}>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
+                            </Typography>
+                            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                                Last synced to template: {new dayjs(courseData.lastSynced).format("DD/MM/YYYY")}
+                            </Typography>
+                            <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                </Box>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                </Box>
+                                <Box sx={{alignSelf:"center"}}>
+                                    <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
+                                        <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </Stack>
+                        </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Typography variant="h4" component="div" sx={{textAlign:"center"}}> 
+                            Currently Achieved:
+                        </Typography>
+                        <Stack direction="row" spacing={10} sx={{alignItems:"center", justifyContent:"center"}}>
+                            <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                            <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                        </Stack>
+                    </Box>
+                )}
             </Box>
-            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 10, ml: 10, mb: 5}} />
+
+            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
             <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
