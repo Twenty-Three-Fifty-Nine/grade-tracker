@@ -27,7 +27,7 @@ class Assessment {
     }
 
     setGrade(grade) {
-        this.grade = grade;
+        this.grade = parseInt(grade);
         this.hasChanged = isNaN(this.grade) ? !isNaN(this.initGrade) : this.grade !== this.initGrade;
     }
 } 
@@ -155,7 +155,7 @@ const CourseViewer = (props) => {
             courseData.grades[index] = assessment.grade;
             courseData.isAssList[index] = assessment.isAss;
             assessment.hasChanged = false;
-            assessment.initGrade = assessment.grade;
+            assessment.initGrade = parseInt(assessment.grade);
         })
 
         courseData.updateTotal();
@@ -307,6 +307,13 @@ const CourseViewer = (props) => {
                             <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                             <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
                         </Stack>
+
+                        <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+                        <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+                            <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
+                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                        </Stack>
                     </Box>
                 )}
             </Box>
@@ -393,17 +400,25 @@ const CourseViewer = (props) => {
                 </Box>  
             </Stack>
 
+            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
+
+            {isMobile && <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+                <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
+                <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+            </Stack>}
+
             <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
-            <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                    <ChevronLeftIcon fontSize="large" />
-                </Fab>
-            </Tooltip>
+            {!isMobile && (<>
+                <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
+                    <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                        <ChevronLeftIcon fontSize="large" />
+                    </Fab>
+                </Tooltip>
 
-            {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
-
+                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+            </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal:"right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
                     {isSuccess ? successText : errorText}
