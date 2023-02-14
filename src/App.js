@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typography, Stack } from "@mui/material";
 import Logout from "./Logout";
 import WelcomePage from "./WelcomePage";
@@ -19,6 +19,8 @@ const App = () => {
 
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
+
+    const activeTri = useMemo(() => { return {year: 2022, tri: 3} }, []);
 
     React.useEffect(() => {
         const cookies = new Cookies();
@@ -65,6 +67,7 @@ const App = () => {
                                 setUserDetails={setUserDetails}
                                 setSessionData={setSessionData}
                                 setViewedCourse={setViewedCourse}
+                                activeTri={activeTri}
                             />
                         )}
                         <FormControlLabel
@@ -85,6 +88,7 @@ const App = () => {
                     <WelcomePage
                         setIsLoggedIn={setIsLoggedIn}
                         setUserDetails={setUserDetails}
+                        activeTri={activeTri}
                     />
                 : viewedCourse ? 
                     <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails} setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList} />
@@ -96,6 +100,7 @@ const App = () => {
                         setSessionData={setSessionData}
                         courseList={courseList}
                         setCourseList={setCourseList}
+                        activeTri={activeTri}
                     />
                 }
             </Box>

@@ -32,6 +32,7 @@ const WelcomePage = (props) => {
                         <Login
                             setIsLoggedIn={props.setIsLoggedIn}
                             setUserDetails={props.setUserDetails}
+                            activeTri={props.activeTri}
                         />
                     </Box>
                 </Box>

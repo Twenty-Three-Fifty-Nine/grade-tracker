@@ -14,7 +14,7 @@ import Cookies from 'universal-cookie';
 import CloseIcon from '@mui/icons-material/Close';
 
 const LoginDialog = (props) => {
-    const { onClose, open, setIsLoggedIn, setUserDetails } = props;
+    const { onClose, open, setIsLoggedIn, setUserDetails, activeTri } = props;
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -31,6 +31,7 @@ const LoginDialog = (props) => {
             {
                 email: email,
                 password: password,
+                activeTri: activeTri
             }
         )
             .then((result) => {
@@ -42,7 +43,7 @@ const LoginDialog = (props) => {
             .catch((e) => {
                 setLoginError(true);
             });
-    }, [email, password, setIsLoggedIn, handleClose, setUserDetails]);
+    }, [email, password, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Box, Fab, Icon, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import YearOverview from './YearOverview';
 import AddCourseDialog from './AddCourseDialog';
@@ -56,9 +56,8 @@ class Course {
 }
 
 const GradesOverview = (props) => {
-    const {userEmail, userName, setViewedCourse, sessionData, setSessionData, courseList, setCourseList} = props
+    const {userEmail, userName, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
     const baseYear = 2022;
-    const activeTri = useMemo(() => { return {year: 2022, tri: 3} }, []);
 
     const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
