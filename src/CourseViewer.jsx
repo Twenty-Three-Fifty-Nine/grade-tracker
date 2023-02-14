@@ -1,8 +1,9 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert } from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse } from "@mui/material";
 import React, {useCallback} from "react";
 import Axios from "axios";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
+import { TransitionGroup } from 'react-transition-group';
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -267,9 +268,13 @@ const CourseViewer = (props) => {
             <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
                 <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 ? filteredAssessments.map((assessment, index) => (
-                        <AssessmentViewerCard key={assessment.name} assData={assessment} checkChanges={checkChanges} />
-                    )) : 
+                    {filteredAssessments.length > 0 ? <TransitionGroup>
+                        {filteredAssessments.map((assessment, index) => (
+                            <Collapse key={assessment.name} sx={{mb: 2}}>
+                                <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} />
+                            </Collapse>
+                        ))} 
+                    </TransitionGroup> : 
                     <Card>
                         <CardContent sx={{minWidth: 731}}>
                             <Typography variant="h5" component="div" sx={{textAlign:"center"}}>
@@ -300,24 +305,26 @@ const CourseViewer = (props) => {
                                 </Select>
                             </FormControl>
                         </Stack>
-                        {filterPanelOpen && <Card sx={{width: 300}}>
-                            <CardContent>
-                                <Stack spacing={0.5}>
-                                    <Typography variant="h5" sx={{ml: 1.3 }}> Assessment Filters </Typography>
-                                    <Divider />
-                                    <FormControlLabel control={<Checkbox checked={finishedFilter} 
-                                        onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
-                                    <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
-                                        onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
-                                    <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
-                                        onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
-                                    <FormControlLabel control={<Checkbox checked={testFilter} 
-                                        onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
-                                    <FormControlLabel control={<Checkbox checked={assignmentFilter} 
-                                        onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
-                                </Stack>
-                            </CardContent>
-                        </Card>}
+                        {<Collapse in={filterPanelOpen}>
+                            <Card sx={{width: 300}}>
+                                <CardContent>
+                                    <Stack spacing={0.5}>
+                                        <Typography variant="h5" sx={{ml: 1.3 }}> Assessment Filters </Typography>
+                                        <Divider />
+                                        <FormControlLabel control={<Checkbox checked={finishedFilter} 
+                                            onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
+                                        <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
+                                            onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
+                                        <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
+                                            onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
+                                        <FormControlLabel control={<Checkbox checked={testFilter} 
+                                            onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
+                                        <FormControlLabel control={<Checkbox checked={assignmentFilter} 
+                                            onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        </Collapse>}
                         <Box sx={{display:"flex", flexWrap:"wrap", gap: 1.5, width:300}}>
                             {finishedFilter && <Chip label="Finished" deleteIcon={<ClearIcon />} onDelete={() => {setFinishedFilter(false)}} sx={{width: 100}} />}
                             {missingGradeFilter && <Chip label="Missing Grade" deleteIcon={<ClearIcon />} onDelete={() => {setMissingGradeFilter(false)}} sx={{width: 130}} />}

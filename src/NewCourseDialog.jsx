@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField } from '@mui/material';
+import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse } from '@mui/material';
+import { TransitionGroup } from 'react-transition-group';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import ConfirmDialog from './ConfirmDialog';
 import Axios from 'axios';
@@ -16,12 +17,6 @@ class Assessment {
     }
 } 
 
-const AlwaysScrollToBottom = ({active}) => {
-    const elementRef = React.useRef();
-    useEffect(() => {if(active) elementRef.current.scrollIntoView()});
-    return <div ref={elementRef} />;
-  };
-
 const NewCourseDialog = (props) => {
     const { onClose, open, activeTri } = props;
 
@@ -29,7 +24,6 @@ const NewCourseDialog = (props) => {
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [courseURL, setCourseURL] = React.useState("");
-    const [scrollActive, setScrollActive] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [errorText, setErrorText] = React.useState("");
@@ -81,14 +75,12 @@ const NewCourseDialog = (props) => {
     }
 
     const addAssessment = () => {
-        setScrollActive(true);
         const date = new Date();
         date.setSeconds(0);
         setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
     }
 
     const removeAssessment = (index) => {
-        setScrollActive(false);
         setAssessments(assessments.filter((a, i) => i !== index));
     }
 
@@ -188,15 +180,18 @@ const NewCourseDialog = (props) => {
 
                 <Typography variant="h5" sx={{paddingTop: 5}}> Course Assessments </Typography>
                 <Divider sx={{marginBottom: 3}}></Divider>
-                <Stack spacing={2}>
-                    {assessments.map((assessment, i) => {
-                        return (
-                            <CreateAssessmentCard key={i} index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
-                        )
-                    })}
-                    <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
-                    <AlwaysScrollToBottom active={scrollActive} />
-                </Stack>
+                
+                    <Stack spacing={2}>
+                        <TransitionGroup>
+                        {assessments.map((assessment, i) => (
+                            <Collapse key={i} sx={{mb: 2}}>
+                                <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
+                            </Collapse>
+                        ))}
+                        </TransitionGroup>
+                        <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
+                    </Stack>
+                
             </Box>
         </Dialog>
 

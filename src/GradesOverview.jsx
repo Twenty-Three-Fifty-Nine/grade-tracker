@@ -173,7 +173,7 @@ const GradesOverview = (props) => {
                         ))}
                     </Tabs>
                         
-                : <Typography>Loading...</Typography>}
+                : null}
             </Box>
             <Box sx={{ marginTop: 2 }}>
                 <SessionContext.Provider value={sessionData !== null ? sessionData : "Reloading"}>
