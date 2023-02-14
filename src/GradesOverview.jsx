@@ -57,10 +57,14 @@ class Course {
 
 const GradesOverview = (props) => {
     const {userEmail, userName, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
-    const baseYear = 2022;
 
-    const [selectedYear, setYear] = React.useState(activeTri.year - baseYear);
+    const [selectedYear, setYear] = React.useState(activeTri.year);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
+    const [activateTab, setActivateTab] = React.useState(false);
+
+    setTimeout( () => {
+        setActivateTab(true)
+    }, 500)
 
     const parseCourseData = useCallback(async (request) => {
         return Axios.get(request).then(async (result) => {
@@ -118,7 +122,7 @@ const GradesOverview = (props) => {
         ).then((courseData) => {
             return {
                 userData: { email: userEmail, displayName: userName },
-                timeInfo: { activeTri, selectedYear: baseYear + year },
+                timeInfo: { activeTri, selectedYear: year },
                 courses: courseData,
             };
         });
@@ -137,7 +141,7 @@ const GradesOverview = (props) => {
     const handleChangedYear = async (event, newValue) => {
         setYear(newValue);
         const tempData = sessionData;
-        tempData.timeInfo.selectedYear = baseYear + newValue;
+        tempData.timeInfo.selectedYear = newValue;
         setSessionData(tempData);
     };
 
@@ -162,14 +166,18 @@ const GradesOverview = (props) => {
     return (
         <Box>        
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={selectedYear} onChange={handleChangedYear}>
-                    <Tab label="2022" />
-                    <Tab label="2023" />
-                </Tabs>
+                {sessionData && sessionData !== "Reloading" ? 
+                    <Tabs value={selectedYear} onChange={handleChangedYear}>
+                        {activateTab && Object.entries(sessionData.courses).map(([key, value], index) => (
+                            <Tab key={key} value={parseInt(key)} label={key} />
+                        ))}
+                    </Tabs>
+                        
+                : <Typography>Loading...</Typography>}
             </Box>
             <Box sx={{ marginTop: 2 }}>
                 <SessionContext.Provider value={sessionData !== null ? sessionData : "Reloading"}>
-                    { baseYear + selectedYear <= activeTri.year ? 
+                    { selectedYear <= activeTri.year ? 
                             <YearOverview setViewedCourse={setViewedCourse} /> :
                             <Box sx={{ mt: 30 }}>
                                 <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 2 }}>Academic year is not currently active.</Typography>
@@ -177,7 +185,7 @@ const GradesOverview = (props) => {
                             </Box>
                     }
                     <Tooltip title={<h3>Add a new course</h3>} placement="left" arrow>
-                        <Fab color="primary" onClick={handleOpenAddCourse} disabled={baseYear + selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: 32, right: 32}}>
+                        <Fab color="primary" onClick={handleOpenAddCourse} disabled={selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: 32, right: 32}}>
                             <Icon>add</Icon>
                         </Fab>
                     </Tooltip>
