@@ -260,22 +260,22 @@ async function deleteUserCourse(userId, courseCode, year) {
     const user = await getUser(userId);
     if (!user) error404("User");
 
-    const { index, courses, yearIndex } = await getUserCourse(
+    const { courseIndex, courses, yearIndex } = await getUserCourse(
         courseCode,
         year,
         user["years"]
     );
-    if (index === -1) return error404("Course");
+    if (courseIndex === -1) return error404("Course");
 
     let years = user["years"];
-    years[yearIndex]["courses"] = courses.splice(index, 1);
+    years[yearIndex]["courses"] = courses.filter((c) => c["courseCode"] !== courseCode);
 
     const params = {
         TableName: userTable,
         Key: marshall({ email: userId }),
         UpdateExpression: "set years = :y",
         ExpressionAttributeValues: {
-            ":y": marshall(years),
+            ":y": { L: marshall(years) },
         },
     };
 
