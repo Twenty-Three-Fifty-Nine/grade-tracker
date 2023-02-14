@@ -15,7 +15,7 @@ const lightTheme = createTheme({
             contrastText: "#ffffff",
         },
         success: {
-            main: "#1b440b",
+            main: "#ffffff",
         },
         error: {
             main: "rgb(200, 0, 0)",
@@ -41,8 +41,8 @@ const lightTheme = createTheme({
                     color: "#000000",
                 },
                 standardSuccess: {
-                    backgroundColor: "rgba(50, 150, 10, .5)",
-                    color: "#000000",
+                    backgroundColor: "#507841",
+                    color: "#ffffff",
                 },
                 standardWarning: {
                     backgroundColor: "rgba(234, 71, 42, 0.2)",
@@ -92,7 +92,7 @@ const darkTheme = createTheme({
             main: "rgba(126, 127, 52, .6)",
         },
         success: {
-            main: "#388c17",
+            main: "#ffffff",
         },
         error: {
             main: "rgb(200, 100, 0)",
@@ -112,7 +112,7 @@ const darkTheme = createTheme({
                     color: "#ffffff",
                 },
                 standardSuccess: {
-                    backgroundColor: "rgba(50, 150, 10, .5)",
+                    backgroundColor: "#507841",
                     color: "#ffffff",
                 },
                 standardWarning: {
