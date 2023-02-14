@@ -31,7 +31,7 @@ export const handler = async (event) => {
         return await addUserCourse(userId, courseCode, year, trimester);
     } else if (httpMethod === "DELETE") {
         const { user, course, year } = event.pathParameters;
-        await deleteUserCourse(user, course, year);
+        return await deleteUserCourse(user, course, year);
     }
 };
 
