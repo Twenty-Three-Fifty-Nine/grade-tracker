@@ -195,7 +195,7 @@ async function addUserCourse(userId, courseCode, year, trimester) {
             codeYearTri: courseCode + "|" + year + "|" + trimester,
         }),
     };
-    
+
     let data = await client.send(new GetItemCommand(params));
     const course = unmarshall(data.Item);
 
@@ -236,7 +236,7 @@ async function addUserCourse(userId, courseCode, year, trimester) {
         Key: marshall({ email: userId }),
         UpdateExpression: "set years = :y",
         ExpressionAttributeValues: {
-            ":y": marshall(years),
+            ":y": { L: marshall(years) },
         },
     };
 
