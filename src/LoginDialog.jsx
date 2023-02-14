@@ -7,7 +7,8 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
-    IconButton
+    IconButton,
+    Collapse
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from 'universal-cookie';
@@ -81,7 +82,7 @@ const LoginDialog = (props) => {
                         setPassword(e.target.value);
                     }}
                 />
-                {loginError && (
+                {<Collapse in={loginError}>
                     <Alert severity="error"
                         action={
                             <IconButton color="inherit" size="small"
@@ -95,7 +96,7 @@ const LoginDialog = (props) => {
                     >
                         There was an error logging in
                     </Alert>
-                )}
+                </Collapse>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
