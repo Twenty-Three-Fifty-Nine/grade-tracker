@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField, Box } from '@mui/material';
+import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
