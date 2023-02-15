@@ -202,6 +202,11 @@ const CourseViewer = (props) => {
     }
 
     const saveChanges = () => {
+        courseData.names = [];
+        courseData.weights = [];
+        courseData.deadlines = [];
+        courseData.grades = [];
+        courseData.isAssList = [];
         assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
             courseData.names[index] = assessment.name;
