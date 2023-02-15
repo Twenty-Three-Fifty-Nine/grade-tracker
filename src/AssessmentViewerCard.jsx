@@ -8,12 +8,11 @@ import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 const AssessmentViewerCard = (props) => {
-    const { assData, checkChanges } = props;
+    const { assData, checkChanges, setCurrentEdit } = props;
     const [updater, setUpdater] = React.useState(false);
-    const [ valid, setValid ] = React.useState(isNaN(assData.grade) || (assData.grade >= 0 && assData.grade <= 100));
 
     const getCourseLetter = () => {
-        if(isNaN(assData.grade) || !valid) return "-";
+        if(isNaN(assData.grade) || !assData.gradeValid) return "-";
         else if(assData.grade >= 90) return "A+";
         else if(assData.grade >= 85) return "A";
         else if(assData.grade >= 80) return "A-";
@@ -30,26 +29,30 @@ const AssessmentViewerCard = (props) => {
     const handleGradeChange = (e) => {
         if(e.target.value === "") assData.setGrade(NaN);
         else if(!isNaN(e.target.value)) assData.setGrade(e.target.value.substring(0, 5));
-        assData.valid = (isNaN(e.target.value) && e.target.value === "") || (!isNaN(e.target.value) && e.target.value >= 0 && e.target.value <= 100);
-        setValid(assData.valid);
+        assData.gradeValid = (isNaN(e.target.value) && e.target.value === "") || (!isNaN(e.target.value) && e.target.value >= 0 && e.target.value <= 100);
+        assData.checkValid();
         checkChanges();
         setUpdater(!updater);
     }
+
+    React.useEffect(() => {
+        assData.stopTransition = false;
+    }, [assData])
 
     return (
         <Card>
             <CardContent sx={{display: 'flex'}}>
                 <Stack spacing={1}>
-                    <Stack direction="row"sx={{display:"flex", minWidth: isMobile ? 300 :350}}>
+                    <Stack direction="row"sx={{display:"flex", minWidth: isMobile ? 300 : 350}}>
                         <Typography variant={"h5"} component="div" sx={{mr: 1}}>
-                            {assData.name}
+                            {assData.name === "" ? "..." : assData.name}
                         </Typography>
                         <Tooltip title={<h3>{assData.isAss ? "Assignment" : "Test"}</h3>} placement="right" arrow>
                             {assData.isAss ? <MenuBookRoundedIcon sx={{mt: 0.3}}/> :
                             <DescriptionRoundedIcon sx={{mt: 0.4}}/>}
                         </Tooltip>
                         <Tooltip title={<h3>Edit Assessment</h3>} placement="bottom" arrow>
-                            <IconButton sx={{ml:"auto", mt:-0.5}}>
+                            <IconButton sx={{ml:"auto", mt:-0.5}} onClick={() => {setCurrentEdit(assData)}}>    
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
@@ -69,7 +72,7 @@ const AssessmentViewerCard = (props) => {
                     <Stack direction="row">
                         <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
                             value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 180}} 
-                            error={!valid}
+                            error={!assData.gradeValid}
                             onChange={handleGradeChange}
                             onKeyDown={(e) => {
                                 if(((isNaN(e.key) && e.key !== ".") || assData.grade.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
@@ -77,7 +80,7 @@ const AssessmentViewerCard = (props) => {
                                 } 
                             }}
                         />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
                             <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
                                 {getCourseLetter()}
                             </Typography>
@@ -93,7 +96,7 @@ const AssessmentViewerCard = (props) => {
                     <Stack direction="row">
                         <TextField type="number" InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
                             value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: isMobile ? 50 : 150}} 
-                            error={!valid}
+                            error={!assData.gradeValid}
                             onChange={handleGradeChange}
                             onKeyDown={(e) => {
                                 if(((isNaN(e.key) && e.key !== ".") || assData.grade.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
@@ -101,7 +104,7 @@ const AssessmentViewerCard = (props) => {
                                 } 
                             }}
                         />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : valid ? "primary.main" : "error.main"}}>
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
                             <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
                                 {getCourseLetter()}
                             </Typography>
