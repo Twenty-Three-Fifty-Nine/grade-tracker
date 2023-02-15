@@ -27,7 +27,7 @@ export const handler = async (event) => {
             return {
                 statusCode: 200,
                 body: JSON.stringify(
-                    await getCourse(course + "|" + year + "|" + trimester)
+                    unmarshall((await getCourse(course + "|" + year + "|" + trimester)).Item)
                 ),
             };
         }
