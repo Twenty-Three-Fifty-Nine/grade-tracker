@@ -421,7 +421,7 @@ const CourseViewer = (props) => {
                                                     onClick={() => {
                                                         assessments.splice(assessments.indexOf(currentEdit), 1);
                                                         if(!currentEdit.isNew) setChangeOverride(true);
-                                                        checkChanges(!currentEdit.isNew);
+                                                        checkChanges(!currentEdit.isNew ? true : changeOverride);
                                                         setCurrentEdit(null);
                                                     }}
                                                 >    
