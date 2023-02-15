@@ -27,14 +27,9 @@ export const handler = async (event) => {
         });
 
         // Check if course exists
-        const course = await client.send(
-            new GetItemCommand({
-                TableName: courseTable,
-                Key: marshall({ codeYearTri }),
-            })
-        );
+        const course = await getCourse(codeYearTri);
 
-        if (course.Item) {
+        if (course.codeYearTri) {
             return {
                 statusCode: 409,
                 body: JSON.stringify("Course already exists"),
@@ -72,17 +67,23 @@ export const handler = async (event) => {
         const route = event.routeKey.split(" ")[1];
 
         if (route === "/courses") {
-            return await getCourses(year, trimester);
+            return {
+                statusCode: 200,
+                body: JSON.stringify(await getCourses(year, trimester)),
+            }
         } else if (route === "/courses/{course}") {
             const { course } = event.pathParameters;
-            return await getCourse(course + "|" + year + "|" + trimester);
+            return {
+                statusCode: 200,
+                body: JSON.stringify(await getCourse(course + "|" + year + "|" + trimester))
+            }
         }
 
         return {
             statusCode: 404,
             body: JSON.stringify({ message: "Not found" }),
         };
-    }
+    }        
 };
 
 async function getCourses(year, trimester) {
@@ -99,10 +100,7 @@ async function getCourses(year, trimester) {
 
     const data = await client.send(new ScanCommand(params));
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(data.Items.map(unmarshall)),
-    };
+    return data.Items.map(unmarshall);
 }
 
 async function getCourse(codeYearTri) {
@@ -112,9 +110,8 @@ async function getCourse(codeYearTri) {
     };
 
     const data = await client.send(new GetItemCommand(params));
+    
+    console.log(unmarshall(data.Item))
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(unmarshall(data.Item)),
-    };
+    return unmarshall(data.Item);
 }
