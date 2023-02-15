@@ -3,6 +3,7 @@ import {
     PutItemCommand,
     ScanCommand,
     GetItemCommand,
+    UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 
@@ -11,50 +12,63 @@ const courseTable = "courses";
 
 export const handler = async (event) => {
     const httpMethod = event.requestContext.http.method;
-    if (httpMethod === "POST") {
+    if (httpMethod === "GET") {
+        const { year, trimester } = event.queryStringParameters;
+
+        const route = event.routeKey.split(" ")[1];
+
+        if (route === "/courses") {
+            return {
+                statusCode: 200,
+                body: JSON.stringify(await getCourses(year, trimester)),
+            };
+        } else if (route === "/courses/{course}") {
+            const { course } = event.pathParameters;
+            return {
+                statusCode: 200,
+                body: JSON.stringify(
+                    unmarshall((await getCourse(course + "|" + year + "|" + trimester)).Item)
+                ),
+            };
+        }
+
+        return {
+            statusCode: 404,
+            body: JSON.stringify({ message: "Not found" }),
+        };
+    } else if (httpMethod === "POST" || httpMethod === "PUT") {
         const { body } = event;
         const { codeYearTri, name, assignments, url } = JSON.parse(body);
 
         const assignmentsParsed = assignments.map((assignment) => {
             const { name, weight, dueDate, grade, isAssignment } = assignment;
-            return {
-                name,
-                weight,
-                dueDate,
-                grade,
-                isAssignment,
-            };
+            return { name, weight, dueDate, grade, isAssignment };
         });
 
         // Check if course exists
-        const course = await client.send(
-            new GetItemCommand({
-                TableName: courseTable,
-                Key: marshall({ codeYearTri }),
-            })
-        );
+        const course = await getCourse(codeYearTri);
+        console.log("Course: ", course);
 
-        if (course.Item) {
+        if (course.Item && httpMethod === "POST") {
             return {
                 statusCode: 409,
                 body: JSON.stringify("Course already exists"),
             };
+        } else if (!course.Item && httpMethod === "PUT") {
+            return {
+                statusCode: 404,
+                body: JSON.stringify("Course does not exist"),
+            };
         }
 
-        // Add course
-        const params = {
-            TableName: courseTable,
-            Item: marshall({
-                codeYearTri,
-                name,
-                assignments: assignmentsParsed,
-                url,
-                lastUpdated: new Date().toString(),
-            }),
-        };
-
         try {
-            const data = await client.send(new PutItemCommand(params));
+            let data;
+
+            if (httpMethod === "POST") {
+                data = await addCourse(codeYearTri, name, assignmentsParsed, url);
+            } else {
+                data = await updateCourse(codeYearTri, name, assignmentsParsed, url);
+            }
             return {
                 statusCode: 200,
                 body: JSON.stringify(data.Item),
@@ -63,39 +77,107 @@ export const handler = async (event) => {
             console.log("Error adding course: ", err);
             return {
                 statusCode: 500,
-                body: JSON.stringify({ message: "Error adding course" }),
-            };
-        }
-    } else if (httpMethod === "GET") {
-        const year = event.queryStringParameters.year;
-        const trimester = event.queryStringParameters.trimester;
-
-        const yearTri = `${year}|${trimester}`;
-
-        // Filter courses by year and trimester
-        const params = {
-            TableName: courseTable,
-            FilterExpression: "contains(codeYearTri, :yearTri)",
-            ExpressionAttributeValues: {
-                ":yearTri": marshall(yearTri),
-            },
-        };
-
-        try {
-            const data = await client.send(new ScanCommand(params));
-            
-            return {
-                statusCode: 200,
-                body: JSON.stringify(data.Items.map(unmarshall)),
-            };
-        } catch (err) {
-            console.log("Error getting courses: ", params);
-            console.log(err);
-
-            return {
-                statusCode: 501,
-                body: JSON.stringify({ message: "Error getting courses" }),
+                body: JSON.stringify({ message: "Error " + (httpMethod === "POST" ? "adding" : "updating") + " course" }),
             };
         }
     }
 };
+
+/**
+ * Get the courses for a given year and trimester
+ *
+ * @param {String} year The year of the course
+ * @param {String} trimester The trimester of the course
+ * @returns {Array} An array of courses
+ */
+async function getCourses(year, trimester) {
+    const yearTri = `${year}|${trimester}`;
+
+    // Filter courses by year and trimester
+    const params = {
+        TableName: courseTable,
+        FilterExpression: "contains(codeYearTri, :yearTri)",
+        ExpressionAttributeValues: {
+            ":yearTri": marshall(yearTri),
+        },
+    };
+
+    const data = await client.send(new ScanCommand(params));
+
+    return data.Items.map(unmarshall);
+}
+
+
+/**
+ * Get a course by its codeYearTri
+ *
+ * @param {String} codeYearTri The codeYearTri of the course to get
+ * @returns {Object} The course
+ */
+async function getCourse(codeYearTri) {
+    const params = {
+        TableName: courseTable,
+        Key: marshall({ codeYearTri: codeYearTri }),
+    };
+
+    const data = await client.send(new GetItemCommand(params));
+
+    console.log(data);
+
+    return data;
+}
+
+
+/**
+ * Add a course to the database
+ *
+ * @param {String} codeYearTri The codeYearTri of the course to add
+ * @param {String} name The name of the course
+ * @param {Array} assignments The assignments of the course
+ * @param {String} url The url of the course page
+ * @returns {Object} The course that was added
+ */
+async function addCourse(codeYearTri, name, assignments, url) {
+    const params = {
+        TableName: courseTable,
+        Item: marshall({
+            codeYearTri,
+            name,
+            assignments,
+            url,
+            lastUpdated: new Date().toString(),
+        }),
+    };
+
+    return await client.send(new PutItemCommand(params));
+}
+
+
+/**
+ * Update a course in the database
+ *
+ * @param {String} codeYearTri The codeYearTri of the course to update
+ * @param {String} name The name of the course
+ * @param {Array} assignments The assignments of the course
+ * @param {String} url The url of the course page
+ * @returns {Object} The course that was updated
+ */
+async function updateCourse(codeYearTri, name, assignments, url) {
+    const params = {
+        TableName: courseTable,
+        Key: marshall({ codeYearTri: codeYearTri }),
+        UpdateExpression: "set #name = :name, assignments = :assignments, url = :url, lastUpdated = :lastUpdated",
+        ExpressionAttributeNames: {
+            "#name": "name",
+        },
+        ExpressionAttributeValues: {
+            ":name": marshall(name),
+            ":assignments": marshall(assignments),
+            ":url": marshall(url),
+            ":lastUpdated": marshall(new Date().toString()),
+        },
+        ReturnValues: "ALL_NEW",
+    };
+
+    return await client.send(new UpdateItemCommand(params));
+}
