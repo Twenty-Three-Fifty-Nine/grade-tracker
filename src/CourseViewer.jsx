@@ -254,7 +254,7 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = async () => {
-        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.year + "/" + courseData.code).then((response) => {
+        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;
