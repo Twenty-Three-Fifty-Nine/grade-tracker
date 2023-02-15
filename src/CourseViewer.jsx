@@ -648,7 +648,12 @@ const CourseViewer = (props) => {
                 </Alert>
             </Snackbar>
 
-            <NewCourseDialog onClose={() => {setEditTemplate(false)}} open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} />
+            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+                onClose={(didUpdate) => {
+                    setEditTemplate(false); 
+                    if(didUpdate) courseData.lastUpdated = new Date();
+                }}
+            />
         </Box>
     )
 }

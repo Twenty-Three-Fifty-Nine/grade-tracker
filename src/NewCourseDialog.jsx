@@ -230,7 +230,7 @@ const NewCourseDialog = (props) => {
         }).then((e) => {
             setSnackbar("success")
             setIsSuccess(true);
-            onClose();
+            onClose(true);
 
             setAssessments([]);
             setCourseName("");
