@@ -420,7 +420,7 @@ const CourseViewer = (props) => {
                                                 <IconButton color="error" sx={{ml: 1}} 
                                                     onClick={() => {
                                                         assessments.splice(assessments.indexOf(currentEdit), 1);
-                                                        setChangeOverride(!currentEdit.isNew);
+                                                        if(!currentEdit.isNew) setChangeOverride(true);
                                                         checkChanges(!currentEdit.isNew);
                                                         setCurrentEdit(null);
                                                     }}
