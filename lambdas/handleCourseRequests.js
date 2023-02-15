@@ -67,35 +67,54 @@ export const handler = async (event) => {
             };
         }
     } else if (httpMethod === "GET") {
-        const year = event.queryStringParameters.year;
-        const trimester = event.queryStringParameters.trimester;
+        const { year, trimester } = event.queryStringParameters;
 
-        const yearTri = `${year}|${trimester}`;
+        const route = event.routeKey.split(" ")[1];
 
-        // Filter courses by year and trimester
-        const params = {
-            TableName: courseTable,
-            FilterExpression: "contains(codeYearTri, :yearTri)",
-            ExpressionAttributeValues: {
-                ":yearTri": marshall(yearTri),
-            },
-        };
-
-        try {
-            const data = await client.send(new ScanCommand(params));
-            
-            return {
-                statusCode: 200,
-                body: JSON.stringify(data.Items.map(unmarshall)),
-            };
-        } catch (err) {
-            console.log("Error getting courses: ", params);
-            console.log(err);
-
-            return {
-                statusCode: 501,
-                body: JSON.stringify({ message: "Error getting courses" }),
-            };
+        if (route === "/courses") {
+            return await getCourses(year, trimester);
+        } else if (route === "/courses/{course}") {
+            const { course } = event.pathParameters;
+            return await getCourse(course + "|" + year + "|" + trimester);
         }
+
+        return {
+            statusCode: 404,
+            body: JSON.stringify({ message: "Not found" }),
+        };
     }
 };
+
+async function getCourses(year, trimester) {
+    const yearTri = `${year}|${trimester}`;
+
+    // Filter courses by year and trimester
+    const params = {
+        TableName: courseTable,
+        FilterExpression: "contains(codeYearTri, :yearTri)",
+        ExpressionAttributeValues: {
+            ":yearTri": marshall(yearTri),
+        },
+    };
+
+    const data = await client.send(new ScanCommand(params));
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify(data.Items.map(unmarshall)),
+    };
+}
+
+async function getCourse(codeYearTri) {
+    const params = {
+        TableName: courseTable,
+        Key: marshall({ codeYearTri: codeYearTri }),
+    };
+
+    const data = await client.send(new GetItemCommand(params));
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify(unmarshall(data.Item)),
+    };
+}
