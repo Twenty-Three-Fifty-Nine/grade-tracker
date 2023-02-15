@@ -18,7 +18,7 @@ import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 class Assessment {
-    constructor(name, weight, grade, deadline, isAss) {
+    constructor(name, weight, grade, deadline, isAss, isNew) {
         this.name = name;
         this.weight = weight;
         this.grade = grade === -1 ? NaN : grade;
@@ -26,11 +26,12 @@ class Assessment {
 
         this.gradeValid = true;
         this.valid = true;
+        this.isNew = isNew;
 
         this.duplicateName = false;
 
         this.isAss = isAss;
-        this.hasChanged = false;
+        this.hasChanged = isNew;
         this.stopTransition = false;
 
         this.initName = name;
@@ -52,7 +53,7 @@ class Assessment {
         let deadlineChanged = this.deadline !== this.initDeadline;
         let isAssChanged = this.isAss !== this.initAss;
         let weightChanged = this.weight !== this.initWeight;
-        this.hasChanged = gradeChanged || nameChanged || deadlineChanged || isAssChanged || weightChanged;
+        this.hasChanged = this.isNew || gradeChanged || nameChanged || deadlineChanged || isAssChanged || weightChanged;
     }
 
     setGrade(grade) {
@@ -88,6 +89,7 @@ const CourseViewer = (props) => {
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
+    const [changeOverride, setChangeOverride] = React.useState(false);
     const changesMadeR = React.useRef(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
@@ -187,16 +189,16 @@ const CourseViewer = (props) => {
         return temp;
     }
 
-    const checkChanges = () => {
+    const checkChanges = (override = changeOverride) => {
         let changes = false;
         let valid = true;
         assessments.forEach((assessment) => {
             if(assessment.hasChanged) changes = true;
             if(!assessment.valid) valid = false;
         })
-        setChangesMade(changes);
+        setChangesMade(changes || override);
         setValidChanges(valid);
-        changesMadeR.changes = changes;
+        changesMadeR.changes = changes || override;
     }
 
     const saveChanges = () => {
@@ -207,11 +209,6 @@ const CourseViewer = (props) => {
             courseData.deadlines[index] = assessment.deadline;
             courseData.grades[index] = assessment.grade;
             courseData.isAssList[index] = assessment.isAss;
-            assessment.hasChanged = false;
-            assessment.initGrade = parseInt(assessment.grade);
-            assessment.initName = assessment.name;
-            assessment.initAss = assessment.isAss;
-            assessment.initDeadline = assessment.deadline; 
         })
 
         courseData.updateTotal();
@@ -227,8 +224,15 @@ const CourseViewer = (props) => {
             totalGrade: courseData.totalGrade,
             year: courseData.year,
         }).then(() => {
+            assessments.forEach((assessment) => {
+                assessment.hasChanged = false;
+                assessment.isNew = false;
+                assessment.initGrade = parseInt(assessment.grade);
+                assessment.initName = assessment.name;
+                assessment.initAss = assessment.isAss;
+                assessment.initDeadline = assessment.deadline; 
+            })
             checkChanges();
-            setChangesMade(false);
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
@@ -395,7 +399,7 @@ const CourseViewer = (props) => {
                             <CardContent sx={{pt: 1, pr: 5, display: "flex", alignItems:"baseline"}}>
                                 <Stack>
                                     <Stack direction="row" spacing={0}>
-                                        <Typography variant="h5" sx={{mt: 1, ml: 0.3, width: 250}}> Edit {currentEdit.isAss ? "Assignment" : "Test"} </Typography>
+                                        <Typography variant="h5" sx={{mt: 1, ml: 0.3, width: 210}}> Edit {currentEdit.isAss ? "Assignment" : "Test"} </Typography>
                                             <ToggleButtonGroup
                                                 exclusive size="small"
                                                 value={currentEdit.isAss ? "ass" : "test"}
@@ -411,6 +415,19 @@ const CourseViewer = (props) => {
                                                     <DescriptionRoundedIcon />
                                                 </ToggleButton>
                                             </ToggleButtonGroup>
+
+                                            <Tooltip title={<h3>Delete Assessment</h3>} placement="bottom" arrow>
+                                                <IconButton color="error" sx={{ml: 1}} 
+                                                    onClick={() => {
+                                                        assessments.splice(assessments.indexOf(currentEdit), 1);
+                                                        setChangeOverride(!currentEdit.isNew);
+                                                        checkChanges(!currentEdit.isNew);
+                                                        setCurrentEdit(null);
+                                                    }}
+                                                >    
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
                                     </Stack>
                                     <Divider sx={{mb: 1.5, mt: 0.5}}/>
                                     <Stack>
@@ -455,7 +472,7 @@ const CourseViewer = (props) => {
                                             }}
                                         />
 
-                                        <Button variant="contained" sx={{mt: 2}} onClick={() => {setCurrentEdit(null)}}> Close </Button>
+                                        <Button variant="contained" sx={{mt: 2, mr: 1}} onClick={() => {setCurrentEdit(null)}}> Close </Button>
                                     </Stack>
                                 </Stack>
                             </CardContent>
@@ -477,7 +494,15 @@ const CourseViewer = (props) => {
                             </Typography>
                         </CardContent>
                     </Card>} 
-                    <Button variant="contained"> Add Assessment </Button>
+                    <Button variant="contained" 
+                        onClick={() => {
+                            let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true);
+                            setAssessments((current) => [...current, newAss]);
+                            setCurrentEdit(newAss);
+                            setChangesMade(true);
+                            setValidChanges(false);
+                        }}
+                    > Add Assessment </Button>
                 </Stack>
 
                 <Box sx={{flexGrow: 1, flexBasis: 0}}>
