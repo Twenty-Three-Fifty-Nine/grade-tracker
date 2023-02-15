@@ -15,14 +15,14 @@ const CreateAssessmentCard = (props) => {
 
     const handleNameChange = (e) => {
         let oldName = details.name;
-        details.name = e.target.value;
+        details.setName(e.target.value);
         setUpdater(!updater);
         updateValidity(oldName);
         setNameCheckOn(true);
     };
 
     const handleWeightChange = (e) => {
-        details.weight = e.target.value;
+        details.setWeight(e.target.value);
         setUpdater(!updater);
         updateValidity(details.name);
         setWeightCheckOn(true);
@@ -66,7 +66,7 @@ const CreateAssessmentCard = (props) => {
                             <ToggleButtonGroup
                                 exclusive size="small"
                                 value={details.isAssignment ? "ass" : "test"}
-                                onChange={(e, newValue) => { details.isAssignment = newValue === "ass"; setUpdater(!updater); }}
+                                onChange={(e, newValue) => { details.setIsAssignment(newValue === "ass"); setUpdater(!updater); }}
                             >
                                 <ToggleButton value="ass">
                                     <MenuBookRoundedIcon />
@@ -93,7 +93,8 @@ const CreateAssessmentCard = (props) => {
                                     value={details.deadline}
                                     inputFormat="DD/MM/YYYY"
                                     onChange={(newValue) => {
-                                        details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
+                                        details.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
+                                        checkFormat();
                                         setUpdater(!updater);
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
@@ -103,7 +104,8 @@ const CreateAssessmentCard = (props) => {
                                     value={details.deadline}
                                     inputFormat="DD/MM/YYYY"
                                     onChange={(newValue) => {
-                                        details.deadline = newValue.format("YYYY-MM-DD HH:mm:ss");
+                                        details.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
+                                        checkFormat();
                                         setUpdater(!updater);
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
