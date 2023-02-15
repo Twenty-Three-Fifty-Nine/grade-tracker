@@ -232,7 +232,8 @@ const CourseViewer = (props) => {
                 assessment.initAss = assessment.isAss;
                 assessment.initDeadline = assessment.deadline; 
             })
-            checkChanges();
+            setChangeOverride(false);
+            checkChanges(false);
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
