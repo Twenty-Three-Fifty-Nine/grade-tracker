@@ -3,7 +3,6 @@ import {
     PutItemCommand,
     ScanCommand,
     GetItemCommand,
-    UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 
@@ -47,7 +46,6 @@ export const handler = async (event) => {
 
         // Check if course exists
         const course = await getCourse(codeYearTri);
-        console.log("Course: ", course);
 
         if (course.Item && httpMethod === "POST") {
             return {
@@ -62,16 +60,9 @@ export const handler = async (event) => {
         }
 
         try {
-            let data;
-
-            if (httpMethod === "POST") {
-                data = await addCourse(codeYearTri, name, assignmentsParsed, url);
-            } else {
-                data = await updateCourse(codeYearTri, name, assignmentsParsed, url);
-            }
             return {
                 statusCode: 200,
-                body: JSON.stringify(data.Item),
+                body: JSON.stringify(await addCourse(codeYearTri, name, assignmentsParsed, url)),
             };
         } catch (err) {
             console.log("Error adding course: ", err);
@@ -88,7 +79,7 @@ export const handler = async (event) => {
  *
  * @param {String} year The year of the course
  * @param {String} trimester The trimester of the course
- * @returns {Array} An array of courses
+ * @returns {Object} An array of courses
  */
 async function getCourses(year, trimester) {
     const yearTri = `${year}|${trimester}`;
@@ -122,8 +113,6 @@ async function getCourse(codeYearTri) {
 
     const data = await client.send(new GetItemCommand(params));
 
-    console.log(data);
-
     return data;
 }
 
@@ -150,34 +139,4 @@ async function addCourse(codeYearTri, name, assignments, url) {
     };
 
     return await client.send(new PutItemCommand(params));
-}
-
-
-/**
- * Update a course in the database
- *
- * @param {String} codeYearTri The codeYearTri of the course to update
- * @param {String} name The name of the course
- * @param {Array} assignments The assignments of the course
- * @param {String} url The url of the course page
- * @returns {Object} The course that was updated
- */
-async function updateCourse(codeYearTri, name, assignments, url) {
-    const params = {
-        TableName: courseTable,
-        Key: marshall({ codeYearTri: codeYearTri }),
-        UpdateExpression: "set #name = :name, assignments = :assignments, url = :url, lastUpdated = :lastUpdated",
-        ExpressionAttributeNames: {
-            "#name": "name",
-        },
-        ExpressionAttributeValues: {
-            ":name": marshall(name),
-            ":assignments": marshall(assignments),
-            ":url": marshall(url),
-            ":lastUpdated": marshall(new Date().toString()),
-        },
-        ReturnValues: "ALL_NEW",
-    };
-
-    return await client.send(new UpdateItemCommand(params));
 }
