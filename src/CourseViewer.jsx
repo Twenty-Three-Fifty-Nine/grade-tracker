@@ -6,6 +6,7 @@ import Axios from "axios";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
+import NewCourseDialog from "./NewCourseDialog";
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -98,6 +99,7 @@ const CourseViewer = (props) => {
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
     const [sliderPos, setSliderPos] = React.useState(-270);
+    const [editTemplate, setEditTemplate] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -293,7 +295,7 @@ const CourseViewer = (props) => {
                 <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                     {courseData.name}
                 </Typography>
-                {!isMobile ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
+                {!isMobile && !editTemplate ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Trimester {courseData.tri} - {courseData.year}
@@ -325,7 +327,7 @@ const CourseViewer = (props) => {
                         </Typography>
                         <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
@@ -339,7 +341,7 @@ const CourseViewer = (props) => {
                             </Box>
                         </Stack>
                     </Stack>
-                </Stack>) : (
+                </Stack>) : !editTemplate && (
                     <Box>
                         <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                             <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
@@ -361,7 +363,7 @@ const CourseViewer = (props) => {
                             </Typography>
                             <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                    <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
                                     <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
@@ -399,7 +401,7 @@ const CourseViewer = (props) => {
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
             <Stack direction="row" sx={{display:"flex", alignItems:"baseline", mb: 5}}>
-                {currentEdit && !isMobile ? (
+                {currentEdit && !isMobile && editTemplate ? (
                     <Box sx={{flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline"}}>
                         <Card sx={{width: 360, m: 0, display: "flex", alignItems:"baseline"}}>
                             <CardContent sx={{pt: 1, pr: 5, display: "flex", alignItems:"baseline"}}>
@@ -486,7 +488,7 @@ const CourseViewer = (props) => {
                     </Box>
                 ): <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
+                    {filteredAssessments.length > 0 && !editTemplate ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                         {filteredAssessments.map((assessment, index) => (
                             <Collapse key={index} sx={{mb: 2}}>
                                 <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
@@ -640,11 +642,13 @@ const CourseViewer = (props) => {
 
                 {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
             </>)}
-            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "left" : "right" }}>
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
                     {isSuccess ? successText : errorText}
                 </Alert>
             </Snackbar>
+
+            <NewCourseDialog onClose={() => {setEditTemplate(false)}} open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} />
         </Box>
     )
 }
