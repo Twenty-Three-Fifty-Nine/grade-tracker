@@ -283,7 +283,7 @@ const NewCourseDialog = (props) => {
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: isMobile ? "100%" : 548}}>
-                <Typography variant="h5"> Basic Info </Typography>
+                <Typography variant="h5" sx={{textAlign:"center"}}> Basic Info </Typography>
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
                     <TextField value={courseName} disabled={editCode ? true : false} label="Course Name" fullWidth onChange={handleNameChange} error={!nameValid && nameCheckOn} 
@@ -301,7 +301,7 @@ const NewCourseDialog = (props) => {
                     </Box>
                 </Stack>
 
-                <Typography variant="h5" sx={{paddingTop: 5}}> Course Assessments </Typography>
+                <Typography variant="h5" sx={{paddingTop: 5, textAlign:"center"}}> Course Assessments </Typography>
                 <Divider sx={{marginBottom: 3}}></Divider>
                 
                     <Stack spacing={2}>
@@ -312,7 +312,7 @@ const NewCourseDialog = (props) => {
                             </Collapse>
                         ))}
                         </TransitionGroup>
-                        <Button variant="contained" sx={{ width: 200 }} onClick={addAssessment}> Add New Assessment </Button>
+                        <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>
                     </Stack>
                 
             </Box>
