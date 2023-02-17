@@ -1,9 +1,12 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse } from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog } from "@mui/material";
 import React, {useCallback} from "react";
+import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Axios from "axios";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
+import NewCourseDialog from "./NewCourseDialog";
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -12,23 +15,73 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "./ConfirmDialog";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 class Assessment {
-    constructor(name, weight, grade, deadline, isAss) {
+    constructor(name, weight, grade, deadline, isAss, isNew) {
         this.name = name;
         this.weight = weight;
-        this.initGrade = grade === -1 ? NaN : grade;
         this.grade = grade === -1 ? NaN : grade;
         this.deadline = deadline;
+
+        this.gradeValid = true;
         this.valid = true;
-        this.duplicate = false;
+        this.isNew = isNew;
+
+        this.duplicateName = false;
+
         this.isAss = isAss;
-        this.hasChanged = false;
+        this.hasChanged = isNew;
+        this.stopTransition = false;
+
+        this.initName = name;
+        this.initDeadline = deadline;
+        this.initGrade = grade === -1 ? NaN : grade;
+        this.initAss = isAss;
+        this.initWeight = weight;
+    }
+
+    checkValid() {
+        let nameValid = !(this.name.length === 0 || this.name.length > 30 || this.duplicateName);
+        let weightValid = this.weight > 0 && this.weight <= 100;
+        this.valid = nameValid && this.gradeValid && weightValid;
+    }
+
+    checkIfChanged() {
+        let gradeChanged = isNaN(this.grade) ? !isNaN(this.initGrade) : this.grade !== this.initGrade;
+        let nameChanged = this.name !== this.initName;
+        let deadlineChanged = this.deadline !== this.initDeadline;
+        let isAssChanged = this.isAss !== this.initAss;
+        let weightChanged = this.weight !== this.initWeight;
+        this.hasChanged = this.isNew || gradeChanged || nameChanged || deadlineChanged || isAssChanged || weightChanged;
     }
 
     setGrade(grade) {
         this.grade = parseInt(grade);
-        this.hasChanged = isNaN(this.grade) ? !isNaN(this.initGrade) : this.grade !== this.initGrade;
+        this.checkIfChanged();
+    }
+
+    setName(name) {
+        this.name = name;
+        this.checkIfChanged();
+        this.checkValid();
+    }
+
+    setDeadline(deadline) {
+        this.deadline = deadline;
+        this.checkIfChanged();
+    }
+
+    setWeight(weight){
+        this.weight = weight;
+        this.checkValid();
+        this.checkIfChanged();
+    }
+
+    setIsAss(isAss) {
+        this.isAss = isAss;
+        this.checkIfChanged();
     }
 } 
 
@@ -37,6 +90,7 @@ const CourseViewer = (props) => {
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
+    const [changeOverride, setChangeOverride] = React.useState(false);
     const changesMadeR = React.useRef(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
@@ -45,6 +99,7 @@ const CourseViewer = (props) => {
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
     const [sliderPos, setSliderPos] = React.useState(-270);
+    const [editTemplate, setEditTemplate] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -58,6 +113,7 @@ const CourseViewer = (props) => {
 
     const [assessments, setAssessments] = React.useState([]);
     const [filteredAssessments, setFilteredAssessments] = React.useState([]);
+    const [currentEdit, setCurrentEdit] = React.useState(null);
 
     let handleKeyDown = null;
 
@@ -135,19 +191,24 @@ const CourseViewer = (props) => {
         return temp;
     }
 
-    const checkChanges = () => {
+    const checkChanges = (override = changeOverride) => {
         let changes = false;
         let valid = true;
         assessments.forEach((assessment) => {
             if(assessment.hasChanged) changes = true;
             if(!assessment.valid) valid = false;
         })
-        setChangesMade(changes);
+        setChangesMade(changes || override);
         setValidChanges(valid);
-        changesMadeR.changes = changes;
+        changesMadeR.changes = changes || override;
     }
 
     const saveChanges = () => {
+        courseData.names = [];
+        courseData.weights = [];
+        courseData.deadlines = [];
+        courseData.grades = [];
+        courseData.isAssList = [];
         assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
             courseData.names[index] = assessment.name;
@@ -155,8 +216,6 @@ const CourseViewer = (props) => {
             courseData.deadlines[index] = assessment.deadline;
             courseData.grades[index] = assessment.grade;
             courseData.isAssList[index] = assessment.isAss;
-            assessment.hasChanged = false;
-            assessment.initGrade = parseInt(assessment.grade);
         })
 
         courseData.updateTotal();
@@ -172,8 +231,16 @@ const CourseViewer = (props) => {
             totalGrade: courseData.totalGrade,
             year: courseData.year,
         }).then(() => {
-            checkChanges();
-            setChangesMade(false);
+            assessments.forEach((assessment) => {
+                assessment.hasChanged = false;
+                assessment.isNew = false;
+                assessment.initGrade = parseInt(assessment.grade);
+                assessment.initName = assessment.name;
+                assessment.initAss = assessment.isAss;
+                assessment.initDeadline = assessment.deadline; 
+            })
+            setChangeOverride(false);
+            checkChanges(false);
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
@@ -189,7 +256,7 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = async () => {
-        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.year + "/" + courseData.code).then((response) => {
+        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;
@@ -208,6 +275,18 @@ const CourseViewer = (props) => {
             setIsSuccess(false);
             setErrorText("Removing course failed, try again later");
         });
+    }
+
+    const checkDuplicateName = () => {
+        assessments.forEach((ass) => {
+            ass.duplicateName = false;
+            assessments.forEach((comparison) => {
+                if(comparison !== ass && comparison.name === ass.name){
+                    ass.duplicateName = true;
+                }
+            })
+            ass.checkValid();
+        })
     }
 
     return (
@@ -248,7 +327,7 @@ const CourseViewer = (props) => {
                         </Typography>
                         <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
@@ -284,7 +363,7 @@ const CourseViewer = (props) => {
                             </Typography>
                             <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Button variant="contained" sx={{fontSize:"large"}}> Update Template </Button>
+                                    <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
                                     <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
@@ -321,13 +400,98 @@ const CourseViewer = (props) => {
 
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
-            <Stack direction="row" sx={{display:"flex", justifyContent:"center", alignItems:"baseline", mb: 5}}>
-                <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />
+            <Stack direction="row" sx={{display:"flex", alignItems:"baseline", mb: 5}}>
+                {currentEdit && !isMobile ? (
+                    <Box sx={{flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline"}}>
+                        <Card sx={{width: 360, m: 0, display: "flex", alignItems:"baseline"}}>
+                            <CardContent sx={{pt: 1, pr: 5, display: "flex", alignItems:"baseline"}}>
+                                <Stack>
+                                    <Stack direction="row" spacing={0}>
+                                        <Typography variant="h5" sx={{mt: 1, ml: 0.3, width: 210}}> Edit {currentEdit.isAss ? "Assignment" : "Test"} </Typography>
+                                            <ToggleButtonGroup
+                                                exclusive size="small"
+                                                value={currentEdit.isAss ? "ass" : "test"}
+                                                onChange={(e, newValue) => { 
+                                                    currentEdit.setIsAss(newValue === "ass");
+                                                    checkChanges();
+                                                }}
+                                            >
+                                                <ToggleButton value="ass">
+                                                    <MenuBookRoundedIcon />
+                                                </ToggleButton>
+                                                <ToggleButton value="test">
+                                                    <DescriptionRoundedIcon />
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+
+                                            <Tooltip title={<h3>Delete Assessment</h3>} placement="bottom" arrow>
+                                                <IconButton color="error" sx={{ml: 1}} 
+                                                    onClick={() => {
+                                                        assessments.splice(assessments.indexOf(currentEdit), 1);
+                                                        if(!currentEdit.isNew) setChangeOverride(true);
+                                                        checkChanges(!currentEdit.isNew ? true : changeOverride);
+                                                        setCurrentEdit(null);
+                                                    }}
+                                                >    
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                    </Stack>
+                                    <Divider sx={{mb: 1.5, mt: 0.5}}/>
+                                    <Stack>
+                                        <TextField label="Assessment Name"
+                                            sx={{width: "90%", mb: 2}}
+                                            value={currentEdit.name} onChange={(e) => { 
+                                                currentEdit.stopTransition = true;
+                                                currentEdit.setName(e.target.value); 
+                                                checkDuplicateName();
+                                                checkChanges();
+                                            }} 
+                                            error={(currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
+                                            helperText={currentEdit.name.length === 0 ? "This field cannot be empty" : currentEdit.name.length > 30 ? "This field  is too long" : currentEdit.duplicateName ? "Another assessment has the same name" : ""} 
+                                        />
+
+                                        <Box>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DesktopDatePicker label="Due Date"
+                                                    value={currentEdit.deadline}
+                                                    inputFormat="DD/MM/YYYY"
+                                                    onChange={(newValue) => {
+                                                        currentEdit.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
+                                                        checkChanges();
+                                                    }}
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                    
+                                                />
+                                            </LocalizationProvider>
+                                        </Box>
+
+                                        <TextField label="Worth (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={currentEdit.weight} sx={{ mt: 2, width: "74%"}}
+                                            onChange={(e) => {
+                                                currentEdit.setWeight(e.target.value);
+                                                checkChanges();
+                                            }} 
+                                            error={(currentEdit.weight <= 0 || currentEdit.weight > 100)} 
+                                            helperText={currentEdit.weight <= 0 ? "The value must be above 0" : currentEdit.weight > 100 ? "The value cannot be above 100" : ""} 
+                                            onKeyDown={(e) => {
+                                                if(((isNaN(e.key) && e.key !== ".") || currentEdit.weight.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
+                                                    e.preventDefault();
+                                                } 
+                                            }}
+                                        />
+
+                                        <Button variant="contained" sx={{mt: 2, mr: 1}} onClick={() => {setCurrentEdit(null)}}> Close </Button>
+                                    </Stack>
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    </Box>
+                ): <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 ? <TransitionGroup>
+                    {filteredAssessments.length > 0 ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                         {filteredAssessments.map((assessment, index) => (
-                            <Collapse key={assessment.name} sx={{mb: 2}}>
-                                <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} />
+                            <Collapse key={index} sx={{mb: 2}}>
+                                <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
                             </Collapse>
                         ))} 
                     </TransitionGroup> : 
@@ -338,10 +502,18 @@ const CourseViewer = (props) => {
                             </Typography>
                         </CardContent>
                     </Card>} 
-                    <Button variant="contained"> Add Assessment </Button>
+                    <Button variant="contained" 
+                        onClick={() => {
+                            let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true);
+                            setAssessments((current) => [...current, newAss]);
+                            setCurrentEdit(newAss);
+                            setChangesMade(true);
+                            setValidChanges(false);
+                        }}
+                    > Add Assessment </Button>
                 </Stack>
 
-                <Box sx={{alignSelf:"baseline", flexGrow: 1, flexBasis: 0}}>
+                <Box sx={{flexGrow: 1, flexBasis: 0}}>
                     {!isMobile && <Stack spacing={2}>
                         <Stack spacing={2} direction={"row"}>
                             <Tooltip title={<h3>Filter assessments</h3>} placement="top" arrow>
@@ -361,7 +533,7 @@ const CourseViewer = (props) => {
                                 </Select>
                             </FormControl>
                         </Stack>
-                        {<Collapse in={filterPanelOpen}>
+                        <Collapse in={filterPanelOpen}>
                             <Card sx={{width: 300}}>
                                 <CardContent>
                                     <Stack spacing={0.5}>
@@ -380,7 +552,7 @@ const CourseViewer = (props) => {
                                     </Stack>
                                 </CardContent>
                             </Card>
-                        </Collapse>}
+                        </Collapse>
                         <Box sx={{display:"flex", flexWrap:"wrap", gap: 1.5, width:300}}>
                             {finishedFilter && <Chip label="Finished" deleteIcon={<ClearIcon />} onDelete={() => {setFinishedFilter(false)}} sx={{width: 100}} />}
                             {missingGradeFilter && <Chip label="Missing Grade" deleteIcon={<ClearIcon />} onDelete={() => {setMissingGradeFilter(false)}} sx={{width: 130}} />}
@@ -401,12 +573,14 @@ const CourseViewer = (props) => {
                 </Box>  
             </Stack>
 
-            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
-
-            {isMobile && <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
-                <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
-            </Stack>}
+            
+            {isMobile && (<>
+                <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
+                <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
+                    <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
+                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                </Stack>
+            </>)}
 
             <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
@@ -461,6 +635,83 @@ const CourseViewer = (props) => {
                 </Box>
             )}
 
+
+            <Dialog open={currentEdit !== null && isMobile} onClose={() => {setCurrentEdit(null)}}>
+                <Stack sx={{display:"flex", alignItems:"center", mx: 3, my: 2}}>
+                    <Typography variant="h5" sx={{mt: 1, mb:0.5, textAlign:"center"}}> Edit {currentEdit && currentEdit.isAss ? "Assignment" : "Test"} </Typography>
+
+                    <ToggleButtonGroup
+                        exclusive size="small"
+                        value={currentEdit && currentEdit.isAss ? "ass" : "test"}
+                        onChange={(e, newValue) => { 
+                            currentEdit.setIsAss(newValue === "ass");
+                            checkChanges();
+                        }}
+                    >
+                        <ToggleButton value="ass">
+                            <Typography> Assignment </Typography>
+                        </ToggleButton>
+                        <ToggleButton value="test">
+                            <Typography> Test </Typography>
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <Divider sx={{width: 240, mt: 2}} />
+
+                    <TextField label="Assessment Name"
+                        sx={{width: "90%", mb: 2, mt: 2}}
+                        value={currentEdit ? currentEdit.name : ""} onChange={(e) => { 
+                            currentEdit.stopTransition = true;
+                            currentEdit.setName(e.target.value); 
+                            checkDuplicateName();
+                            checkChanges();
+                        }} 
+                        error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
+                        helperText={!currentEdit ? "" : currentEdit.name.length === 0 ? "This field cannot be empty" : currentEdit.name.length > 30 ? "This field  is too long" : currentEdit.duplicateName ? "Another assessment has the same name" : ""} 
+                    />
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDatePicker label="Due Date" sx={{width: "20%"}}
+                            value={currentEdit ? currentEdit.deadline : ""}
+                            inputFormat="DD/MM/YYYY"
+                            onChange={(newValue) => {
+                                currentEdit.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
+                                checkChanges();
+                            }}
+                            renderInput={(params) => <TextField {...params} sx={{width:"90%"}} />}
+                        />
+                    </LocalizationProvider>
+
+                    <TextField label="Worth (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={currentEdit ? currentEdit.weight : "0"} sx={{ mt: 2, width: "90%"}}
+                        onChange={(e) => {
+                            currentEdit.setWeight(e.target.value);
+                            checkChanges();
+                        }} 
+                        error={currentEdit && (currentEdit.weight <= 0 || currentEdit.weight > 100)} 
+                        helperText={!currentEdit ? "" : currentEdit.weight <= 0 ? "The value must be above 0" : currentEdit.weight > 100 ? "The value cannot be above 100" : ""} 
+                        onKeyDown={(e) => {
+                            if(((isNaN(e.key) && e.key !== ".") || currentEdit.weight.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
+                                e.preventDefault();
+                            } 
+                        }}
+                    />
+
+                    <Stack direction="row" spacing={2} sx={{display:"flex", justifyContent:"center", mt: 2, mb: 1}}>
+                        <Button variant="outlined" 
+                            onClick={() => {
+                                assessments.splice(assessments.indexOf(currentEdit), 1);
+                                if(!currentEdit.isNew) setChangeOverride(true);
+                                checkChanges(!currentEdit.isNew ? true : changeOverride);
+                                setCurrentEdit(null);
+                            }}
+                        >
+                            Delete 
+                        </Button>
+                        <Button variant="contained"  onClick={() => {setCurrentEdit(null)}}> Close </Button>
+                    </Stack>
+                </Stack>
+            </Dialog>
+
             {!isMobile && (<>
                 <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
                     <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
@@ -470,11 +721,18 @@ const CourseViewer = (props) => {
 
                 {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
             </>)}
-            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "left" : "right" }}>
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
                     {isSuccess ? successText : errorText}
                 </Alert>
             </Snackbar>
+
+            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+                onClose={(didUpdate) => {
+                    setEditTemplate(false); 
+                    if(didUpdate) courseData.lastUpdated = new Date();
+                }}
+            />
         </Box>
     )
 }

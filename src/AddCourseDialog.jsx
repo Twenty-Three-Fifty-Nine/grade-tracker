@@ -95,13 +95,15 @@ const AddCourseDialog = (props) => {
             <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
                 If your course is not in this list, you can create an entry for the course offering.
             </DialogContentText>
-            <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
-                <Button onClick={handleNewCourse} variant="outlined" size={isMobile ? "small" : "medium"}>Create New Course</Button>
-                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained" size={isMobile ? "small" : "medium"}>Add Course</Button>
+            <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
+                <Button onClick={handleNewCourse} variant="outlined" >Create New Course</Button>
+                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained" >Add Course</Button>
             </Stack>
         </Dialog>
-        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}>
-            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
+            anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+        >
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
                 {isSuccess ? "Course added successfully." : "Error adding course."}
             </Alert>
         </Snackbar>
