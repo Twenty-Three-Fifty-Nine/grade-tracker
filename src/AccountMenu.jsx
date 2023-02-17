@@ -1,9 +1,12 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
+
+import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 const AccountMenu = (props) => {
@@ -130,10 +133,16 @@ const AccountMenu = (props) => {
             </IconButton>
             <Menu open={menuOpen} anchorEl={anchorEl} onClick={handleMenuClose} onClose={handleMenuClose} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
                 <MenuItem onClick={() => {setProfileDialogOpen(true);handleMenuClose()}}>
+                    <ListItemIcon>
+                        <TagFacesRoundedIcon fontSize="small"/>
+                    </ListItemIcon>
                     Profile
                 </MenuItem>
                 <MenuItem onClick={() => {handleMenuClose();handleLogout()}}>
-                    Logout
+                    <ListItemIcon>
+                        <LogoutIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <Typography variant="body1">Logout</Typography>
                 </MenuItem>
             </Menu>
 
