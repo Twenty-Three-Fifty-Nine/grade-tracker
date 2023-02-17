@@ -100,7 +100,7 @@ const AddCourseDialog = (props) => {
                 <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained" size={isMobile ? "small" : "medium"}>Add Course</Button>
             </Stack>
         </Dialog>
-        <Snackbar open={snackbar !== "none"} autoHideDuration={400000} onClose={() => {setSnackbar("none")}}
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
             anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
         >
             <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
