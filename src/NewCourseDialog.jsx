@@ -178,7 +178,7 @@ const NewCourseDialog = (props) => {
         await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
-            url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
+            url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,
             assignments: assessments.map((a) => {
                 return {
                     name: toTitleCase(a.name),
@@ -279,7 +279,7 @@ const NewCourseDialog = (props) => {
                         <Icon>close</Icon>
                     </IconButton>
                     <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { editCode ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } </Typography>
-                    <Button color="inherit" onClick={editCode !== null ? updateCourse : createCourse} disabled={!formatValid || (editCode && !(changesMade || changeOverride))}> {editCode ? "Update" : "Create" } </Button>
+                    <Button color="inherit" onClick={editCode ? updateCourse : createCourse} disabled={!formatValid || (editCode && !(changesMade || changeOverride))}> {editCode ? "Update" : "Create" } </Button>
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: isMobile ? "100%" : 548}}>
