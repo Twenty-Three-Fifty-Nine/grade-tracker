@@ -2,16 +2,16 @@ import {
     DynamoDBClient,
     GetItemCommand,
     PutItemCommand,
+    DeleteItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import crypto from "crypto";
 
 const client = new DynamoDBClient({ region: "ap-southeast-2" });
-const tableName = "users";
+const userTable = "users";
 
 export const handler = async (event) => {
-    console.log(event);
-    if (event.requestContext.http.method !== "POST") {
+    if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH") {
         return {
             statusCode: 401,
             body: "Unauthorized",
@@ -24,6 +24,8 @@ export const handler = async (event) => {
         return await authenticateUser(event);
     } else if (route === "/users/signup") {
         return await addUser(event);
+    } else if (route === "/users/{user}") {
+        return await updateUser(event);
     } else {
         return {
             statusCode: 401,
@@ -41,7 +43,7 @@ export const handler = async (event) => {
  */
 async function addActiveYear(user, year) {
     let hasYear = false;
-    user["years"].forEach((y) => hasYear = hasYear || y.year === year);
+    user["years"].forEach((y) => (hasYear = hasYear || y.year === year));
 
     if (hasYear) return;
 
@@ -51,7 +53,7 @@ async function addActiveYear(user, year) {
     });
 
     const command = new PutItemCommand({
-        TableName: tableName,
+        TableName: userTable,
         Item: marshall(user),
     });
 
@@ -74,7 +76,7 @@ async function removeEmptyYears(user, year) {
     user["years"] = newYears;
 
     const command = new PutItemCommand({
-        TableName: tableName,
+        TableName: userTable,
         Item: marshall(user),
     });
 
@@ -102,6 +104,14 @@ function generateSalt() {
     return crypto.randomBytes(16).toString("hex");
 }
 
+async function getUser(email){
+    return await client.send(
+        new GetItemCommand({
+            TableName: userTable,
+            Key: marshall({ email: email }),
+        })
+    );
+}
 
 /**
  * Authenticates a user
@@ -111,15 +121,14 @@ function generateSalt() {
  */
 async function authenticateUser(event) {
     const body = JSON.parse(event.body);
-    const { email, password, activeTri: { year } } = body;
+    const {
+        email,
+        password,
+        activeTri: { year },
+    } = body;
 
     // Get the user from the database
-    const result = await client.send(
-        new GetItemCommand({
-            TableName: tableName,
-            Key: marshall({ email: email }),
-        })
-    );
+    const result = await getUser(email);
 
     if (result.Item) {
         // Check if the password is correct
@@ -157,21 +166,22 @@ async function authenticateUser(event) {
  * @param {Object} event The event object from the API Gateway
  * @returns {Promise} A promise that resolves when the user has been added
  */
-async function addUser(event) {
+async function addUser(event, years = []) {
     const body = JSON.parse(event.body);
     const email = body.email;
     const displayName = body.displayName;
     const password = body.password;
-    const year = body.activeTri.year;
+    let year = null;
+
+    try {
+        year = body.activeTri.year;
+    } catch (ignored) {}
 
     const salt = generateSalt();
     const hash = getHash(password, salt);
 
     // Check if the user already exists
-    const result = await client.send(new GetItemCommand({
-        TableName: tableName,
-        Key: marshall({ email: email }),
-    }));
+    const result = await getUser(email);
 
     if (result.Item) {
         return {
@@ -180,18 +190,18 @@ async function addUser(event) {
         };
     }
 
+    const yearsValue =
+        years.length === 0 ? [{ year: year, courses: [] }] : years;
+
     // Add the user to the database
     const command = new PutItemCommand({
-        TableName: tableName,
+        TableName: userTable,
         Item: marshall({
             email: email,
             displayName: displayName,
             password: hash,
             salt: salt,
-            years: [{
-                year: year,
-                courses: [],
-            }],
+            years: yearsValue,
         }),
     });
 
@@ -204,4 +214,85 @@ async function addUser(event) {
             displayName: displayName,
         }),
     };
+}
+
+/**
+ * Updates a user in the database
+ *
+ * @param {Object} event The event object from the API Gateway
+ * @returns {Promise} A promise that resolves when the user has been updated
+ */
+async function updateUser(event) {
+    const email = event.pathParameters.user;
+    const body = JSON.parse(event.body);
+    const { newEmail, displayName, oldPassword, newPassword } = body;
+
+    // Check if the user already exists
+    const result = await getUser(email);
+
+    if (!result.Item) {
+        return {
+            statusCode: 404,
+            body: "User does not exist",
+        };
+    }
+
+    const user = unmarshall(result.Item);
+
+    if (oldPassword && newPassword) {
+        const hash = getHash(oldPassword, user.salt);
+        if (hash !== user.password) {
+            return {
+                statusCode: 401,
+                body: "Unauthorized",
+            };
+        }
+        user.salt = generateSalt();
+        user.password = getHash(newPassword, user.salt);
+    }
+
+    if (displayName) {
+        user.displayName = displayName;
+    }
+
+    if (newEmail) {
+        const userCheck = await getUser(newEmail);
+        if (userCheck.Item) {
+            return {
+                statusCode: 409,
+                body: "User already exists",
+            };
+        } else {
+            user.email = newEmail;
+        }
+    }
+
+    const command = new PutItemCommand({
+        TableName: userTable,
+        Item: marshall(user),
+    });
+
+    await client.send(command);
+    if (newEmail) await deleteUser(email);
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            email: user.email,
+            displayName: user.displayName,
+        }),
+    };    
+}
+
+/**
+ * Deletes a user from the database
+ *
+ * @param {String} email The user's email linked to the account being deleted
+ */
+async function deleteUser(email) {
+    const command = new DeleteItemCommand({
+        TableName: userTable,
+        Key: marshall({ email: email }),
+    });
+
+    await client.send(command);
 }
