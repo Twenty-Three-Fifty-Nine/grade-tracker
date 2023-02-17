@@ -1,39 +1,17 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, TextField } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
 
 
-const TextButton = (props) => {
-    const { text, onClick } = props;
-    return (
-        <Typography
-            variant="body1"
-            fontSize={18}
-            component="div"
-            sx={{
-                flexGrow: 1,
-                "&:hover": { backgroundColor: "highlight.main" },
-                cursor: "pointer",
-                borderRadius: 1,
-                p: 1,
-            }}
-            onClick={onClick}
-            textAlign="left"
-        >
-            {text}
-        </Typography>
-    );
-};
-
-
 const AccountMenu = (props) => {
     const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse } = props;
 
-    const [menuOpen, setMenuOpen] = React.useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const menuOpen = Boolean(anchorEl);
 
     const [newName, setNewName] = React.useState(null);
     const [newEmail, setNewEmail] = React.useState(null);
@@ -87,6 +65,10 @@ const AccountMenu = (props) => {
         },
         [newPassword]
     );
+
+    const handleMenuClose = useCallback(() => {
+        setAnchorEl(null);
+    }, [setAnchorEl]);
 
     const handleDialogClose = useCallback(() => {
         setProfileDialogOpen(false);
@@ -142,29 +124,18 @@ const AccountMenu = (props) => {
     }, [handleDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setViewedCourse]);
 
     return (
-        <>
-            <Box
-                sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
-                onMouseLeave={() => setMenuOpen(false)}
-            >
-                <IconButton onClick={() => setMenuOpen(!menuOpen)} color="inherit" sx={{ position: "relative" }}>
-                    <AccountCircleRoundedIcon fontSize="large" />
-                </IconButton>
-                {menuOpen && (
-                    <Box
-                        sx={{ position: "absolute", top: "100%", right: "70%", width: 150, zIndex: 1, backgroundColor: "filterPanel.main", borderRadius: 1, boxShadow: 1, border: "1px solid black", }}
-                    >
-                        <TextButton
-                            text="Update Details"
-                            onClick={() => {
-                                setProfileDialogOpen(true);
-                                setMenuOpen(false);
-                            }}
-                        />
-                        <TextButton text="Logout" onClick={handleLogout} />
-                    </Box>
-                )}
-            </Box>
+        <Box>
+            <IconButton color="inherit" onClick={(event) => setAnchorEl(event.target)}>
+                <AccountCircleRoundedIcon color="inherit" fontSize="large"/>
+            </IconButton>
+            <Menu open={menuOpen} anchorEl={anchorEl} onClick={handleMenuClose} onClose={handleMenuClose} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                <MenuItem onClick={() => {setProfileDialogOpen(true);handleMenuClose()}}>
+                    Profile
+                </MenuItem>
+                <MenuItem onClick={() => {handleMenuClose();handleLogout()}}>
+                    Logout
+                </MenuItem>
+            </Menu>
 
             {profileDialogOpen && (
                 <Dialog open={profileDialogOpen} onClose={() => handleDialogClose()} maxWidth="sm" fullWidth >
@@ -201,7 +172,7 @@ const AccountMenu = (props) => {
                     </DialogActions>
                 </Dialog>
             )}
-        </>
+        </Box>
     );
 };
 
