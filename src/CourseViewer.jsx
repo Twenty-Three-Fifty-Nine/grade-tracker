@@ -295,7 +295,7 @@ const CourseViewer = (props) => {
                 <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                     {courseData.name}
                 </Typography>
-                {!isMobile && !editTemplate ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
+                {!isMobile ? (<Stack spacing={20} direction="row" sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline", ml: 2, mr: 2, mt: 2}}>
                     <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                         <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
                             Trimester {courseData.tri} - {courseData.year}
@@ -341,7 +341,7 @@ const CourseViewer = (props) => {
                             </Box>
                         </Stack>
                     </Stack>
-                </Stack>) : !editTemplate && (
+                </Stack>) : (
                     <Box>
                         <Stack sx={{flexGrow: 1, flexBasis: 0}}>
                             <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
@@ -401,7 +401,7 @@ const CourseViewer = (props) => {
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
             <Stack direction="row" sx={{display:"flex", alignItems:"baseline", mb: 5}}>
-                {currentEdit && !isMobile && editTemplate ? (
+                {currentEdit && !isMobile ? (
                     <Box sx={{flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline"}}>
                         <Card sx={{width: 360, m: 0, display: "flex", alignItems:"baseline"}}>
                             <CardContent sx={{pt: 1, pr: 5, display: "flex", alignItems:"baseline"}}>
@@ -488,7 +488,7 @@ const CourseViewer = (props) => {
                     </Box>
                 ): <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 && !editTemplate ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
+                    {filteredAssessments.length > 0 ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                         {filteredAssessments.map((assessment, index) => (
                             <Collapse key={index} sx={{mb: 2}}>
                                 <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
