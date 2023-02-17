@@ -17,6 +17,9 @@ const lightTheme = createTheme({
         success: {
             main: "#ffffff",
         },
+        successAlt: {
+            main: "#1b440b"
+        },
         error: {
             main: "rgb(200, 0, 0)",
         },
@@ -93,6 +96,9 @@ const darkTheme = createTheme({
         },
         success: {
             main: "#ffffff",
+        },
+        successAlt: {
+            main: "#388c17"
         },
         error: {
             main: "rgb(200, 100, 0)",
