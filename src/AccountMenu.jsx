@@ -1,9 +1,11 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
+import { isMobile } from "react-device-detect";
+import ThemeSwitch from "./ThemeSwitch";
 
 import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -11,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const AccountMenu = (props) => {
-    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse } = props;
+    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse, toggleTheme, lightMode } = props;
 
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -156,11 +158,12 @@ const AccountMenu = (props) => {
     );
 
     return (
-        <Box>
+        <Box sx={{ mr: 2 }}>
             <IconButton color="inherit" onClick={(event) => setAnchorEl(event.target)}>
                 <AccountCircleRoundedIcon color="inherit" fontSize="large"/>
             </IconButton>
-            <Menu open={menuOpen} anchorEl={anchorEl} onClick={handleMenuClose} onClose={handleMenuClose} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+            <Menu open={menuOpen} anchorEl={anchorEl} onClose={handleMenuClose} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                
                 <MenuItem onClick={() => {setProfileDialogOpen(true);handleMenuClose()}}>
                     <ListItemIcon>
                         <TagFacesRoundedIcon fontSize="small"/>
@@ -172,6 +175,18 @@ const AccountMenu = (props) => {
                         <LogoutIcon fontSize="small"/>
                     </ListItemIcon>
                     <Typography variant="body1">Logout</Typography>
+                </MenuItem>
+                <Divider variant="middle" />
+                <MenuItem>
+                <FormControlLabel
+                            control={
+                                <ThemeSwitch
+                                    sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
+                                    defaultChecked={lightMode}
+                                    onChange={toggleTheme}
+                                />
+                            }
+                        />
                 </MenuItem>
             </Menu>
 
