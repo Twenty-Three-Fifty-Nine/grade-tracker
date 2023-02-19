@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
@@ -192,7 +192,7 @@ const AccountMenu = (props) => {
                                 validPasswordMatch={validPasswordMatch}
                             />
                         )}
-                        { apiAlert && <Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert> }
+                        { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => handleDialogClose()}>Close</Button>
