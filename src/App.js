@@ -1,15 +1,15 @@
 import React, {useMemo} from "react";
 import { AppBar, Box, CssBaseline, FormControlLabel, ThemeProvider, Toolbar, Typography, Stack } from "@mui/material";
-import Logout from "./Logout";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
 import CourseViewer from "./CourseViewer";
 import { lightTheme, darkTheme } from "./Themes";
-import { MaterialUISwitch } from "./ThemeSwitch";
+import ThemeSwitch from "./ThemeSwitch";
 import logoLight from "./2359LogoLight.svg";
 import logoDark from "./2359LogoDark.svg";
 import { isMobile } from "react-device-detect";
 import Cookies from 'universal-cookie';
+import AccountMenu from "./AccountMenu";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -61,24 +61,29 @@ const App = () => {
                     </Typography>
                     
                     <Stack direction={"row"} sx={{position:"fixed", right: isMobile ? 10 : 0}}>
-                        {isLoggedIn && (
-                            <Logout
+                        {isLoggedIn ? (
+                            <AccountMenu
                                 setIsLoggedIn={setIsLoggedIn}
+                                userDetails={userDetails}
                                 setUserDetails={setUserDetails}
+                                sessionData={sessionData}
                                 setSessionData={setSessionData}
                                 setViewedCourse={setViewedCourse}
-                                activeTri={activeTri}
+                                toggleTheme={() => setLightMode(!lightMode)}
+                                lightMode={lightMode}
+                                inCourseViewer={viewedCourse}
                             />
-                        )}
-                        <FormControlLabel
+                        ) : (
+                            <FormControlLabel
                             control={
-                                <MaterialUISwitch
+                                <ThemeSwitch
                                     sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
-                                    defaultChecked
+                                    checked={lightMode}
                                     onChange={() => setLightMode(!lightMode)}
                                 />
                             }
                         />
+                        )}
                     </Stack>
                 </Toolbar>
             </AppBar>

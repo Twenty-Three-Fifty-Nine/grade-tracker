@@ -34,6 +34,9 @@ const lightTheme = createTheme({
         },
         filterPanel: {
             main: "#c4c389"
+        },
+        passing: {
+            main: "#49a527",
         }
     },
     components: {
@@ -108,6 +111,9 @@ const darkTheme = createTheme({
         },
         filterPanel: {
             main: "#32382c"
+        },
+        passing: {
+            main: "#49a527",
         }
     },
     components: {

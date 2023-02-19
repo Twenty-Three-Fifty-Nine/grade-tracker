@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, IconButton, Collapse } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
+import PasswordValidation from './PasswordValidation';
 
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 import CloseIcon from '@mui/icons-material/Close';
 
 const SignupDialog = (props) => {
@@ -131,13 +130,8 @@ const SignupDialog = (props) => {
                 <TextField margin="dense" id="password" label="Password" type="password" fullWidth value={password} onChange={handlePasswordChange} />
                 <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type="password" fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} />
 
-                <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 0.5 }}>
-                    <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordLength ? <CheckCircleIcon sx={{color:'successAlt.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must be at least 8 characters long</Typography>
-                    <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordNumber ? <CheckCircleIcon sx={{color:'successAlt.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one number</Typography>
-                    <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordCapital ? <CheckCircleIcon sx={{color:'successAlt.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one capital letter</Typography>
-                    <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordSpecial ? <CheckCircleIcon sx={{color:'successAlt.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one special character</Typography>
-                    <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordMatch ? <CheckCircleIcon sx={{color:'successAlt.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must match</Typography>
-                </Box>
+                <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} />
+                
                 {<Collapse in={signupError}>
                     <Alert severity="error" sx={{ mt: 2 }}
                         action={
