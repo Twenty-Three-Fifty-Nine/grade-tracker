@@ -78,7 +78,7 @@ const App = () => {
                             control={
                                 <ThemeSwitch
                                     sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
-                                    defaultChecked={lightMode}
+                                    checked={lightMode}
                                     onChange={() => setLightMode(!lightMode)}
                                 />
                             }
