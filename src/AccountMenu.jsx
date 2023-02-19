@@ -74,16 +74,19 @@ const AccountMenu = (props) => {
     }, [setAnchorEl]);
 
     const handleDialogClose = useCallback(() => {
+        setNewName(null);
+        setNewEmail(null);
+        setEmailError(null);
+        setOldPassword(null);
+        setNewPassword(null);
+        setNewPasswordConfirm(null);
+        setValidPasswordLength(null);
+        setValidPasswordNumber(null);
+        setValidPasswordSpecial(null);
+        setValidPasswordCapital(null);
+        setValidPasswordMatch(null);
         setProfileDialogOpen(false);
-        setOldPassword("");
-        setNewPassword("");
-        setNewPasswordConfirm("");
-        setValidPasswordLength(false);
-        setValidPasswordNumber(false);
-        setValidPasswordSpecial(false);
-        setValidPasswordCapital(false);
-        setValidPasswordMatch(false);
-    }, [setProfileDialogOpen, setOldPassword, setNewPassword, setNewPasswordConfirm, setValidPasswordLength, setValidPasswordNumber, setValidPasswordSpecial, setValidPasswordCapital, setValidPasswordMatch,]);
+    }, [setOldPassword, setNewPassword, setNewPasswordConfirm, setValidPasswordLength, setValidPasswordNumber, setValidPasswordSpecial, setValidPasswordCapital, setValidPasswordMatch]);
 
     const handleUserUpdate = useCallback(() => {
         const data = {
@@ -126,6 +129,17 @@ const AccountMenu = (props) => {
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
     }, [handleDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setViewedCourse]);
 
+    const handleKeyDown = useCallback(
+        (event) => {
+            if (event.key === "Enter" && !(!newEmail &&
+                !newName &&
+                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch))) {
+                handleUserUpdate();
+            }
+        },
+        [handleUserUpdate, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]
+    );
+
     return (
         <Box>
             <IconButton color="inherit" onClick={(event) => setAnchorEl(event.target)}>
@@ -147,7 +161,7 @@ const AccountMenu = (props) => {
             </Menu>
 
             {profileDialogOpen && (
-                <Dialog open={profileDialogOpen} onClose={() => handleDialogClose()} maxWidth="sm" fullWidth >
+                <Dialog open={profileDialogOpen} onClose={() => handleDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
                     <DialogTitle>Update Information</DialogTitle>
                     <DialogContent>
                         <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
