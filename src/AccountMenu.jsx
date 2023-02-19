@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const AccountMenu = (props) => {
-    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse, toggleTheme, lightMode } = props;
+    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
 
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -190,7 +190,7 @@ const AccountMenu = (props) => {
                 </MenuItem>
             </Menu>
 
-            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }} anchorOrigin={{ vertical: "bottom", horizontal: inCourseViewer ? "right" : "left" }}>
                 <Alert severity="success">Profile updated successfully</Alert>
             </Snackbar>
 

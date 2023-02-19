@@ -71,6 +71,7 @@ const App = () => {
                                 setViewedCourse={setViewedCourse}
                                 toggleTheme={() => setLightMode(!lightMode)}
                                 lightMode={lightMode}
+                                inCourseViewer={viewedCourse}
                             />
                         ) : (
                             <FormControlLabel
