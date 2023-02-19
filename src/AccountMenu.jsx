@@ -181,7 +181,7 @@ const AccountMenu = (props) => {
                 <FormControlLabel
                             control={
                                 <ThemeSwitch
-                                    sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
+                                    sx={{ ml: 4 }}
                                     checked={lightMode}
                                     onChange={toggleTheme}
                                 />
