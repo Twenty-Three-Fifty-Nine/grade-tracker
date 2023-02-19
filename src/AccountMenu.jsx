@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
 
 import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const AccountMenu = (props) => {
@@ -30,6 +31,8 @@ const AccountMenu = (props) => {
     const [validPasswordSpecial, setValidPasswordSpecial] = React.useState(false);
     const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
+
+    const [apiAlert, setApiAlert] = React.useState(false);
 
     const handleEmailChange = useCallback(
         (event) => {
@@ -115,7 +118,13 @@ const AccountMenu = (props) => {
             }
         })
         .catch((error) => {
-            console.log(error);
+            if (error.response.status === 409) {
+                setApiAlert("Email already in use");
+            } else if (error.response.status === 401) {
+                setApiAlert("Incorrect password");
+            } else {
+                setApiAlert("Something went wrong");
+            }
         });
     }, [newEmail, newName, oldPassword, newPassword, userDetails.email, handleDialogClose, setUserDetails, setSessionData, sessionData]);
 
@@ -179,6 +188,7 @@ const AccountMenu = (props) => {
                                 validPasswordMatch={validPasswordMatch}
                             />
                         )}
+                        { apiAlert && <Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert> }
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => handleDialogClose()}>Close</Button>
