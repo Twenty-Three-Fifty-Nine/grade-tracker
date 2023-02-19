@@ -82,6 +82,7 @@ const AccountMenu = (props) => {
         setNewName(null);
         setNewEmail(null);
         setEmailError(null);
+        setApiAlert(null);
         setOldPassword(null);
         setNewPassword(null);
         setNewPasswordConfirm(null);
@@ -90,6 +91,7 @@ const AccountMenu = (props) => {
         setValidPasswordSpecial(null);
         setValidPasswordCapital(null);
         setValidPasswordMatch(null);
+        setPasswordError(null);
         setProfileDialogOpen(false);
     }, [setOldPassword, setNewPassword, setNewPasswordConfirm, setValidPasswordLength, setValidPasswordNumber, setValidPasswordSpecial, setValidPasswordCapital, setValidPasswordMatch]);
 
