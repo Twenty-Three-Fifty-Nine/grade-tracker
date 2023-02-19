@@ -21,6 +21,7 @@ const AccountMenu = (props) => {
     const [newEmail, setNewEmail] = React.useState(null);
 
     const [emailError, setEmailError] = React.useState(null);
+    const [passwordError, setPasswordError] = React.useState(null);
 
     const [oldPassword, setOldPassword] = React.useState(null);
     const [newPassword, setNewPassword] = React.useState(null);
@@ -58,9 +59,10 @@ const AccountMenu = (props) => {
             setValidPasswordSpecial(password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/) !== null);
             setValidPasswordCapital(password.match(/[A-Z]/) !== null);
             setValidPasswordMatch(password === newPasswordConfirm);
+            setPasswordError(password === oldPassword ? "New password cannot be the same as old password" : null);
             setNewPassword(password);
         },
-        [newPasswordConfirm]
+        [newPasswordConfirm, oldPassword]
     );
 
     const handlePasswordConfirmChange = useCallback(
@@ -142,7 +144,7 @@ const AccountMenu = (props) => {
         (event) => {
             if (event.key === "Enter" && !(!newEmail &&
                 !newName &&
-                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch))) {
+                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))) {
                 handleUserUpdate();
             }
         },
@@ -176,8 +178,8 @@ const AccountMenu = (props) => {
                         <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
                         <TextField label="Email" defaultValue={userDetails.email} fullWidth margin="normal" onChange={handleEmailChange} error={emailError !== null} helperText={emailError} />
                         <Divider variant="middle" sx={{ my: 0.5, borderWidth: 2 }} />
-                        <TextField label="Current Password" type="password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value) } />
-                        <TextField label="New Password" type="password" fullWidth margin="dense" onChange={handlePasswordChange} />
+                        <TextField label="Current Password" type="password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}/>
+                        <TextField label="New Password" type="password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} />
                         <TextField label="Confirm New Password" type="password" fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
                         {oldPassword && (
                             <PasswordValidation
@@ -197,7 +199,7 @@ const AccountMenu = (props) => {
                             disabled={
                                 !newEmail &&
                                 !newName &&
-                                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch)
+                                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword))
                             }
                         >
                             Update
