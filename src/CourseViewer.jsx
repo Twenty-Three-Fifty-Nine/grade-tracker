@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
 import NewCourseDialog from "./NewCourseDialog";
+import SyncDialog from "./SyncDialog";
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -100,6 +101,7 @@ const CourseViewer = (props) => {
     const [errorText, setErrorText] = React.useState("");
     const [sliderPos, setSliderPos] = React.useState(-270);
     const [editTemplate, setEditTemplate] = React.useState(false);
+    const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -330,7 +332,7 @@ const CourseViewer = (props) => {
                                 <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
@@ -366,7 +368,7 @@ const CourseViewer = (props) => {
                                     <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                    <Button disabled variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
                                     <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
@@ -733,6 +735,8 @@ const CourseViewer = (props) => {
                     if(didUpdate) courseData.lastUpdated = new Date();
                 }}
             />
+
+            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} />
         </Box>
     )
 }
