@@ -190,7 +190,7 @@ const AccountMenu = (props) => {
                 </MenuItem>
             </Menu>
 
-            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }} anchorOrigin={{ vertical: "bottom", horizontal: inCourseViewer ? "right" : "left" }}>
+            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }} anchorOrigin={{ vertical: "bottom", horizontal: inCourseViewer ? "right" : "left" }}>
                 <Alert severity="success">Profile updated successfully</Alert>
             </Snackbar>
 
