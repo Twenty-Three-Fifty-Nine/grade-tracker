@@ -16,6 +16,7 @@ const AccountMenu = (props) => {
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
     const [newName, setNewName] = React.useState(null);
     const [newEmail, setNewEmail] = React.useState(null);
@@ -119,6 +120,7 @@ const AccountMenu = (props) => {
                     path: "/",
                     sameSite: "strict",
                 });
+                setSnackbarOpen(true);
             }
         })
         .catch((error) => {
@@ -172,6 +174,10 @@ const AccountMenu = (props) => {
                     <Typography variant="body1">Logout</Typography>
                 </MenuItem>
             </Menu>
+
+            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                <Alert severity="success">Profile updated successfully</Alert>
+            </Snackbar>
 
             {profileDialogOpen && (
                 <Dialog open={profileDialogOpen} onClose={() => handleDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
