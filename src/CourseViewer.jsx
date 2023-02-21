@@ -84,6 +84,11 @@ class Assessment {
         this.isAss = isAss;
         this.checkIfChanged();
     }
+
+    equalsTemplate(template) {
+        return this.name === template.name && this.deadline === template.deadline && 
+            this.isAss === template.isAss && this.weight === template.weight;
+    }
 } 
 
 const CourseViewer = (props) => {
