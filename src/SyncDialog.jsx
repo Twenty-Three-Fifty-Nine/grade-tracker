@@ -11,14 +11,6 @@ const SyncDialog = (props) => {
     const { onClose, open, courseData, templateData, setTemplateData} = props;
     const [assignments, setAssignments] = React.useState(null);
 
-    // compare two assignments by name
-    const compareAssessments = (a1, a2) => {
-        if (a1.name !== a2.name || a1.weight !== a2.weight || a1.deadline !== a2.deadline || a1.isAss !== a2.isAss) {
-            return a1.isUserAss ? -1 : 1
-        }
-        return 0;
-    }
-
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
         for (const assignment of data.assignments) {
