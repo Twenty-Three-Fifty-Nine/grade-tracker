@@ -742,3 +742,4 @@ const CourseViewer = (props) => {
 }
 
 export default CourseViewer;
+export { Assessment };
