@@ -54,7 +54,7 @@ class Assessment {
 } 
 
 const NewCourseDialog = (props) => {
-    const { onClose, open, activeTri, editCode } = props;
+    const { onClose, open, activeTri, editCode, templateData, setTemplateData } = props;
 
     const [assessments, setAssessments] = React.useState([]);
     const [courseName, setCourseName] = React.useState("");
@@ -75,7 +75,6 @@ const NewCourseDialog = (props) => {
     
     const [closeDialog, setCloseDialog] = React.useState(false);
 
-    const [courseData, setCourseData] = React.useState(null);
     const [initURL, setInitURL] = React.useState(null);
     const [changesMade, setChangesMade] = React.useState(false);
     const [changeOverride, setChangeOverride] = React.useState(false);
@@ -93,18 +92,18 @@ const NewCourseDialog = (props) => {
         setChangesMade(false);
         setChangeOverride(false);
 
-        if(courseData){
-            setCourseName(courseData.name);
-            setCourseURL(courseData.url);
-            setInitURL(courseData.url);
+        if(templateData){
+            setCourseName(templateData.name);
+            setCourseURL(templateData.url);
+            setInitURL(templateData.url);
 
-            courseData.assignments.forEach((ass) => {
+            templateData.assignments.forEach((ass) => {
                 setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
             })
         }else{
             Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
                 let data = response.data;    
-                setCourseData(data);
+                setTemplateData(data);
 
                 setCourseName(data.name);
                 setCourseURL(data.url);
@@ -242,7 +241,7 @@ const NewCourseDialog = (props) => {
             setNameCheckOn(false);
             setCodeCheckOn(false);
             setURLCheckOn(false);
-            setCourseData(null);
+            setTemplateData(null);
         }).catch((e) => {
             setErrorText("There was an error updating the template")
             setSnackbar("error");

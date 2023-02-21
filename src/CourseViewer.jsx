@@ -116,12 +116,15 @@ const CourseViewer = (props) => {
     const [assessments, setAssessments] = React.useState([]);
     const [filteredAssessments, setFilteredAssessments] = React.useState([]);
     const [currentEdit, setCurrentEdit] = React.useState(null);
+    const [templateData, setTemplateData] = React.useState(false);
+
 
     let handleKeyDown = null;
 
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
         setViewedCourse(null);
+        setTemplateData(null);
     }, [handleKeyDown, setViewedCourse]);
 
     const attemptClose = useCallback(() => {
@@ -729,14 +732,14 @@ const CourseViewer = (props) => {
                 </Alert>
             </Snackbar>
 
-            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} templateData={templateData} setTemplateData={setTemplateData} 
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
                     if(didUpdate) courseData.lastUpdated = new Date();
                 }}
             />
 
-            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} />
+            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} />
         </Box>
     )
 }
