@@ -120,7 +120,6 @@ const SyncDialog = (props) => {
     }, [open]);
 
     useEffect(() => {
-        return
         if(!open) return;
         saveChanges(true);
         onClose();
