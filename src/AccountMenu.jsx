@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const AccountMenu = (props) => {
-    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
+    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setCourseList, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
 
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -141,6 +141,7 @@ const AccountMenu = (props) => {
         setIsLoggedIn(false);
         setUserDetails(null);
         setSessionData(null);
+        setCourseList(null)
         setViewedCourse(null);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
