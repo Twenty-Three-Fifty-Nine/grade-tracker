@@ -152,7 +152,7 @@ const NewCourseDialog = (props) => {
     const handleURLChange = (e) => {
         const stripped = e.target.value.replace(/\s/g, "");
         setCourseURL(stripped);
-        const exp = /^(https?:\/\/)?(www\.)?(ecs\.)?wgtn\.ac\.nz\//;
+        const exp = /^(https?:\/\/)?(www\.)?(ecs\.)?(nuku\.)?wgtn\.ac\.nz\//;
         let match = stripped.match(exp);
         setURLValid((match !== null && stripped.startsWith(match[0]) && stripped.length < 200) || stripped.length === 0);
         setURLCheckOn(true);
