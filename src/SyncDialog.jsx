@@ -218,7 +218,7 @@ const SyncDialog = (props) => {
 
                         {changedAssessments.map((assignment, i) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
                                         <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected; checkValidSync();}} sx={{backgroundColor:"secondary.main"}}> 
@@ -238,7 +238,7 @@ const SyncDialog = (props) => {
 
                         {newAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
                                         <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected; checkValidSync();}} />
@@ -257,7 +257,7 @@ const SyncDialog = (props) => {
 
                         {unchangedAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
                                         <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected;}} />
@@ -275,7 +275,7 @@ const SyncDialog = (props) => {
 
                         {equalAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 5.1}}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 10H5V8h14v2m0 6H5v-2h14v2Z" /></svg>
