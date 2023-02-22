@@ -4,6 +4,7 @@ import { isMobile } from "react-device-detect";
 import Axios from 'axios';
 import { Assessment } from './CourseViewer';
 import SyncAssessmentCard from './SyncAssessmentCard';
+import ConfirmDialog from './ConfirmDialog';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
@@ -17,6 +18,7 @@ const SyncDialog = (props) => {
 
     const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
     const [validSync, setValidSync] = React.useState(false);
+    const [confirmSync, setConfirmSync] = React.useState(false);
 
     const checkValidSync = () => {
         let changesAvailable = changedAssessments.length + newAssessments.length > 0;
@@ -76,20 +78,22 @@ const SyncDialog = (props) => {
             })
         });
         
-        // setAssignments(filtered);
+        let changeFound = false;
         filtered.forEach((assessment) => {
             if(assessment.user.name === "") {
-                if(!validSync) setValidSync(true);
+                if(!validSync) changeFound = true;
                 setNewAssessments(curr => [...curr, assessment]);
             }else if (assessment.template.name === "") {
                 setUnchangedAssessments(curr => [...curr, assessment]);
             }else if(assessment.user.equalsTemplate(assessment.template)) {
                 setEqualAssessments(curr => [...curr, assessment]);
             }else {
-                if(!validSync) setValidSync(true);
+                if(!validSync) changeFound = true;
                 setChangedAssessments(curr => [...curr, assessment]);
             }
-        })
+        });
+
+        return changeFound;
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseData.deadlines, courseData.isAssList, courseData.names, courseData.weights, templateData]);
 
@@ -101,23 +105,24 @@ const SyncDialog = (props) => {
         setNewAssessments([]);
         setEqualAssessments([]);
         setNewAssessmentPreference(true);
-        setValidSync(false);
         if(templateData){
-            loadAssesmentList();
+            setValidSync(loadAssesmentList());
         }else{
             Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + courseData.code + "?year=" + courseData.year + "&trimester=" + courseData.tri).then((response) => {
                 setTemplateData(response.data)
-                loadAssesmentList(response.data);
+                setValidSync(loadAssesmentList(response.data));
             }).catch((error) => {
                 console.log(error);
             });
         }
-    }, [courseData, loadAssesmentList, open, setTemplateData, templateData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open]);
 
     useEffect(() => {
         if(!open) return;
-        saveChanges();
+        saveChanges(true);
         onClose();
+        setConfirmSync(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assessments])
 
@@ -157,8 +162,8 @@ const SyncDialog = (props) => {
                     <IconButton color="inherit" onClick={onClose}>
                         <Icon>close</Icon>
                     </IconButton>
-                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { courseData ? "Syncing " + courseData.code + " to it's template" : "" } </Typography>
-                    <Button color="inherit" onClick={sync} disabled={!validSync}> Sync </Button>
+                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } </Typography>
+                    <Button color="inherit" onClick={() => {setConfirmSync(true)}} disabled={!validSync}> Sync </Button>
                 </Toolbar>
             </AppBar>
 
@@ -283,6 +288,7 @@ const SyncDialog = (props) => {
                     </>)}
                 </Stack>
             </Box>
+            <ConfirmDialog open={confirmSync} handleClose={() => {setConfirmSync(false)}} buttonText={"Sync"} message={"Sync " + courseData.code + " to it's Template?"} subMessage={"This action cannot be reverted."} confirmAction={sync} />
         </Dialog>
     )
 }

@@ -212,7 +212,7 @@ const CourseViewer = (props) => {
         changesMadeR.changes = changes || override;
     }
 
-    const saveChanges = () => {
+    const saveChanges = (synced = false) => {
         setCurrentEdit(null)
         courseData.names = [];
         courseData.weights = [];
@@ -240,6 +240,7 @@ const CourseViewer = (props) => {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
+            synced: synced
         }).then(() => {
             assessments.forEach((assessment) => {
                 assessment.hasChanged = false;
@@ -254,7 +255,8 @@ const CourseViewer = (props) => {
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
-        }).catch(() => {
+        }).catch((e) => {
+            console.log(e)
             setSnackbar("error");
             setIsSuccess(false);
             setErrorText("Saving to server failed, try again later");
@@ -402,7 +404,7 @@ const CourseViewer = (props) => {
 
                         <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
                         </Stack>
                     </Box>
                 )}
@@ -588,7 +590,7 @@ const CourseViewer = (props) => {
                 <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
                 <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
                     <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
                 </Stack>
             </>)}
 
@@ -729,7 +731,7 @@ const CourseViewer = (props) => {
                     </Fab>
                 </Tooltip>
 
-                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>}
             </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
