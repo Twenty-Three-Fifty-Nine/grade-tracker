@@ -220,6 +220,7 @@ const CourseViewer = (props) => {
         courseData.deadlines = [];
         courseData.grades = [];
         courseData.isAssList = [];
+        if(synced) courseData.lastSynced = new Date();
         assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
             courseData.names[index] = assessment.name;
@@ -751,7 +752,6 @@ const CourseViewer = (props) => {
             />
 
             <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} subMessage={"You have updated the template but not your instance. Sync to update your course instance."} confirmAction={() => {setSyncMenuOpen(true); setSyncSuggestion(false)}} />
-
 
             <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} />
         </Box>

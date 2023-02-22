@@ -81,14 +81,14 @@ const SyncDialog = (props) => {
         let changeFound = false;
         filtered.forEach((assessment) => {
             if(assessment.user.name === "") {
-                if(!validSync) changeFound = true;
+                changeFound = true;
                 setNewAssessments(curr => [...curr, assessment]);
             }else if (assessment.template.name === "") {
                 setUnchangedAssessments(curr => [...curr, assessment]);
             }else if(assessment.user.equalsTemplate(assessment.template)) {
                 setEqualAssessments(curr => [...curr, assessment]);
             }else {
-                if(!validSync) changeFound = true;
+                changeFound = true;
                 setChangedAssessments(curr => [...curr, assessment]);
             }
         });
