@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from 'react-transition-group';
 import NewCourseDialog from "./NewCourseDialog";
+import SyncDialog from "./SyncDialog";
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import AssessmentViewerCard from "./AssessmentViewerCard";
@@ -83,6 +84,11 @@ class Assessment {
         this.isAss = isAss;
         this.checkIfChanged();
     }
+
+    equalsTemplate(template) {
+        return this.name === template.name && this.deadline === template.deadline && 
+            this.isAss === template.isAss && this.weight === template.weight;
+    }
 } 
 
 const CourseViewer = (props) => {
@@ -100,6 +106,8 @@ const CourseViewer = (props) => {
     const [errorText, setErrorText] = React.useState("");
     const [sliderPos, setSliderPos] = React.useState(-270);
     const [editTemplate, setEditTemplate] = React.useState(false);
+    const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
+    const [syncSuggestion, setSyncSuggestion] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -114,12 +122,14 @@ const CourseViewer = (props) => {
     const [assessments, setAssessments] = React.useState([]);
     const [filteredAssessments, setFilteredAssessments] = React.useState([]);
     const [currentEdit, setCurrentEdit] = React.useState(null);
+    const [templateData, setTemplateData] = React.useState(false);
 
     let handleKeyDown = null;
 
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
         setViewedCourse(null);
+        setTemplateData(null);
     }, [handleKeyDown, setViewedCourse]);
 
     const attemptClose = useCallback(() => {
@@ -203,12 +213,14 @@ const CourseViewer = (props) => {
         changesMadeR.changes = changes || override;
     }
 
-    const saveChanges = () => {
+    const saveChanges = (synced = false) => {
+        setCurrentEdit(null)
         courseData.names = [];
         courseData.weights = [];
         courseData.deadlines = [];
         courseData.grades = [];
         courseData.isAssList = [];
+        if(synced) courseData.lastSynced = new Date();
         assessments.forEach((assessment) => {
             let index = assessments.indexOf(assessment);
             courseData.names[index] = assessment.name;
@@ -230,6 +242,7 @@ const CourseViewer = (props) => {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
+            synced: synced
         }).then(() => {
             assessments.forEach((assessment) => {
                 assessment.hasChanged = false;
@@ -244,7 +257,8 @@ const CourseViewer = (props) => {
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
-        }).catch(() => {
+        }).catch((e) => {
+            console.log(e)
             setSnackbar("error");
             setIsSuccess(false);
             setErrorText("Saving to server failed, try again later");
@@ -330,7 +344,7 @@ const CourseViewer = (props) => {
                                 <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                <Button variant="contained" disabled={changesMade} sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
@@ -366,7 +380,7 @@ const CourseViewer = (props) => {
                                     <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Button variant="contained" sx={{fontSize:"large"}}> Sync </Button>
+                                    <Button disabled variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
                                     <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
@@ -392,7 +406,7 @@ const CourseViewer = (props) => {
 
                         <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
                         </Stack>
                     </Box>
                 )}
@@ -578,7 +592,7 @@ const CourseViewer = (props) => {
                 <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
                 <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
                     <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save</Button>
+                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
                 </Stack>
             </>)}
 
@@ -719,7 +733,7 @@ const CourseViewer = (props) => {
                     </Fab>
                 </Tooltip>
 
-                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={saveChanges}> Save Changes</Button>}
+                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>}
             </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
@@ -727,14 +741,22 @@ const CourseViewer = (props) => {
                 </Alert>
             </Snackbar>
 
-            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} templateData={templateData} setTemplateData={setTemplateData} 
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
-                    if(didUpdate) courseData.lastUpdated = new Date();
+                    if(didUpdate){
+                        courseData.lastUpdated = new Date();
+                        if(!changesMade) setSyncSuggestion(true);
+                    }
                 }}
             />
+
+            <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} subMessage={"You have updated the template but not your instance. Sync to update your course instance."} confirmAction={() => {setSyncMenuOpen(true); setSyncSuggestion(false)}} />
+
+            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} />
         </Box>
     )
 }
 
 export default CourseViewer;
+export { Assessment };
