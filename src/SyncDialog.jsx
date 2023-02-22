@@ -179,7 +179,7 @@ const SyncDialog = (props) => {
                             <Stack sx={{display: "flex", alignItems:"center", justifyContent:"center"}}>
                                 <Stack direction="row" sx={{ display: "flex", alignItems:"center", justifyContent:"center"}}>
                                     <Typography sx={{flexGrow: 1, flexBasis: 0, width: 300, textAlign:"end"}} variant="h6">Current Assessments</Typography>
-                                    <IconButton sx={{mx: 2}} 
+                                    <IconButton sx={{mx: 2, backgroundColor:"secondary.main"}} 
                                         onClick={() => {
                                             setNewAssessmentPreference(!newAssessmentPreference);
                                             changedAssessments.forEach((assessment) => {
@@ -221,7 +221,7 @@ const SyncDialog = (props) => {
                                 <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
-                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected; checkValidSync();}}> 
+                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected; checkValidSync();}} sx={{backgroundColor:"secondary.main"}}> 
                                             <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)"}} />
                                         </IconButton>
                                     </Box>
