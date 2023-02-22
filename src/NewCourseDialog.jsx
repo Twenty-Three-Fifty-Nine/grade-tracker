@@ -341,9 +341,7 @@ const NewCourseDialog = (props) => {
             "This is where the updating system comes in; you can change the assessment information of the template so everyone else can access it. " + 
             "Note that if the inputted information does not apply to the majority of a class, consider updating your personal copy of the course instead using the course viewer." 
             : "Templates are a powerful system that exist to preserve a students' most valuable resource: time. Only one student has to create a template for a course, " + 
-            "and then any student can add that course to their course list and immediately gain access to any assessment information the template creator inputted."
-            
-            
+            "and then any student can add that course to their course list and immediately gain access to any assessment information the template creator inputted." 
             }
         />
         </>
