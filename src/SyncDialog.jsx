@@ -291,7 +291,7 @@ const SyncDialog = (props) => {
             </Box>
             <ConfirmDialog open={confirmSync} handleClose={() => {setConfirmSync(false)}} buttonText={"Sync"} message={"Sync " + courseData.code + " to it's Template?"} subMessage={"This action cannot be reverted."} confirmAction={sync} />
             <ConfirmDialog open={syncInfo} handleClose={() => {setSyncInfo(false)}} buttonText={"Got It"} message={"How Template Syncing Works"} confirmAction={null} 
-                subMessage={"Syncing is the process of updating your course information with a newer version of the template it uses." + 
+                subMessage={"Syncing is the process of updating your course information with a newer version of the template." + 
                 " You can choose what changes you want to keep from the new template and how much you want to keep from your current instance."}
             />
         </Dialog>
