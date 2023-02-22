@@ -15,8 +15,8 @@ const ConfirmDialog = (props) => {
                     {subMessage}
                 </Typography>
                 <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 3, paddingBottom: 3 }}>
-                    <Button onClick={handleClose} variant="outlined">Cancel</Button>
-                    <Button onClick={confirmAction} variant="contained">{buttonText}</Button>
+                    {confirmAction && <Button onClick={handleClose} variant="outlined">Cancel</Button>}
+                    <Button onClick={confirmAction ? confirmAction : handleClose} variant="contained">{buttonText}</Button>
                 </Stack>
             </Stack>
         </Dialog>
