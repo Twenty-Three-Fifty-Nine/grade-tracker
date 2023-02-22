@@ -123,7 +123,6 @@ const CourseViewer = (props) => {
     const [currentEdit, setCurrentEdit] = React.useState(null);
     const [templateData, setTemplateData] = React.useState(false);
 
-
     let handleKeyDown = null;
 
     const exitViewer = useCallback(() => {
@@ -214,6 +213,7 @@ const CourseViewer = (props) => {
     }
 
     const saveChanges = () => {
+        setCurrentEdit(null)
         courseData.names = [];
         courseData.weights = [];
         courseData.deadlines = [];
@@ -340,7 +340,7 @@ const CourseViewer = (props) => {
                                 <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
+                                <Button variant="contained" disabled={changesMade} sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
@@ -744,7 +744,7 @@ const CourseViewer = (props) => {
                 }}
             />
 
-            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} />
+            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} />
         </Box>
     )
 }

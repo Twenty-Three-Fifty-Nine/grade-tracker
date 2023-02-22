@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel } from '@mui/material';
+import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel, Button } from '@mui/material';
 import { isMobile } from "react-device-detect";
 import Axios from 'axios';
 import { Assessment } from './CourseViewer';
@@ -8,12 +8,31 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const SyncDialog = (props) => {
-    const { onClose, open, courseData, templateData, setTemplateData} = props;
+    const { onClose, open, courseData, templateData, setTemplateData, assessments, setAssessments, saveChanges} = props;
+
     const [changedAssessments, setChangedAssessments] = React.useState([]);
     const [unchangedAssessments, setUnchangedAssessments] = React.useState([]);
     const [newAssessments, setNewAssessments] = React.useState([]);
     const [equalAssessments, setEqualAssessments] = React.useState([]);
+
     const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
+    const [validSync, setValidSync] = React.useState(false);
+
+    const checkValidSync = () => {
+        let changesAvailable = changedAssessments.length + newAssessments.length > 0;
+
+        let foundChangeSelection = false;
+        changedAssessments.forEach(assessment => {
+            if(assessment.newSelected) foundChangeSelection = true;
+        })
+
+        let foundNewSelection = false;
+        newAssessments.forEach(assessment => {
+            if(assessment.selected) foundNewSelection = true;
+        })
+
+        setValidSync(changesAvailable && (foundChangeSelection || foundNewSelection));
+    }
 
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
@@ -60,15 +79,18 @@ const SyncDialog = (props) => {
         // setAssignments(filtered);
         filtered.forEach((assessment) => {
             if(assessment.user.name === "") {
+                if(!validSync) setValidSync(true);
                 setNewAssessments(curr => [...curr, assessment]);
             }else if (assessment.template.name === "") {
                 setUnchangedAssessments(curr => [...curr, assessment]);
             }else if(assessment.user.equalsTemplate(assessment.template)) {
                 setEqualAssessments(curr => [...curr, assessment]);
             }else {
+                if(!validSync) setValidSync(true);
                 setChangedAssessments(curr => [...curr, assessment]);
             }
         })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseData.deadlines, courseData.isAssList, courseData.names, courseData.weights, templateData]);
 
     useEffect(() => {
@@ -79,6 +101,7 @@ const SyncDialog = (props) => {
         setNewAssessments([]);
         setEqualAssessments([]);
         setNewAssessmentPreference(true);
+        setValidSync(false);
         if(templateData){
             loadAssesmentList();
         }else{
@@ -91,6 +114,42 @@ const SyncDialog = (props) => {
         }
     }, [courseData, loadAssesmentList, open, setTemplateData, templateData]);
 
+    useEffect(() => {
+        if(!open) return;
+        saveChanges();
+        onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assessments])
+
+    const sync = () => {
+        let syncList = equalAssessments.map((assessment) => assessment.user);
+        let existingAssessments = assessments.map((assessment) => assessment.name);
+        
+        syncList.forEach((assessment) => {
+            let grade = assessments[existingAssessments.indexOf(assessment.name)].grade;
+            assessment.grade = grade;
+        })
+
+        changedAssessments.forEach(assessment => {
+            let grade = assessments[existingAssessments.indexOf(assessment.user.name)].grade;
+            assessment.user.grade = grade;
+            assessment.template.grade = grade;
+            syncList.push(assessment.newSelected ? assessment.template : assessment.user);
+        })
+
+        unchangedAssessments.forEach(assessment => {
+            let grade = assessments[existingAssessments.indexOf(assessment.user.name)].grade;
+            assessment.user.grade = grade;
+            if(assessment.selected) syncList.push(assessment.user);
+        })
+
+        newAssessments.forEach(assessment => {
+            if(assessment.selected) syncList.push(assessment.template);
+        })
+
+        setAssessments(syncList);
+    }
+
     return (
         <Dialog fullScreen open={open} onClose={onClose} sx={{}}>
             <AppBar position="fixed" component="nav">
@@ -98,7 +157,8 @@ const SyncDialog = (props) => {
                     <IconButton color="inherit" onClick={onClose}>
                         <Icon>close</Icon>
                     </IconButton>
-                    <Typography sx={{ paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { courseData ? "Syncing " + courseData.code + " to it's template" : "" } </Typography>
+                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { courseData ? "Syncing " + courseData.code + " to it's template" : "" } </Typography>
+                    <Button color="inherit" onClick={sync} disabled={!validSync}> Sync </Button>
                 </Toolbar>
             </AppBar>
 
@@ -120,6 +180,7 @@ const SyncDialog = (props) => {
                                             changedAssessments.forEach((assessment) => {
                                                 assessment.newSelected = !newAssessmentPreference;
                                             })
+                                            checkValidSync();
                                         }}> 
                                         <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: newAssessmentPreference ? "rotate(0deg)" : "rotate(-180deg)"}} />
                                     </IconButton>
@@ -131,6 +192,7 @@ const SyncDialog = (props) => {
                                         newAssessments.forEach((assessment) => {
                                             assessment.selected = newValue;
                                         })
+                                        checkValidSync();
                                     }} label={<Typography variant="h6">Keep New Assessments</Typography>} labelPlacement="start" 
                                 />
 
@@ -154,7 +216,7 @@ const SyncDialog = (props) => {
                                 <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
-                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected}}> 
+                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected; checkValidSync();}}> 
                                             <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)"}} />
                                         </IconButton>
                                     </Box>
@@ -164,9 +226,6 @@ const SyncDialog = (props) => {
                         })}
                         <Box visibility="hidden" sx={{mb: 4}} />
                     </>)}
-                    
-                    
-                    
 
                     {newAssessments.length > 0 && (<>
                         <Typography variant="h5" textAlign="center">New Assessments</Typography>
@@ -177,7 +236,7 @@ const SyncDialog = (props) => {
                                 <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
-                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected;}} />
+                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected; checkValidSync();}} />
                                     </Box>
                                     <SyncAssessmentCard assessment={assignment.template} />
                                 </Stack>
