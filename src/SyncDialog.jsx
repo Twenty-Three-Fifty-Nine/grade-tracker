@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider } from '@mui/material';
+import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel } from '@mui/material';
 import { isMobile } from "react-device-detect";
 import Axios from 'axios';
 import { Assessment } from './CourseViewer';
@@ -13,7 +13,7 @@ const SyncDialog = (props) => {
     const [unchangedAssessments, setUnchangedAssessments] = React.useState([]);
     const [newAssessments, setNewAssessments] = React.useState([]);
     const [equalAssessments, setEqualAssessments] = React.useState([]);
-
+    const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
 
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
@@ -38,13 +38,15 @@ const SyncDialog = (props) => {
                 return {
                     user: a1.isUserAss ? a1 : a2,
                     template: a2.isUserAss ? a1 : a2,
-                    newer: 1
+                    newSelected: true,
+                    selected: true
                 }
             }
             return {
                 user: found[0].isUserAss ? found[0] : blankAssessment,
                 template: found[0].isUserAss ? blankAssessment : found[0],
-                newer: -1
+                newSelected: false,
+                selected: true
             }
         });
 
@@ -76,6 +78,7 @@ const SyncDialog = (props) => {
         setUnchangedAssessments([]);
         setNewAssessments([]);
         setEqualAssessments([]);
+        setNewAssessmentPreference(true);
         if(templateData){
             loadAssesmentList();
         }else{
@@ -106,16 +109,54 @@ const SyncDialog = (props) => {
                 </Box>
                 
                 <Stack direction="column" spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
+                    <Card sx={{display: "flex", alignItems:"center", justifyContent:"center"}}>
+                        <CardContent sx={{width: 800, py: 4}}>
+                            <Stack sx={{display: "flex", alignItems:"center", justifyContent:"center"}}>
+                                <Stack direction="row" sx={{ display: "flex", alignItems:"center", justifyContent:"center"}}>
+                                    <Typography sx={{flexGrow: 1, flexBasis: 0, width: 300, textAlign:"end"}} variant="h6">Current Assessments</Typography>
+                                    <IconButton sx={{mx: 2}} 
+                                        onClick={() => {
+                                            setNewAssessmentPreference(!newAssessmentPreference);
+                                            changedAssessments.forEach((assessment) => {
+                                                assessment.newSelected = !newAssessmentPreference;
+                                            })
+                                        }}> 
+                                        <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: newAssessmentPreference ? "rotate(0deg)" : "rotate(-180deg)"}} />
+                                    </IconButton>
+                                    <Typography variant="h6" sx={{flexGrow: 1, flexBasis: 0, width: 300}}>Template Assessments</Typography>
+                                </Stack>
+
+                                <FormControlLabel control={<Checkbox defaultChecked />} 
+                                    onChange={(e, newValue) => {
+                                        newAssessments.forEach((assessment) => {
+                                            assessment.selected = newValue;
+                                        })
+                                    }} label={<Typography variant="h6">Keep New Assessments</Typography>} labelPlacement="start" 
+                                />
+
+                                <FormControlLabel control={<Checkbox defaultChecked />} 
+                                    onChange={(e, newValue) => {
+                                        unchangedAssessments.forEach((assessment) => {
+                                            assessment.selected = newValue;
+                                        })
+                                    }} label={<Typography variant="h6">Keep Your Assessments</Typography>} labelPlacement="start" 
+                                />
+                            </Stack>
+                        </CardContent>
+                    </Card>
+
                     {changedAssessments.length > 0 && (<>
                         <Typography variant="h5" textAlign="center">Changed Assessments</Typography>
                         <Divider sx={{width: "50%", borderWidth: 2}} />
 
-                        {changedAssessments.map((assignment) => {
+                        {changedAssessments.map((assignment, i) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name + String(assignment.newer)} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
-                                    <Box sx={{mx: 5.1}}>
-                                        { assignment.newer === 1 ? <ArrowForwardIosIcon /> : <ArrowForwardIosIcon sx={{ transform: "rotate(180deg)" }} /> }
+                                    <Box sx={{mx: 4}}>
+                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected}}> 
+                                            <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)"}} />
+                                        </IconButton>
                                     </Box>
                                     <SyncAssessmentCard assessment={assignment.template} />
                                 </Stack>
@@ -133,10 +174,10 @@ const SyncDialog = (props) => {
 
                         {newAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name + String(assignment.newer)} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
-                                        <Checkbox defaultChecked />
+                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected;}} />
                                     </Box>
                                     <SyncAssessmentCard assessment={assignment.template} />
                                 </Stack>
@@ -147,15 +188,15 @@ const SyncDialog = (props) => {
 
                     
                     {unchangedAssessments.length > 0 && (<>
-                        <Typography variant="h5" textAlign="center">Unchanged Assessments</Typography>
+                        <Typography variant="h5" textAlign="center">Your Assessments </Typography>
                         <Divider sx={{width: "50%", borderWidth: 2}} />
 
                         {unchangedAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name + String(assignment.newer)} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 4}}>
-                                        <Checkbox defaultChecked />
+                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected;}} />
                                     </Box>
                                     <SyncAssessmentCard assessment={assignment.template} />
                                 </Stack>
@@ -170,7 +211,7 @@ const SyncDialog = (props) => {
 
                         {equalAssessments.map((assignment) => {
                             return (
-                                <Stack direction="row" key={assignment.user.name + String(assignment.newer)} justifyContent="center" alignItems="center">
+                                <Stack direction="row" key={assignment.user.name} justifyContent="center" alignItems="center">
                                     <SyncAssessmentCard assessment={assignment.user}/>
                                     <Box sx={{mx: 5.1}}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 10H5V8h14v2m0 6H5v-2h14v2Z" /></svg>
