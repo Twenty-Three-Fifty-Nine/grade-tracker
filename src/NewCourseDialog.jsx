@@ -5,6 +5,7 @@ import CreateAssessmentCard from './CreateAssessmentCard';
 import ConfirmDialog from './ConfirmDialog';
 import Axios from 'axios';
 import { isMobile } from "react-device-detect";
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 class Assessment {
     constructor(name, weight, deadline, isNew = true, existing = false, isAssignment = true) {
@@ -74,6 +75,7 @@ const NewCourseDialog = (props) => {
     const [formatValid, setFormatValid] = React.useState(false);
     
     const [closeDialog, setCloseDialog] = React.useState(false);
+    const [templateInfo, setTemplateInfo] = React.useState(false);
 
     const [initURL, setInitURL] = React.useState(null);
     const [changesMade, setChangesMade] = React.useState(false);
@@ -282,7 +284,14 @@ const NewCourseDialog = (props) => {
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: isMobile ? "100%" : 548}}>
-                <Typography variant="h5" sx={{textAlign:"center"}}> Basic Info </Typography>
+                <Stack direction="row" sx={{display:"flex", alignItems:"center", justifyContent:"baseline"}}>
+                    <Box visibility="hidden" sx={{flexGrow: 1, flexBasis: 0}} />
+                    <Typography variant="h5" sx={{textAlign:"center"}}> Basic Info </Typography>
+                    <Box sx={{ flexGrow: 1, flexBasis: 0, ml: 2, mt: 0.5}}>
+                        <HelpRoundedIcon onClick={() => {setTemplateInfo(true)}} sx={{ fontSize: 40, color: "grey", "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer"}} />
+                    </Box>
+                </Stack>
+                
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
                     <TextField value={courseName} disabled={editCode ? true : false} label="Course Name" fullWidth onChange={handleNameChange} error={!nameValid && nameCheckOn} 
@@ -318,7 +327,7 @@ const NewCourseDialog = (props) => {
         </Dialog>
 
         <ConfirmDialog open={closeDialog} handleClose={() => {setCloseDialog(false)}} buttonText={"Stop"} message={"Stop template creation?"} subMessage={"Any inputted data will be lost."} confirmAction={stopCreating} />
-
+        
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
             anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : editCode === null ? "left" : "right" }}
         >
@@ -326,6 +335,15 @@ const NewCourseDialog = (props) => {
                 {isSuccess ? editCode ? "Course updated successfully" : "Course created successfully" : errorText}
             </Alert>
         </Snackbar>
+
+        <ConfirmDialog open={templateInfo} handleClose={() => {setTemplateInfo(false)}} buttonText={"Got It"} message={editCode ? "How Template Updating Works" : "How Template Creation Works"} confirmAction={null} 
+            subMessage={editCode ? "When you add a course to your offering in a given trimester, sometimes the information may not be up to date. " + 
+            "This is where the updating system comes in; you can change the assessment information of the template so everyone else can access it. " + 
+            "Note that if the inputted information does not apply to the majority of a class, consider updating your personal copy of the course instead using the course viewer." 
+            : "Templates are a powerful system that exist to preserve a students' most valuable resource: time. Only one student has to create a template for a course, " + 
+            "and then any student can add that course to their course list and immediately gain access to any assessment information the template creator inputted." 
+            }
+        />
         </>
     )
 }
