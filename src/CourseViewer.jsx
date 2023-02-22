@@ -107,6 +107,7 @@ const CourseViewer = (props) => {
     const [sliderPos, setSliderPos] = React.useState(-270);
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
+    const [syncSuggestion, setSyncSuggestion] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -742,9 +743,15 @@ const CourseViewer = (props) => {
             <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} templateData={templateData} setTemplateData={setTemplateData} 
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
-                    if(didUpdate) courseData.lastUpdated = new Date();
+                    if(didUpdate){
+                        courseData.lastUpdated = new Date();
+                        if(!changesMade) setSyncSuggestion(true);
+                    }
                 }}
             />
+
+            <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} subMessage={"You have updated the template but not your instance. Sync to update your course instance."} confirmAction={() => {setSyncMenuOpen(true); setSyncSuggestion(false)}} />
+
 
             <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} />
         </Box>
