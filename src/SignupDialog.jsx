@@ -67,7 +67,7 @@ const SignupDialog = (props) => {
         }
 
         await Axios.post(
-            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
+            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
             {
                 displayName: displayName,
                 email: email,

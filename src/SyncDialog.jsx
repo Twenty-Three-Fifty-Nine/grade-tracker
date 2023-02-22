@@ -109,7 +109,7 @@ const SyncDialog = (props) => {
         if(templateData){
             setValidSync(loadAssesmentList());
         }else{
-            Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + courseData.code + "?year=" + courseData.year + "&trimester=" + courseData.tri).then((response) => {
+            Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + courseData.code + "?year=" + courseData.year + "&trimester=" + courseData.tri).then((response) => {
                 setTemplateData(response.data)
                 setValidSync(loadAssesmentList(response.data));
             }).catch((error) => {

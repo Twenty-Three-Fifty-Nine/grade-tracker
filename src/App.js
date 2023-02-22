@@ -68,6 +68,7 @@ const App = () => {
                                 setUserDetails={setUserDetails}
                                 sessionData={sessionData}
                                 setSessionData={setSessionData}
+                                setCourseList={setCourseList}
                                 setViewedCourse={setViewedCourse}
                                 toggleTheme={() => setLightMode(!lightMode)}
                                 lightMode={lightMode}

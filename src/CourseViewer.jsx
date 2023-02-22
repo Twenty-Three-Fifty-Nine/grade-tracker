@@ -238,7 +238,7 @@ const CourseViewer = (props) => {
             assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
         });
 
-        Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
+        Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
@@ -270,7 +270,7 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = async () => {
-        Axios.delete("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
+        Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;

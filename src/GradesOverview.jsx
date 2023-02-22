@@ -116,7 +116,7 @@ const GradesOverview = (props) => {
         console.log("Getting Session Data");
         await setSessionData("Reloading");
         return parseCourseData(
-            "https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
+            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
                 userEmail +
                 "/courses"
         ).then((courseData) => {

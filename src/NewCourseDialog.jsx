@@ -103,7 +103,7 @@ const NewCourseDialog = (props) => {
                 setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
             })
         }else{
-            Axios.get("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
+            Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
                 let data = response.data;    
                 setTemplateData(data);
 
@@ -176,7 +176,7 @@ const NewCourseDialog = (props) => {
     const createCourse = async () => {
         console.log("Adding new template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
-        await Axios.post("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
+        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
             url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,
@@ -215,7 +215,7 @@ const NewCourseDialog = (props) => {
     const updateCourse = async () => {
         console.log("Updating template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
-        await Axios.put("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
+        await Axios.put("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
             url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
