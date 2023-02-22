@@ -87,7 +87,7 @@ class Assessment {
 
     equalsTemplate(template) {
         return this.name === template.name && this.deadline === template.deadline && 
-            this.isAss === template.isAss && this.weight === template.weight;
+            this.isAss === template.isAss && this.weight.toString() === template.weight.toString();
     }
 } 
 
