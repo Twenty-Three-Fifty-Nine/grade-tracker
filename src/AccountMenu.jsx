@@ -106,7 +106,7 @@ const AccountMenu = (props) => {
             newPassword: !newPassword ? null : newPassword,
         };
 
-        Axios.patch("https://b0d0rkqp47.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, data).then((response) => {
+        Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, data).then((response) => {
             if (response.status === 200) {
                 handleDialogClose();
                 const userObj = {
