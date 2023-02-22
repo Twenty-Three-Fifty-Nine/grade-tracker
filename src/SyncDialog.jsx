@@ -74,7 +74,7 @@ const SyncDialog = (props) => {
         // Remove duplicates
         let filtered = groupedAssignments.filter((assignment, index) => {
             return index === groupedAssignments.findIndex((ass) => { 
-                return ass.user.name === assignment.user.name
+                return ass.user.name === assignment.user.name && ass.template.name === assignment.template.name
             })
         });
         
