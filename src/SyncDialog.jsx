@@ -19,6 +19,7 @@ const SyncDialog = (props) => {
     const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
     const [validSync, setValidSync] = React.useState(false);
     const [confirmSync, setConfirmSync] = React.useState(false);
+    const [syncInfo, setSyncInfo] = React.useState(false);
 
     const checkValidSync = () => {
         let changesAvailable = changedAssessments.length + newAssessments.length > 0;
@@ -119,6 +120,7 @@ const SyncDialog = (props) => {
     }, [open]);
 
     useEffect(() => {
+        return
         if(!open) return;
         saveChanges(true);
         onClose();
@@ -170,7 +172,7 @@ const SyncDialog = (props) => {
             <Box sx={{ mt: 10, mb: 10 }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <Typography variant="h4" textAlign="center">{courseData.code}</Typography>
-                    <HelpRoundedIcon sx={{ fontSize: 40, color: "grey", ml: 2, "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }} />
+                    <HelpRoundedIcon onClick={() => {setSyncInfo(true)}} sx={{ fontSize: 40, color: "grey", ml: 2, "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }} />
                 </Box>
                 
                 <Stack direction="column" spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
@@ -289,6 +291,10 @@ const SyncDialog = (props) => {
                 </Stack>
             </Box>
             <ConfirmDialog open={confirmSync} handleClose={() => {setConfirmSync(false)}} buttonText={"Sync"} message={"Sync " + courseData.code + " to it's Template?"} subMessage={"This action cannot be reverted."} confirmAction={sync} />
+            <ConfirmDialog open={syncInfo} handleClose={() => {setSyncInfo(false)}} buttonText={"Got It"} message={"How Template Syncing Works"} confirmAction={null} 
+                subMessage={"Syncing is the process of updating your course information with a newer version of the template it uses." + 
+                " You can choose what changes you want to keep from the new template and how much you want to keep from your current instance."}
+            />
         </Dialog>
     )
 }
