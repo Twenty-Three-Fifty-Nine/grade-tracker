@@ -20,7 +20,7 @@ const App = () => {
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
 
-    const activeTri = useMemo(() => { return {year: 2022, tri: 3} }, []);
+    const activeTri = useMemo(() => { return {year: 2023, tri: 1} }, []);
 
     React.useEffect(() => {
         const cookies = new Cookies();
