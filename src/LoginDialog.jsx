@@ -24,13 +24,13 @@ const LoginDialog = (props) => {
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [loginError, setLoginError] = React.useState(false);
+    const [loginError, setLoginError] = React.useState(null);
 
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
-        setLoginError(false);
+        setLoginError(null);
         setLoginState(true);
     }, [onClose]);
 
@@ -140,7 +140,7 @@ const LoginDialog = (props) => {
 
                         
                     </>
-                )}<Collapse in={loginError !== false}>
+                )}<Collapse in={loginError !== null}>
                             <Alert
                                 severity="error"
                                 action={
@@ -148,7 +148,7 @@ const LoginDialog = (props) => {
                                         color="inherit"
                                         size="small"
                                         onClick={() => {
-                                            setLoginError(false);
+                                            setLoginError(null);
                                         }}
                                     >
                                         <CloseIcon fontSize="inherit" />
