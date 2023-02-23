@@ -324,7 +324,7 @@ const NewCourseDialog = (props) => {
                 <Divider sx={{marginBottom: 3}}></Divider>
                 
                     <Stack spacing={2}>
-                        { assessments.length > 0 ? (
+                        { assessments.length > 0 && editCode ? (
                             <TransitionGroup>
                                 {assessments.map((assessment, i) => (
                                     <Collapse key={i} sx={{mb: 2}}>
