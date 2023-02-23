@@ -141,7 +141,7 @@ const LoginDialog = (props) => {
 
                         
                     </>
-                )}<Collapse in={loginError}>
+                )}<Collapse in={loginError && true}>
                             <Alert
                                 severity="error"
                                 action={
