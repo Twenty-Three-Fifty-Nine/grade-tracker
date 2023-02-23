@@ -216,7 +216,7 @@ const AccountMenu = (props) => {
                         )}
                         { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions sx={{px: 2}}>
                         <Button onClick={() => handleDialogClose()}>Close</Button>
                         <Button
                             onClick={() => handleUserUpdate()}

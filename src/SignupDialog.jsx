@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
@@ -21,6 +21,7 @@ const SignupDialog = (props) => {
 
     const [signupError, setSignupError] = React.useState(false);
     const [signupErrorText, setSignupErrorText] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
@@ -66,6 +67,8 @@ const SignupDialog = (props) => {
             return;
         }
 
+        setLoading(true);
+
         await Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
             {
@@ -96,6 +99,7 @@ const SignupDialog = (props) => {
                 }
                 setSignupError(true);
             });
+        setLoading(false)
     }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
@@ -150,7 +154,12 @@ const SignupDialog = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSignup}>Signup</Button>
+                <Box sx={{ position: 'relative' }}>
+                    <Button onClick={handleSignup} disabled={loading}>Signup</Button>
+                    {loading &&
+                        <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                    }
+                </Box>
             </DialogActions>
         </Dialog>
     );

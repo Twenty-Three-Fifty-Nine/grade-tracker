@@ -9,7 +9,9 @@ import {
     Snackbar,
     TextField,
     Collapse,
-    IconButton
+    IconButton,
+    Box, 
+    CircularProgress
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
@@ -30,6 +32,7 @@ const PasswordResetDialog = (props) => {
 
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
     const [resetPasswordError, setResetPasswordError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const handlePasswordChange = useCallback(
         (e) => {
@@ -71,7 +74,8 @@ const PasswordResetDialog = (props) => {
     }, [onClose]);
 
     const resetPassword = useCallback(async () => {
-        Axios.post(
+        setLoading(true);
+        await Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/reset",
             {
                 email: resetData.email,
@@ -93,6 +97,7 @@ const PasswordResetDialog = (props) => {
             setResetPasswordError(true);
             setResetPasswordSuccess(false);
         });
+        setLoading(false);
     }, [resetData, password, setIsLoggedIn, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
@@ -177,21 +182,27 @@ const PasswordResetDialog = (props) => {
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button
-                        onClick={resetPassword}
-                        color="primary"
-                        disabled={
-                            !(
-                                validPasswordLength &&
-                                validPasswordNumber &&
-                                validPasswordSpecial &&
-                                validPasswordCapital &&
-                                validPasswordMatch
-                            )
+
+                    <Box sx={{ position: 'relative' }}>
+                        <Button
+                            onClick={resetPassword}
+                            color="primary"
+                            disabled={
+                                !(
+                                    validPasswordLength &&
+                                    validPasswordNumber &&
+                                    validPasswordSpecial &&
+                                    validPasswordCapital &&
+                                    validPasswordMatch
+                                ) || loading
+                            }
+                        >
+                            Reset Password
+                        </Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                         }
-                    >
-                        Reset Password
-                    </Button>
+                    </Box>
                 </DialogActions>
             </Dialog>
             <Snackbar
