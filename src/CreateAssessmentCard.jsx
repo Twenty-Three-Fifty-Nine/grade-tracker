@@ -22,7 +22,7 @@ const CreateAssessmentCard = (props) => {
     };
 
     const handleWeightChange = (e) => {
-        if(!isNaN(e.target.value)) details.setWeight(e.target.value);
+        if(!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) details.setWeight(e.target.value);
         setUpdater(!updater);
         updateValidity(details.name);
         setWeightCheckOn(true);

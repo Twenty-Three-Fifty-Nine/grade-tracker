@@ -28,7 +28,7 @@ const AssessmentViewerCard = (props) => {
 
     const handleGradeChange = (e) => {
         if(e.target.value === "") assData.setGrade(NaN);
-        else if(!isNaN(e.target.value)) assData.setGrade(e.target.value);
+        else if(!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) assData.setGrade(e.target.value);
         assData.gradeValid = (isNaN(e.target.value) && e.target.value === "") || (!isNaN(e.target.value) && e.target.value >= 0 && e.target.value <= 100);
         assData.checkValid();
         checkChanges();

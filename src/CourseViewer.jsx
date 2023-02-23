@@ -482,7 +482,7 @@ const CourseViewer = (props) => {
 
                                         <TextField label="Worth (%)" InputProps={{ inputProps: { min: 0 } }} value={currentEdit.weight} sx={{ mt: 2, width: "74%"}}
                                             onChange={(e) => {
-                                                if(!isNaN(e.target.value)) currentEdit.setWeight(e.target.value);
+                                                if(!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) currentEdit.setWeight(e.target.value);
                                                 checkChanges();
                                             }} 
                                             error={(currentEdit.weight <= 0 || currentEdit.weight > 100)} 
