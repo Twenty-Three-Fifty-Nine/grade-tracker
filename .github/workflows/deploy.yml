@@ -1,0 +1,34 @@
+name: Build and Deploy
+
+on:
+  release:
+    types: [published]
+
+env:
+  BUCKET_NAME : "twentythreefiftynine"
+  AWS_REGION : "ap-southeast-2"
+
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+  Build-and-upload-S3:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Build
+        run: npm ci && npm run build
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::541403457022:role/GithubActionDeployWebsite
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Upload to S3
+        run: aws s3 sync ./build s3://${{ env.BUCKET_NAME }}/ --delete --quiet

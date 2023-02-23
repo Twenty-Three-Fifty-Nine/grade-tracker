@@ -145,7 +145,7 @@ const AccountMenu = (props) => {
         setViewedCourse(null);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
-    }, [handleDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setViewedCourse]);
+    }, [handleDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
 
     const handleKeyDown = useCallback(
         (event) => {
