@@ -22,7 +22,7 @@ const CreateAssessmentCard = (props) => {
     };
 
     const handleWeightChange = (e) => {
-        details.setWeight(e.target.value);
+        if(!isNaN(e.target.value)) details.setWeight(e.target.value);
         setUpdater(!updater);
         updateValidity(details.name);
         setWeightCheckOn(true);
@@ -113,15 +113,10 @@ const CreateAssessmentCard = (props) => {
                                 />
                             }
                         </LocalizationProvider>
-                        <TextField label="Grade Weight (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
+                        <TextField label="Grade Weight (%)" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
                             sx={{ marginLeft: 2}}
                             error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
                             helperText={details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? "The value cannot be above 100" : ""} 
-                            onKeyDown={(e) => {
-                                if(((isNaN(e.key) && e.key !== ".") || details.weight.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
-                                  e.preventDefault();
-                                } 
-                            }}
                         />
                     </Box>
                 </Stack>

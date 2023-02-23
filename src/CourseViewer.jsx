@@ -480,18 +480,13 @@ const CourseViewer = (props) => {
                                             </LocalizationProvider>
                                         </Box>
 
-                                        <TextField label="Worth (%)" type="number" InputProps={{ inputProps: { min: 0 } }} value={currentEdit.weight} sx={{ mt: 2, width: "74%"}}
+                                        <TextField label="Worth (%)" InputProps={{ inputProps: { min: 0 } }} value={currentEdit.weight} sx={{ mt: 2, width: "74%"}}
                                             onChange={(e) => {
-                                                currentEdit.setWeight(e.target.value);
+                                                if(!isNaN(e.target.value)) currentEdit.setWeight(e.target.value);
                                                 checkChanges();
                                             }} 
                                             error={(currentEdit.weight <= 0 || currentEdit.weight > 100)} 
                                             helperText={currentEdit.weight <= 0 ? "The value must be above 0" : currentEdit.weight > 100 ? "The value cannot be above 100" : ""} 
-                                            onKeyDown={(e) => {
-                                                if(((isNaN(e.key) && e.key !== ".") || currentEdit.weight.toString().length === 5) && e.key !== "Backspace" && e.key !== "Delete"){
-                                                    e.preventDefault();
-                                                } 
-                                            }}
                                         />
 
                                         <Button variant="contained" sx={{mt: 2, mr: 1}} onClick={() => {setCurrentEdit(null)}}> Close </Button>
