@@ -156,7 +156,7 @@ const PasswordResetDialog = (props) => {
                     Cancel
                 </Button>
                 <Button
-                    onClick={onClose}
+                    onClick={resetPassword}
                     color="primary"
                     disabled={
                         !(
