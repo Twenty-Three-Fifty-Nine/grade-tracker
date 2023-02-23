@@ -15,7 +15,7 @@ export const handler = async (event) => {
         const { user: userId, course: courseCode } = event.pathParameters;
 
         const body = JSON.parse(event.body);
-        const { year, totalGrade, assignments, synced } = body;
+        const { year, totalGrade, assignments, synced, url } = body;
 
         if (!assignments) {
             return {
@@ -49,6 +49,7 @@ export const handler = async (event) => {
             .courses.find((course) => course.courseCode === courseCode);
         course.assignments = newAssignmentValues;
         course.totalGrade = totalGrade;
+        course.url = url;
         
         if (synced) course.lastSynced = new Date().toString();
 

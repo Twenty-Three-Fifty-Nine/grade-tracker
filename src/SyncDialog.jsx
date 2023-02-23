@@ -17,12 +17,13 @@ const SyncDialog = (props) => {
     const [equalAssessments, setEqualAssessments] = React.useState([]);
 
     const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
+    const [keepNewURL, setKeepNewURL] = React.useState(true);
     const [validSync, setValidSync] = React.useState(false);
     const [confirmSync, setConfirmSync] = React.useState(false);
     const [syncInfo, setSyncInfo] = React.useState(false);
 
     const checkValidSync = () => {
-        let changesAvailable = changedAssessments.length + newAssessments.length > 0;
+        let changesAvailable = changedAssessments.length + newAssessments.length > 0 || templateData.url !== courseData.url;
 
         let foundChangeSelection = false;
         changedAssessments.forEach(assessment => {
@@ -94,7 +95,7 @@ const SyncDialog = (props) => {
             }
         });
 
-        return changeFound;
+        return changeFound || data.url !== courseData.url;
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseData.deadlines, courseData.isAssList, courseData.names, courseData.weights, templateData]);
 
@@ -106,6 +107,7 @@ const SyncDialog = (props) => {
         setNewAssessments([]);
         setEqualAssessments([]);
         setNewAssessmentPreference(true);
+        setKeepNewURL(true);
         if(templateData){
             setValidSync(loadAssesmentList());
         }else{
@@ -121,6 +123,7 @@ const SyncDialog = (props) => {
 
     useEffect(() => {
         if(!open) return;
+        if(keepNewURL) courseData.url = templateData.url;
         saveChanges(true);
         onClose();
         setConfirmSync(false);
@@ -209,6 +212,17 @@ const SyncDialog = (props) => {
                                         })
                                     }} label={<Typography variant="h6">Keep Your Assessments</Typography>} labelPlacement="start" 
                                 />
+                                
+                                {templateData && templateData.url !== courseData.url && 
+                                (<Stack direction="row">
+                                    <FormControlLabel control={<Checkbox checked={keepNewURL} />} 
+                                        onChange={(e, newValue) => {
+                                            setKeepNewURL(newValue);
+                                        }} label={<Typography variant="h6">Keep New Course URL </Typography>} labelPlacement="start" 
+                                    />
+
+                                    <Button disabled={templateData.url === ""} href={templateData.url} target="_blank" sx={{fontSize: 18, ml: 2}}> Open URL </Button>
+                                </Stack>)}
                             </Stack>
                         </CardContent>
                     </Card>

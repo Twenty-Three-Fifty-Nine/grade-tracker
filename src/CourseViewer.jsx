@@ -242,7 +242,8 @@ const CourseViewer = (props) => {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
-            synced: synced
+            synced: synced,
+            url: courseData.url,
         }).then(() => {
             assessments.forEach((assessment) => {
                 assessment.hasChanged = false;
