@@ -96,7 +96,7 @@ const LoginDialog = (props) => {
 
     return (
         <>
-        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
+        <Dialog open={open} onClose={() => {loginState ? handleClose() : setLoginState(true)}} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
             <DialogTitle>{loginState ? "Login" : "Reset Passowrd"}</DialogTitle>
             <DialogContent>
                 <TextField
