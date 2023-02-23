@@ -32,7 +32,6 @@ const LoginDialog = (props) => {
         onClose();
         setLoginError(false);
         setLoginState(true);
-        setResetPasswordSuccess(false);
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
@@ -141,7 +140,7 @@ const LoginDialog = (props) => {
 
                         
                     </>
-                )}<Collapse in={loginError && true}>
+                )}<Collapse in={loginError !== false}>
                             <Alert
                                 severity="error"
                                 action={
@@ -175,7 +174,7 @@ const LoginDialog = (props) => {
                 )}
             </DialogActions>
         </Dialog>
-        <Snackbar open={resetPasswordSuccess} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={resetPasswordSuccess} autoHideDuration={4000} onClose={() => setResetPasswordSuccess(false)}>
             <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
                 Password reset email sent!
             </Alert>
