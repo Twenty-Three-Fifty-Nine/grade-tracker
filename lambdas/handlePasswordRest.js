@@ -162,20 +162,24 @@ async function handleResetPassword(email, token, password) {
     const salt = generateSalt();
     const hash = getHash(password, salt);
 
+    user.password = hash;
+    user.salt = salt;
+    delete user.passwordReset;
+
     const params = {
         TableName: userTable,
-        Item: marshall({
-            email: email,
-            password: hash,
-            salt: salt,
-        }),
+        Item: marshall(user),
     };
 
+    // A PutItemCommand is used to update as it will also remove the passwordReset attribute
     const command = new PutItemCommand(params);
     await dbClient.send(command);
 
     return {
         statusCode: 200,
-        body: JSON.stringify("Password reset"),
+        body: JSON.stringify({
+            email: email,
+            displayName: user.displayName,
+        })
     };
 }
