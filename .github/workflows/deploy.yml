@@ -1,8 +1,8 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches: [ 191-create-cicd-pipeline-to-deploy-website-to-s3 ]
+  release:
+    types: [published]
 
 env:
   BUCKET_NAME : "twentythreefiftynine"
