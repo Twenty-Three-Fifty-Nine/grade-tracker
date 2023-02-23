@@ -8,22 +8,30 @@ import {
     DialogTitle,
     TextField,
     IconButton,
-    Collapse
+    Collapse,
+    Box,
+    Typography,
+    Snackbar,
 } from "@mui/material";
 import Axios from "axios";
-import Cookies from 'universal-cookie';
-import CloseIcon from '@mui/icons-material/Close';
+import Cookies from "universal-cookie";
+import CloseIcon from "@mui/icons-material/Close";
 
 const LoginDialog = (props) => {
     const { onClose, open, setIsLoggedIn, setUserDetails, activeTri } = props;
 
+    const [loginState, setLoginState] = React.useState(true);
+
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [loginError, setLoginError] = React.useState(false);
+    const [loginError, setLoginError] = React.useState(null);
+
+    const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
-        setLoginError(false);
+        setLoginError(null);
+        setLoginState(true);
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
@@ -32,19 +40,50 @@ const LoginDialog = (props) => {
             {
                 email: email,
                 password: password,
-                activeTri: activeTri
+                activeTri: activeTri,
             }
         )
             .then((result) => {
                 setIsLoggedIn(true);
                 setUserDetails(result.data);
-                new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
+                new Cookies().set("userDetails", result.data, {
+                    path: "/",
+                    sameSite: "strict",
+                });
                 handleClose();
             })
             .catch((e) => {
-                setLoginError(true);
+                setLoginError("There was an error logging in");
             });
-    }, [email, password, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
+    }, [
+        email,
+        password,
+        activeTri,
+        setIsLoggedIn,
+        setUserDetails,
+        handleClose,
+    ]);
+
+    const handleForgotPassword = useCallback(() => {
+        setLoginState(false);
+    }, []);
+
+    const handlePasswordReset = useCallback(() => {
+
+        Axios.post(
+            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/forgot",
+            {
+                email: email,
+            }
+        )
+            .then((result) => {
+                setResetPasswordSuccess(true);
+                handleClose();
+            })
+            .catch((e) => {
+                setLoginError("There was an error resetting your password");
+            });
+    }, [email, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {
@@ -56,8 +95,9 @@ const LoginDialog = (props) => {
     );
 
     return (
-        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
-            <DialogTitle>Login</DialogTitle>
+        <>
+        <Dialog open={open} onClose={() => {loginState ? handleClose() : setLoginState(true)}} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
+            <DialogTitle>{loginState ? "Login" : "Reset Passowrd"}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
@@ -71,38 +111,75 @@ const LoginDialog = (props) => {
                         setEmail(e.target.value);
                     }}
                 />
-                <TextField
-                    margin="dense"
-                    id="password"
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                    }}
-                />
-                {<Collapse in={loginError}>
-                    <Alert severity="error"
-                        action={
-                            <IconButton color="inherit" size="small"
-                            onClick={() => {
-                                setLoginError(false);
-                            }}
+                {loginState && (
+                    <>
+                        <Box>
+                            <TextField
+                                margin="dense"
+                                id="password"
+                                label="Password"
+                                type="password"
+                                fullWidth
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                            />
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{
+                                    cursor: "pointer",
+                                    "&:hover": { color: "primary.main" },
+                                }}
+                                onClick={handleForgotPassword}
                             >
-                            <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                    >
-                        There was an error logging in
-                    </Alert>
-                </Collapse>}
+                                Forgot Password?
+                            </Typography>
+                        </Box>
+
+                        
+                    </>
+                )}<Collapse in={loginError !== null}>
+                            <Alert
+                                severity="error"
+                                action={
+                                    <IconButton
+                                        color="inherit"
+                                        size="small"
+                                        onClick={() => {
+                                            setLoginError(null);
+                                        }}
+                                    >
+                                        <CloseIcon fontSize="inherit" />
+                                    </IconButton>
+                                }
+                            >
+                                {loginError}
+                                
+                            </Alert>
+                        </Collapse>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ display: "flex", justifyContent: "flex-end", px: 2 }}>
+                {loginState ? (
+                    <>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button onClick={handleLogin}>Login</Button>
+                </>
+                ) : (
+                <>
+                    <Button onClick={() => setLoginState(true)}>Cancel</Button>
+                    <Button onClick={handlePasswordReset}>Reset Password</Button>
+                </>
+                )}
             </DialogActions>
         </Dialog>
+        <Snackbar open={resetPasswordSuccess} autoHideDuration={4000} onClose={() => setResetPasswordSuccess(false)}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+                Password reset email sent!
+            </Alert>
+        </Snackbar>
+        </>
     );
 };
 
