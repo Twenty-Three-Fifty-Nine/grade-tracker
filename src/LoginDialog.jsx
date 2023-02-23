@@ -8,10 +8,11 @@ import {
     DialogTitle,
     TextField,
     IconButton,
-    Collapse,
-    Box,
     Typography,
     Snackbar,
+    Collapse,
+    CircularProgress,
+    Box
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
@@ -25,6 +26,7 @@ const LoginDialog = (props) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
 
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
 
@@ -35,6 +37,8 @@ const LoginDialog = (props) => {
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
+        setLoading(true);
+
         await Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/authorise",
             {
@@ -55,20 +59,15 @@ const LoginDialog = (props) => {
             .catch((e) => {
                 setLoginError("There was an error logging in");
             });
-    }, [
-        email,
-        password,
-        activeTri,
-        setIsLoggedIn,
-        setUserDetails,
-        handleClose,
-    ]);
+        setLoading(false);
+    }, [email, password, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
     const handleForgotPassword = useCallback(() => {
         setLoginState(false);
     }, []);
 
     const handlePasswordReset = useCallback(() => {
+        setLoading(true);
 
         Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/forgot",
@@ -77,10 +76,12 @@ const LoginDialog = (props) => {
             }
         )
             .then((result) => {
+                setLoading(false);
                 setResetPasswordSuccess(true);
                 handleClose();
             })
             .catch((e) => {
+                setLoading(false);
                 setLoginError("There was an error resetting your password");
             });
     }, [email, handleClose]);
@@ -164,12 +165,22 @@ const LoginDialog = (props) => {
                 {loginState ? (
                     <>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleLogin}>Login</Button>
+                <Box sx={{ position: 'relative' }}>
+                    <Button onClick={handleLogin} disabled={loading}>Login</Button>
+                    {loading &&
+                        <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                    }
+                </Box>
                 </>
                 ) : (
                 <>
                     <Button onClick={() => setLoginState(true)}>Cancel</Button>
-                    <Button onClick={handlePasswordReset}>Reset Password</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button onClick={handlePasswordReset} disabled={loading}>Reset Password</Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
                 </>
                 )}
             </DialogActions>

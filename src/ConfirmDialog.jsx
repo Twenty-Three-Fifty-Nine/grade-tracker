@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dialog, DialogTitle, Stack, Typography, Button } from '@mui/material';
+import { Dialog, DialogTitle, Stack, Typography, Button, Box, CircularProgress } from '@mui/material';
 
 const ConfirmDialog = (props) => {
-    const { open, handleClose, message, subMessage, confirmAction, buttonText } = props;
+    const { open, handleClose, message, subMessage, confirmAction, buttonText, loading } = props;
 
     return (
         <>
@@ -16,7 +16,12 @@ const ConfirmDialog = (props) => {
                 </Typography>
                 <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 3, paddingBottom: 3 }}>
                     {confirmAction && <Button onClick={handleClose} variant="outlined">Cancel</Button>}
-                    <Button onClick={confirmAction ? confirmAction : handleClose} variant="contained">{buttonText}</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button onClick={confirmAction ? confirmAction : handleClose} disabled={loading} variant="contained">{buttonText}</Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
                 </Stack>
             </Stack>
         </Dialog>

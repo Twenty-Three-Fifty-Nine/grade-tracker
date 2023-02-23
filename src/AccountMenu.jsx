@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
@@ -37,6 +37,7 @@ const AccountMenu = (props) => {
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
 
     const [apiAlert, setApiAlert] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const handleEmailChange = useCallback(
         (event) => {
@@ -106,7 +107,9 @@ const AccountMenu = (props) => {
             newPassword: !newPassword ? null : newPassword,
         };
 
+        setLoading(true);
         Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, data).then((response) => {
+            setLoading(false);
             if (response.status === 200) {
                 handleDialogClose();
                 const userObj = {
@@ -126,6 +129,7 @@ const AccountMenu = (props) => {
             }
         })
         .catch((error) => {
+            setLoading(false);
             if (error.response.status === 409) {
                 setApiAlert("Email already in use");
             } else if (error.response.status === 401) {
@@ -216,18 +220,23 @@ const AccountMenu = (props) => {
                         )}
                         { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions sx={{px: 2}}>
                         <Button onClick={() => handleDialogClose()}>Close</Button>
-                        <Button
-                            onClick={() => handleUserUpdate()}
-                            disabled={
-                                !newEmail &&
-                                !newName &&
-                                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword))
+                        <Box sx={{ position: 'relative' }}>
+                            <Button
+                                onClick={() => handleUserUpdate()}
+                                disabled={
+                                    loading || (!newEmail &&
+                                    !newName &&
+                                    !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))
+                                }
+                            >
+                                Update
+                            </Button>
+                            {loading &&
+                                <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                             }
-                        >
-                            Update
-                        </Button>
+                        </Box>
                     </DialogActions>
                 </Dialog>
             )}

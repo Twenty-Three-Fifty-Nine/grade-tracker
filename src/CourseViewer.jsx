@@ -1,4 +1,4 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog } from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog, CircularProgress } from "@mui/material";
 import React, {useCallback} from "react";
 import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -108,6 +108,7 @@ const CourseViewer = (props) => {
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
+    const [apiLoading, setAPILoading] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -238,6 +239,7 @@ const CourseViewer = (props) => {
             assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
         });
 
+        setAPILoading(true);
         Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
@@ -245,6 +247,7 @@ const CourseViewer = (props) => {
             synced: synced,
             url: courseData.url,
         }).then(() => {
+            setAPILoading(false);
             assessments.forEach((assessment) => {
                 assessment.hasChanged = false;
                 assessment.isNew = false;
@@ -259,7 +262,7 @@ const CourseViewer = (props) => {
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
         }).catch((e) => {
-            console.log(e)
+            setAPILoading(false);
             setSnackbar("error");
             setIsSuccess(false);
             setErrorText("Saving to server failed, try again later");
@@ -271,7 +274,8 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = async () => {
-        Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
+        setAPILoading(true);
+        await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;
@@ -290,6 +294,7 @@ const CourseViewer = (props) => {
             setIsSuccess(false);
             setErrorText("Removing course failed, try again later");
         });
+        setAPILoading(false);
     }
 
     const checkDuplicateName = () => {
@@ -407,7 +412,12 @@ const CourseViewer = (props) => {
 
                         <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                            <Box sx={{ position: 'relative' }}>
+                                <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                                {apiLoading &&
+                                    <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                                }
+                            </Box>
                         </Stack>
                     </Box>
                 )}
@@ -588,11 +598,16 @@ const CourseViewer = (props) => {
                 <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
                 <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
                     <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                        {apiLoading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
                 </Stack>
             </>)}
 
-            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
             {isMobile && (
@@ -728,8 +743,15 @@ const CourseViewer = (props) => {
                         <KeyboardArrowLeftIcon fontSize="large" />
                     </Fab>
                 </Tooltip>
-
-                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>}
+                
+                {changesMade && (
+                    <Box>
+                        <Button disabled={!validChanges || apiLoading} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>
+                        {apiLoading &&
+                            <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px', }} />
+                        }
+                    </Box>
+                )}
             </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
@@ -742,7 +764,7 @@ const CourseViewer = (props) => {
                     setEditTemplate(false); 
                     if(didUpdate){
                         courseData.lastUpdated = new Date();
-                        if(!changesMade) setSyncSuggestion(true);
+                        if(!changesMade && !isMobile) setSyncSuggestion(true);
                     }
                 }}
             />

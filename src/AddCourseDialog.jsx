@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField, CircularProgress, Box } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
@@ -13,6 +13,7 @@ const AddCourseDialog = (props) => {
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [loadingAddRequest, setLoadingAddRequest] = React.useState(false);
 
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
@@ -25,6 +26,7 @@ const AddCourseDialog = (props) => {
     const handleAddCourse = async (code = courseCode, isNewTemplate) => {
         console.log("Adding course " + code + " to user");
         
+        setLoadingAddRequest(true);
         await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + session.userData.email + "/courses", {
             courseCode: code,
             year: activeTri.year,
@@ -41,6 +43,7 @@ const AddCourseDialog = (props) => {
             setSnackbar("error");
             setIsSuccess(false);
         })
+        setLoadingAddRequest(false);
     }
 
     const handleNewCourse = () => {
@@ -97,7 +100,12 @@ const AddCourseDialog = (props) => {
             </DialogContentText>
             <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
                 <Button onClick={handleNewCourse} variant="outlined" >Create New Course</Button>
-                <Button disabled={!courseCode} onClick={() => handleAddCourse()} variant="contained" >Add Course</Button>
+                <Box sx={{ position: 'relative' }}>
+                    <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" >Add Course</Button>
+                    {loadingAddRequest &&
+                        <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                    }
+                </Box>
             </Stack>
         </Dialog>
         <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}

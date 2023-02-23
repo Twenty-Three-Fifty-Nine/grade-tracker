@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse } from '@mui/material';
+import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse, CircularProgress, Skeleton } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import ConfirmDialog from './ConfirmDialog';
@@ -75,6 +75,7 @@ const NewCourseDialog = (props) => {
     const [formatValid, setFormatValid] = React.useState(false);
     
     const [closeDialog, setCloseDialog] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     const [templateInfo, setTemplateInfo] = React.useState(false);
 
     const [initURL, setInitURL] = React.useState(null);
@@ -176,6 +177,7 @@ const NewCourseDialog = (props) => {
     const createCourse = async () => {
         console.log("Adding new template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
+        setLoading(true);
         await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
@@ -210,11 +212,14 @@ const NewCourseDialog = (props) => {
             setSnackbar("error");
             setIsSuccess(false);
         })
+        setLoading(false);
     }
 
     const updateCourse = async () => {
         console.log("Updating template");
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
+        
+        setLoading(true);
         await Axios.put("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
@@ -249,6 +254,7 @@ const NewCourseDialog = (props) => {
             setSnackbar("error");
             setIsSuccess(false);
         })
+        setLoading(false);
     }
 
     const attemptClose = () => {
@@ -280,7 +286,12 @@ const NewCourseDialog = (props) => {
                         <Icon>close</Icon>
                     </IconButton>
                     <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { editCode ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } </Typography>
-                    <Button color="inherit" onClick={editCode ? updateCourse : createCourse} disabled={!formatValid || (editCode && !(changesMade || changeOverride))}> {editCode ? "Update" : "Create" } </Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button color="inherit" onClick={editCode ? updateCourse : createCourse} disabled={loading || !formatValid || (editCode && !(changesMade || changeOverride))}> {editCode ? "Update" : "Create" } </Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Box sx={{padding: 3, margin: "auto", mt: 8.5, width: isMobile ? "100%" : 548}}>
@@ -313,14 +324,21 @@ const NewCourseDialog = (props) => {
                 <Divider sx={{marginBottom: 3}}></Divider>
                 
                     <Stack spacing={2}>
-                        <TransitionGroup>
-                        {assessments.map((assessment, i) => (
-                            <Collapse key={i} sx={{mb: 2}}>
-                                <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
-                            </Collapse>
-                        ))}
-                        </TransitionGroup>
-                        <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>
+                        { assessments.length > 0 ? (
+                            <TransitionGroup>
+                                {assessments.map((assessment, i) => (
+                                    <Collapse key={i} sx={{mb: 2}}>
+                                        <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
+                                    </Collapse>
+                                ))}
+                            </TransitionGroup>) : (editCode && 
+                            <Stack spacing={2}>
+                                <Skeleton variant="rounded" height={150} />
+                                <Skeleton variant="rounded" height={150} />
+                                <Skeleton variant="rounded" height={150} />
+                            </Stack>
+                        )}
+                        {(assessments.length > 0 || !editCode) && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
                     </Stack>
                 
             </Box>
