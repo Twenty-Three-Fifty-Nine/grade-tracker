@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse, CircularProgress } from '@mui/material';
+import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse, CircularProgress, Skeleton } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
 import CreateAssessmentCard from './CreateAssessmentCard';
 import ConfirmDialog from './ConfirmDialog';
@@ -324,14 +324,21 @@ const NewCourseDialog = (props) => {
                 <Divider sx={{marginBottom: 3}}></Divider>
                 
                     <Stack spacing={2}>
-                        <TransitionGroup>
-                        {assessments.map((assessment, i) => (
-                            <Collapse key={i} sx={{mb: 2}}>
-                                <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
-                            </Collapse>
-                        ))}
-                        </TransitionGroup>
-                        <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>
+                        { assessments.length > 0 ? (
+                            <TransitionGroup>
+                                {assessments.map((assessment, i) => (
+                                    <Collapse key={i} sx={{mb: 2}}>
+                                        <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
+                                    </Collapse>
+                                ))}
+                            </TransitionGroup>) : (
+                            <Stack spacing={2}>
+                                <Skeleton variant="rounded" height={150} />
+                                <Skeleton variant="rounded" height={150} />
+                                <Skeleton variant="rounded" height={150} />
+                            </Stack>
+                        )}
+                        {assessments.length > 0 && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
                     </Stack>
                 
             </Box>
