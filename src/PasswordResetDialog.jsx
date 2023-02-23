@@ -8,10 +8,13 @@ import {
     DialogContent,
     Snackbar,
     TextField,
+    Collapse,
+    IconButton
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PasswordResetDialog = (props) => {
     const { onClose, resetData, setIsLoggedIn, setUserDetails } = props;
@@ -117,66 +120,93 @@ const PasswordResetDialog = (props) => {
     );
     return (
         <>
-        <Dialog
-            open={resetData !== null}
-            onClose={handleClose}
-            onKeyDown={handleKeyDown}
-        >
-            <DialogTitle>Reset Password</DialogTitle>
-            <DialogContent>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="password"
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    value={password}
-                    onChange={handlePasswordChange}
-                />
-                <TextField
-                    margin="dense"
-                    id="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                    fullWidth
-                    value={passwordConfirm}
-                    onChange={handlePasswordConfirmChange}
-                />
-                <PasswordValidation
-                    validPasswordLength={validPasswordLength}
-                    validPasswordNumber={validPasswordNumber}
-                    validPasswordSpecial={validPasswordSpecial}
-                    validPasswordCapital={validPasswordCapital}
-                    validPasswordMatch={validPasswordMatch}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Cancel
-                </Button>
-                <Button
-                    onClick={resetPassword}
-                    color="primary"
-                    disabled={
-                        !(
-                            validPasswordLength &&
-                            validPasswordNumber &&
-                            validPasswordSpecial &&
-                            validPasswordCapital &&
-                            validPasswordMatch
-                        )
-                    }
+            <Dialog
+                open={resetData !== null}
+                onClose={handleClose}
+                onKeyDown={handleKeyDown}
+            >
+                <DialogTitle>Reset Password</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="password"
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        fullWidth
+                        value={passwordConfirm}
+                        onChange={handlePasswordConfirmChange}
+                    />
+                    <PasswordValidation
+                        validPasswordLength={validPasswordLength}
+                        validPasswordNumber={validPasswordNumber}
+                        validPasswordSpecial={validPasswordSpecial}
+                        validPasswordCapital={validPasswordCapital}
+                        validPasswordMatch={validPasswordMatch}
+                    />
+                    <Collapse in={resetPasswordError}>
+                        <Alert
+                            severity="error"
+                            sx={{ width: "100%", mt: 2 }}
+                            action={
+                                <IconButton
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setResetPasswordError(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            Password reset failed
+                        </Alert>
+                    </Collapse>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={resetPassword}
+                        color="primary"
+                        disabled={
+                            !(
+                                validPasswordLength &&
+                                validPasswordNumber &&
+                                validPasswordSpecial &&
+                                validPasswordCapital &&
+                                validPasswordMatch
+                            )
+                        }
+                    >
+                        Reset Password
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar
+                open={resetPasswordSuccess}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    sx={{ width: "100%" }}
                 >
-                    Reset Password
-                </Button>
-            </DialogActions>
-        </Dialog>
-        <Snackbar open={resetPasswordSuccess || resetPasswordError} autoHideDuration={6000} onClose={() => { if (resetPasswordSuccess) handleClose() }}>
-            <Alert onClose={handleClose} severity={resetPasswordSuccess ? "success" : "error"} sx={{ width: "100%" }}>
-                {resetPasswordSuccess ? "Password reset successfully" : "Password reset failed"}
-            </Alert>
-        </Snackbar>
+                    Password reset successfully
+                </Alert>
+            </Snackbar>
         </>
     );
 };
