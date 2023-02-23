@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel, Button } from '@mui/material';
+import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel, Button, Skeleton } from '@mui/material';
 import { isMobile } from "react-device-detect";
 import Axios from 'axios';
 import { Assessment } from './CourseViewer';
@@ -226,6 +226,14 @@ const SyncDialog = (props) => {
                             </Stack>
                         </CardContent>
                     </Card>
+
+                    {changedAssessments.length + equalAssessments.length + newAssessments.length + unchangedAssessments.length === 0 && 
+                        <Stack direction="column" spacing={2} justifyContent="center" alignItems="center">
+                            <Skeleton variant="rounded" width={900} height={150} />
+                            <Skeleton variant="rounded" width={900} height={150} />
+                            <Skeleton variant="rounded" width={900} height={150} />
+                        </Stack>
+                    }
 
                     {changedAssessments.length > 0 && (<>
                         <Typography variant="h5" textAlign="center">Changed Assessments</Typography>
