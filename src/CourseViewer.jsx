@@ -59,7 +59,7 @@ class Assessment {
     }
 
     setGrade(grade) {
-        this.grade = parseInt(grade);
+        this.grade = grade;
         this.checkIfChanged();
     }
 
