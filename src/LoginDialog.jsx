@@ -11,6 +11,7 @@ import {
     Collapse,
     Box,
     Typography,
+    Snackbar,
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
@@ -25,10 +26,13 @@ const LoginDialog = (props) => {
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState(false);
 
+    const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
+
     const handleClose = useCallback(() => {
         onClose();
         setLoginError(false);
         setLoginState(true);
+        setResetPasswordSuccess(false);
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
@@ -74,12 +78,13 @@ const LoginDialog = (props) => {
             }
         )
             .then((result) => {
-                console.log(result);
+                setResetPasswordSuccess(true);
+                handleClose();
             })
             .catch((e) => {
                 setLoginError("There was an error resetting your password");
             });
-    }, [email]);
+    }, [email, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {
@@ -91,6 +96,7 @@ const LoginDialog = (props) => {
     );
 
     return (
+        <>
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
             <DialogTitle>{loginState ? "Login" : "Reset Passowrd"}</DialogTitle>
             <DialogContent>
@@ -169,6 +175,12 @@ const LoginDialog = (props) => {
                 )}
             </DialogActions>
         </Dialog>
+        <Snackbar open={resetPasswordSuccess} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+                Password reset email sent!
+            </Alert>
+        </Snackbar>
+        </>
     );
 };
 

@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
 import {
+    Alert,
+    Button,
     Dialog,
+    DialogActions,
     DialogTitle,
     DialogContent,
+    Snackbar,
     TextField,
-    DialogActions,
-    Button,
 } from "@mui/material";
-import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
 import Cookies from "universal-cookie";
+import PasswordValidation from "./PasswordValidation";
 
 const PasswordResetDialog = (props) => {
     const { onClose, resetData, setIsLoggedIn, setUserDetails } = props;
@@ -19,11 +21,12 @@ const PasswordResetDialog = (props) => {
 
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
-    const [validPasswordSpecial, setValidPasswordSpecial] =
-        React.useState(false);
-    const [validPasswordCapital, setValidPasswordCapital] =
-        React.useState(false);
+    const [validPasswordSpecial, setValidPasswordSpecial] = React.useState(false);
+    const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
+
+    const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
+    const [resetPasswordError, setResetPasswordError] = React.useState(false);
 
     const handlePasswordChange = useCallback(
         (e) => {
@@ -60,6 +63,8 @@ const PasswordResetDialog = (props) => {
         setValidPasswordSpecial(false);
         setValidPasswordCapital(false);
         setValidPasswordMatch(false);
+        setResetPasswordSuccess(false);
+        setResetPasswordError(false);
     }, [onClose]);
 
     const resetPassword = useCallback(async () => {
@@ -79,6 +84,11 @@ const PasswordResetDialog = (props) => {
                 sameSite: "strict",
             });
             handleClose();
+            setResetPasswordSuccess(true);
+            setResetPasswordError(false);
+        }).catch((e) => {
+            setResetPasswordError(true);
+            setResetPasswordSuccess(false);
         });
     }, [resetData, password, setIsLoggedIn, setUserDetails, handleClose]);
 
@@ -106,6 +116,7 @@ const PasswordResetDialog = (props) => {
         ]
     );
     return (
+        <>
         <Dialog
             open={resetData !== null}
             onClose={handleClose}
@@ -161,6 +172,12 @@ const PasswordResetDialog = (props) => {
                 </Button>
             </DialogActions>
         </Dialog>
+        <Snackbar open={resetPasswordSuccess || resetPasswordError} autoHideDuration={6000} onClose={() => { if (resetPasswordSuccess) handleClose() }}>
+            <Alert onClose={handleClose} severity={resetPasswordSuccess ? "success" : "error"} sx={{ width: "100%" }}>
+                {resetPasswordSuccess ? "Password reset successfully" : "Password reset failed"}
+            </Alert>
+        </Snackbar>
+        </>
     );
 };
 
