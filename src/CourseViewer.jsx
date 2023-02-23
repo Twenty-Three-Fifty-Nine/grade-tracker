@@ -108,6 +108,7 @@ const CourseViewer = (props) => {
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
+    const [apiLoading, setAPILoading] = React.useState(false);
 
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
@@ -238,6 +239,7 @@ const CourseViewer = (props) => {
             assessment.grade = isNaN(assessment.grade) ? -1 : assessment.grade;
         });
 
+        setAPILoading(true);
         Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
@@ -245,6 +247,7 @@ const CourseViewer = (props) => {
             synced: synced,
             url: courseData.url,
         }).then(() => {
+            setAPILoading(false);
             assessments.forEach((assessment) => {
                 assessment.hasChanged = false;
                 assessment.isNew = false;
@@ -259,7 +262,7 @@ const CourseViewer = (props) => {
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
         }).catch((e) => {
-            console.log(e)
+            setAPILoading(false);
             setSnackbar("error");
             setIsSuccess(false);
             setErrorText("Saving to server failed, try again later");
@@ -271,7 +274,8 @@ const CourseViewer = (props) => {
     }
 
     const deleteCourse = async () => {
-        Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
+        setAPILoading(true);
+        await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;
@@ -290,6 +294,7 @@ const CourseViewer = (props) => {
             setIsSuccess(false);
             setErrorText("Removing course failed, try again later");
         });
+        setAPILoading(false);
     }
 
     const checkDuplicateName = () => {
@@ -592,7 +597,7 @@ const CourseViewer = (props) => {
                 </Stack>
             </>)}
 
-            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} />
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} />
             <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
 
             {isMobile && (
