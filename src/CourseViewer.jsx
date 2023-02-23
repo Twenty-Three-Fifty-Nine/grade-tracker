@@ -1,4 +1,4 @@
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog } from "@mui/material";
+import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog, CircularProgress } from "@mui/material";
 import React, {useCallback} from "react";
 import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -412,7 +412,12 @@ const CourseViewer = (props) => {
 
                         <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
                             <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                            <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                            <Box sx={{ position: 'relative' }}>
+                                <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                                {apiLoading &&
+                                    <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                                }
+                            </Box>
                         </Stack>
                     </Box>
                 )}
@@ -593,7 +598,12 @@ const CourseViewer = (props) => {
                 <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
                 <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
                     <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                    <Button disabled={!validChanges || !changesMade} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
+                        {apiLoading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
                 </Stack>
             </>)}
 
@@ -733,8 +743,15 @@ const CourseViewer = (props) => {
                         <KeyboardArrowLeftIcon fontSize="large" />
                     </Fab>
                 </Tooltip>
-
-                {changesMade && <Button disabled={!validChanges} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>}
+                
+                {changesMade && (
+                    <Box>
+                        <Button disabled={!validChanges || apiLoading} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>
+                        {apiLoading &&
+                            <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px', }} />
+                        }
+                    </Box>
+                )}
             </>)}
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
