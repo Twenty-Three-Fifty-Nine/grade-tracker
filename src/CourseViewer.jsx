@@ -764,7 +764,7 @@ const CourseViewer = (props) => {
                     setEditTemplate(false); 
                     if(didUpdate){
                         courseData.lastUpdated = new Date();
-                        if(!changesMade) setSyncSuggestion(true);
+                        if(!changesMade && !isMobile) setSyncSuggestion(true);
                     }
                 }}
             />
