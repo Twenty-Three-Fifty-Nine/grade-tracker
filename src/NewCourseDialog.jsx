@@ -324,21 +324,21 @@ const NewCourseDialog = (props) => {
                 <Divider sx={{marginBottom: 3}}></Divider>
                 
                     <Stack spacing={2}>
-                        { assessments.length > 0 && editCode ? (
+                        { assessments.length > 0 ? (
                             <TransitionGroup>
                                 {assessments.map((assessment, i) => (
                                     <Collapse key={i} sx={{mb: 2}}>
                                         <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
                                     </Collapse>
                                 ))}
-                            </TransitionGroup>) : (
+                            </TransitionGroup>) : (editCode && 
                             <Stack spacing={2}>
                                 <Skeleton variant="rounded" height={150} />
                                 <Skeleton variant="rounded" height={150} />
                                 <Skeleton variant="rounded" height={150} />
                             </Stack>
                         )}
-                        {assessments.length > 0 && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
+                        {(assessments.length > 0 || !editCode) && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
                     </Stack>
                 
             </Box>
