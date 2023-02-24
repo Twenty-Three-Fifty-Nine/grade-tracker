@@ -16,15 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useEffect } from 'react';
-import { AppBar, Box, Dialog, IconButton, Toolbar, Icon, Stack, Typography, Checkbox, Divider, Card, CardContent, FormControlLabel, Button, Skeleton } from '@mui/material';
+import React, { useEffect } from "react";
+import {
+    AppBar,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Checkbox,
+    Dialog,
+    Divider,
+    FormControlLabel,
+    Icon,
+    IconButton,
+    Skeleton,
+    Stack,
+    Toolbar,
+    Typography,
+} from "@mui/material";
+
+import { Assessment } from "./CourseViewer";
+import Axios from "axios";
+import ConfirmDialog from "./ConfirmDialog";
 import { isMobile } from "react-device-detect";
-import Axios from 'axios';
-import { Assessment } from './CourseViewer';
-import SyncAssessmentCard from './SyncAssessmentCard';
-import ConfirmDialog from './ConfirmDialog';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import SyncAssessmentCard from "./SyncAssessmentCard";
+
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
 const SyncDialog = (props) => {
     const { onClose, open, courseData, templateData, setTemplateData, assessments, setAssessments, saveChanges} = props;

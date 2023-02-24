@@ -16,8 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Card, CardActionArea, CardContent, Chip, Divider, Typography } from '@mui/material';
+import React from "react";
+import {
+    Card,
+    CardActionArea,
+    CardContent,
+    Chip,
+    Divider,
+    Typography,
+} from "@mui/material";
+
 import { isMobile } from "react-device-detect";
 
 const CourseOverview = ({courseInfo, setViewedCourse}) => {

@@ -16,8 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Dialog, DialogTitle, Stack, Typography, Button, Box, CircularProgress } from '@mui/material';
+import React from "react";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    Stack,
+    Typography,
+} from "@mui/material";
 
 const ConfirmDialog = (props) => {
     const { open, handleClose, message, subMessage, confirmAction, buttonText, loading } = props;

@@ -16,14 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useCallback, useEffect } from 'react';
-import { Alert, Snackbar, Stack, AppBar, Box, Button, Dialog, Divider, IconButton, Toolbar, Icon, Typography, TextField, Collapse, CircularProgress, Skeleton } from '@mui/material';
-import { TransitionGroup } from 'react-transition-group';
-import CreateAssessmentCard from './CreateAssessmentCard';
-import ConfirmDialog from './ConfirmDialog';
-import Axios from 'axios';
+import React, { useCallback, useEffect } from "react";
+import {
+    Alert,
+    AppBar,
+    Box,
+    Button,
+    CircularProgress,
+    Collapse,
+    Dialog,
+    Divider,
+    IconButton,
+    Icon,
+    Skeleton,
+    Snackbar,
+    Stack,
+    TextField,
+    Toolbar,
+    Typography,
+} from "@mui/material";
+
+import Axios from "axios";
+import ConfirmDialog from "./ConfirmDialog";
+import CreateAssessmentCard from "./CreateAssessmentCard";
 import { isMobile } from "react-device-detect";
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import { TransitionGroup } from "react-transition-group";
+
+import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
 class Assessment {
     constructor(name, weight, deadline, isNew = true, existing = false, isAssignment = true) {

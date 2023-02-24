@@ -16,26 +16,58 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import { Typography, Stack, Button, Box, Chip, Divider, Fab, IconButton, FormControl, Tooltip, InputLabel, MenuItem, Select, Card, CardContent, FormControlLabel, Checkbox, Snackbar, Alert, Collapse, TextField, ToggleButtonGroup, ToggleButton, Dialog, CircularProgress } from "@mui/material";
-import React, {useCallback} from "react";
-import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React, { useCallback } from "react";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Checkbox,
+    Chip,
+    CircularProgress,
+    Collapse,
+    Dialog,
+    Divider,
+    Fab,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    Snackbar,
+    Stack,
+    TextField,
+    ToggleButtonGroup,
+    ToggleButton,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+
+import {
+    DesktopDatePicker,
+    MobileDatePicker,
+    LocalizationProvider,
+} from "@mui/x-date-pickers";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import AssessmentViewerCard from "./AssessmentViewerCard";
 import Axios from "axios";
+import ConfirmDialog from "./ConfirmDialog";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
-import { TransitionGroup } from 'react-transition-group';
 import NewCourseDialog from "./NewCourseDialog";
 import SyncDialog from "./SyncDialog";
+import { TransitionGroup } from "react-transition-group";
 
-import LaunchIcon from '@mui/icons-material/Launch';
-import AssessmentViewerCard from "./AssessmentViewerCard";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import ClearIcon from '@mui/icons-material/Clear';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ConfirmDialog from "./ConfirmDialog";
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import ClearIcon from "@mui/icons-material/Clear";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import LaunchIcon from "@mui/icons-material/Launch";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
 class Assessment {
     constructor(name, weight, grade, deadline, isAss, isNew) {

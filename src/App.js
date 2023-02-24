@@ -26,22 +26,24 @@ import {
     ThemeProvider,
     Toolbar,
     Typography,
-    Stack,
     Snackbar,
+    Stack,
 } from "@mui/material";
-import WelcomePage from "./WelcomePage";
-import GradesOverview from "./GradesOverview";
+
+import AccountMenu from "./AccountMenu";
+import Axios from "axios";
+import Cookies from "universal-cookie";
 import CourseViewer from "./CourseViewer";
+import GradesOverview from "./GradesOverview";
+import { isMobile } from "react-device-detect";
 import { lightTheme, darkTheme } from "./Themes";
+import PasswordResetDialog from "./PasswordResetDialog";
 import ThemeSwitch from "./ThemeSwitch";
+import { useLocation } from "react-router-dom";
+import WelcomePage from "./WelcomePage";
+
 import logoLight from "./2359LogoLight.svg";
 import logoDark from "./2359LogoDark.svg";
-import { isMobile } from "react-device-detect";
-import Cookies from "universal-cookie";
-import AccountMenu from "./AccountMenu";
-import { useLocation } from "react-router-dom";
-import PasswordResetDialog from "./PasswordResetDialog";
-import Axios from "axios";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);

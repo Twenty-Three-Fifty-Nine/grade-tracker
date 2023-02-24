@@ -17,13 +17,24 @@
 */
 
 import React from "react";
-import { Card, CardContent, Typography, Divider, Stack, TextField, Box, IconButton, Tooltip } from "@mui/material";
+import {
+    Box,
+    Card,
+    CardContent,
+    Divider,
+    IconButton,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 
-import EditIcon from '@mui/icons-material/Edit';
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+import EditIcon from "@mui/icons-material/Edit";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
 const AssessmentViewerCard = (props) => {
     const { assData, checkChanges, setCurrentEdit } = props;

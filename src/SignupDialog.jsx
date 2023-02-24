@@ -16,16 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment, Stack, Checkbox, Typography } from '@mui/material';
-import Axios from 'axios';
-import Cookies from 'universal-cookie';
-import PasswordValidation from './PasswordValidation';
+import React, { useCallback } from "react";
+import {
+    Alert,
+    Box,
+    Button,
+    Checkbox,
+    CircularProgress,
+    Collapse,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    InputAdornment,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 
-import CloseIcon from '@mui/icons-material/Close';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import TermsAndConditions from './TermsAndConditions';
+import Axios from "axios";
+import Cookies from "universal-cookie";
+import PasswordValidation from "./PasswordValidation";
+
+import CloseIcon from "@mui/icons-material/Close";
+import TermsAndConditions from "./TermsAndConditions";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const SignupDialog = (props) => {
     const { open, onClose, setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
