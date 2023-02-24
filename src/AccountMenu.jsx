@@ -251,7 +251,7 @@ const AccountMenu = (props) => {
                             type={showPassword ? 'text' : 'password'}
                             InputProps={{endAdornment: 
                                 <InputAdornment position="end">
-                                    <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                    <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
                                         {showPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
@@ -261,7 +261,7 @@ const AccountMenu = (props) => {
                             type={showNewPassword ? 'text' : 'password'}
                             InputProps={{endAdornment: 
                                 <InputAdornment position="end">
-                                    <IconButton onClick={() => {setShowNewPassword(!showNewPassword)}}>
+                                    <IconButton onClick={() => {setShowNewPassword(!showNewPassword)}} tabIndex={-1}>
                                         {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>

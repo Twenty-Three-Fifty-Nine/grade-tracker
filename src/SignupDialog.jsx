@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment, Stack, Checkbox, Typography } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
@@ -7,6 +7,7 @@ import PasswordValidation from './PasswordValidation';
 import CloseIcon from '@mui/icons-material/Close';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import TermsAndConditions from './TermsAndConditions';
 
 const SignupDialog = (props) => {
     const { open, onClose, setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
@@ -14,6 +15,7 @@ const SignupDialog = (props) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
+    const [acceptedTerms, setAcceptedTerms] = React.useState(false);
 
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
@@ -25,6 +27,7 @@ const SignupDialog = (props) => {
     const [signupErrorText, setSignupErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
+    const [showTerms, setShowTerms] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
@@ -35,6 +38,7 @@ const SignupDialog = (props) => {
         setPassword("");
         setPasswordConfirm("");
         setShowPassword(false);
+        setAcceptedTerms(false);
     }, [onClose]);
 
     const handleSignup = useCallback(async () => {
@@ -131,6 +135,7 @@ const SignupDialog = (props) => {
     }, [password]);
 
     return (
+        <>
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
@@ -140,7 +145,7 @@ const SignupDialog = (props) => {
                     type={showPassword ? 'text' : 'password'}
                     InputProps={{endAdornment: 
                         <InputAdornment position="end">
-                            <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                            <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         </InputAdornment>
@@ -150,6 +155,13 @@ const SignupDialog = (props) => {
 
                 <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} />
                 
+                <Stack direction="row" sx={{ml: -1.1, mt: 1}}>
+                    <Checkbox checked={acceptedTerms} onChange={(e, newValue) => {setAcceptedTerms(newValue)}} />
+                    <Typography variant="h6" sx={{mt:1.2, fontSize:"16px"}}> 
+                        Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
+                    </Typography> 
+                </Stack>
+
                 {<Collapse in={signupError}>
                     <Alert severity="error" sx={{ mt: 2 }}
                         action={
@@ -169,13 +181,16 @@ const SignupDialog = (props) => {
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Box sx={{ position: 'relative' }}>
-                    <Button onClick={handleSignup} disabled={loading}>Signup</Button>
+                    <Button onClick={handleSignup} disabled={loading || !acceptedTerms}>Signup</Button>
                     {loading &&
                         <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                     }
                 </Box>
             </DialogActions>
         </Dialog>
+
+        <TermsAndConditions open={showTerms} onClose={() => {setShowTerms(false)}} />
+        </>
     );
 }
 
