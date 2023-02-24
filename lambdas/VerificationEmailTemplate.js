@@ -1,6 +1,6 @@
-const EmailTemplate = (props) => {
+const VerificationEmailTemplate = (props) => {
     const { email, displayName, token } = props;
-    const link = `http://localhost:3000/verify-email?token=${token}&email=${email}`;
+    const link = `http://localhost:3000/verify?token=${token}&email=${email}`;
     return `
 <html lang="en">
     <head>
@@ -70,4 +70,4 @@ const EmailTemplate = (props) => {
         `;
 };
 
-export default EmailTemplate;
+export default VerificationEmailTemplate;

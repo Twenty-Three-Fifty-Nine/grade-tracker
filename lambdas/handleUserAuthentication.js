@@ -31,6 +31,8 @@ export const handler = async (event) => {
         return await addUser(event);
     } else if (route === "/users/{user}") {
         return await updateUser(event);
+    } else if (route === "/users/{user}/verify") {
+        return await verifyEmail(event);
     } else {
         return {
             statusCode: 401,
@@ -109,7 +111,7 @@ function generateSalt() {
     return crypto.randomBytes(16).toString("hex");
 }
 
-async function getUser(email){
+async function getUser(email) {
     return await client.send(
         new GetItemCommand({
             TableName: userTable,
@@ -197,7 +199,7 @@ async function addUser(event, years = []) {
 
     const yearsValue =
         years.length === 0 ? [{ year: year, courses: [] }] : years;
-    
+
     const token = crypto.randomBytes(50).toString("hex");
     const obj = {
         token: token,
@@ -217,7 +219,7 @@ async function addUser(event, years = []) {
         }),
     });
 
-    await client.send(command).then(async () => {
+    await client.send(command).then(async (res) => {
         const params = {
             Destination: {
                 ToAddresses: [email],
@@ -226,7 +228,11 @@ async function addUser(event, years = []) {
                 Body: {
                     Html: {
                         Charset: "UTF-8",
-                        Data: VerificationEmailTemplate(email, displayName, token),
+                        Data: VerificationEmailTemplate({
+                            email,
+                            displayName,
+                            token,
+                        }),
                     },
                 },
                 Subject: {
@@ -313,7 +319,7 @@ async function updateUser(event) {
             email: user.email,
             displayName: user.displayName,
         }),
-    };    
+    };
 }
 
 /**
@@ -328,4 +334,40 @@ async function deleteUser(email) {
     });
 
     await client.send(command);
+}
+
+async function verifyEmail(event) {
+    console.log(event);
+    const email = event.pathParameters.user;
+    const token = JSON.parse(event.body).token;
+    const result = await getUser(email);
+
+    if (!result.Item) {
+        return {
+            statusCode: 404,
+            body: "User does not exist",
+        };
+    }
+
+    const user = unmarshall(result.Item);
+
+    if (user.verifiedEmail.token === token) {
+        user.verifiedEmail.verified = true;
+        user.verifiedEmail.token = null;
+        const command = new PutItemCommand({
+            TableName: userTable,
+            Item: marshall(user),
+        });
+
+        await client.send(command);
+        return {
+            statusCode: 200,
+            body: "Email verified",
+        };
+    } else {
+        return {
+            statusCode: 401,
+            body: "Unauthorized",
+        };
+    }
 }
