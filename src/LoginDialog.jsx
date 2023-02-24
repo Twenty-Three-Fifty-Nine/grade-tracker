@@ -12,11 +12,14 @@ import {
     Snackbar,
     Collapse,
     CircularProgress,
-    Box
+    Box, 
+    InputAdornment 
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import CloseIcon from "@mui/icons-material/Close";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginDialog = (props) => {
     const { onClose, open, setIsLoggedIn, setUserDetails, activeTri } = props;
@@ -27,6 +30,7 @@ const LoginDialog = (props) => {
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
 
@@ -34,6 +38,9 @@ const LoginDialog = (props) => {
         onClose();
         setLoginError(null);
         setLoginState(true);
+        setEmail("");
+        setPassword("");
+        setShowPassword(false);
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {
@@ -119,7 +126,14 @@ const LoginDialog = (props) => {
                                 margin="dense"
                                 id="password"
                                 label="Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
+                                InputProps={{endAdornment: 
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }}
                                 fullWidth
                                 value={password}
                                 onChange={(e) => {

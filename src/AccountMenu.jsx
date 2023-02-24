@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress } from "@mui/material";
+import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress, InputAdornment } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
@@ -10,6 +10,8 @@ import ThemeSwitch from "./ThemeSwitch";
 import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
 const AccountMenu = (props) => {
@@ -38,6 +40,8 @@ const AccountMenu = (props) => {
 
     const [apiAlert, setApiAlert] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showNewPassword, setShowNewPassword] = React.useState(false);
 
     const handleEmailChange = useCallback(
         (event) => {
@@ -97,6 +101,8 @@ const AccountMenu = (props) => {
         setValidPasswordMatch(null);
         setPasswordError(null);
         setProfileDialogOpen(false);
+        setShowPassword(false);
+        setShowNewPassword(false);
     }, [setOldPassword, setNewPassword, setNewPasswordConfirm, setValidPasswordLength, setValidPasswordNumber, setValidPasswordSpecial, setValidPasswordCapital, setValidPasswordMatch]);
 
     const handleUserUpdate = useCallback(() => {
@@ -206,9 +212,27 @@ const AccountMenu = (props) => {
                         <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
                         <TextField label="Email" defaultValue={userDetails.email} fullWidth margin="normal" onChange={handleEmailChange} error={emailError !== null} helperText={emailError} />
                         <Divider variant="middle" sx={{ my: 0.5, borderWidth: 2 }} />
-                        <TextField label="Current Password" type="password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}/>
-                        <TextField label="New Password" type="password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} />
-                        <TextField label="Confirm New Password" type="password" fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
+                        <TextField label="Current Password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}
+                            type={showPassword ? 'text' : 'password'}
+                            InputProps={{endAdornment: 
+                                <InputAdornment position="end">
+                                    <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }}
+                        />
+                        <TextField label="New Password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} 
+                            type={showNewPassword ? 'text' : 'password'}
+                            InputProps={{endAdornment: 
+                                <InputAdornment position="end">
+                                    <IconButton onClick={() => {setShowNewPassword(!showNewPassword)}}>
+                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }}
+                        />
+                        <TextField label="Confirm New Password" type={showNewPassword ? 'text' : 'password'} fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
                         {oldPassword && (
                             <PasswordValidation
                                 validPasswordLength={validPasswordLength}
