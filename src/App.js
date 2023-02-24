@@ -141,7 +141,7 @@ const App = () => {
                 </Toolbar>
             </AppBar>
 
-            <Box sx={{ mt: 8.5 }}>
+            <Box sx={{ mt: isMobile && !isLoggedIn ? 0 : 8.5 }}>
                 {!isLoggedIn ? (
                     <WelcomePage
                         setIsLoggedIn={setIsLoggedIn}
