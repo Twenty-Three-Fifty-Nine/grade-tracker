@@ -7,6 +7,7 @@ import PasswordValidation from './PasswordValidation';
 import CloseIcon from '@mui/icons-material/Close';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import TermsAndConditions from './TermsAndConditions';
 
 const SignupDialog = (props) => {
     const { open, onClose, setIsLoggedIn, setUserDetails, activeTri } = props;
@@ -26,6 +27,7 @@ const SignupDialog = (props) => {
     const [signupErrorText, setSignupErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
+    const [showTerms, setShowTerms] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
@@ -136,6 +138,7 @@ const SignupDialog = (props) => {
     }, [password]);
 
     return (
+        <>
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
             <DialogTitle>Sign Up</DialogTitle>
             <DialogContent>
@@ -158,7 +161,7 @@ const SignupDialog = (props) => {
                 <Stack direction="row" sx={{ml: -1.1, mt: 1}}>
                     <Checkbox checked={acceptedTerms} onChange={(e, newValue) => {setAcceptedTerms(newValue)}} />
                     <Typography variant="h6" sx={{mt:1.2, fontSize:"16px"}}> 
-                        Accept <Box display="inline-block" onClick={() => {console.log("hi")}} sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
+                        Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
                     </Typography> 
                 </Stack>
 
@@ -188,6 +191,9 @@ const SignupDialog = (props) => {
                 </Box>
             </DialogActions>
         </Dialog>
+
+        <TermsAndConditions open={showTerms} onClose={() => {setShowTerms(false)}} />
+        </>
     );
 }
 
