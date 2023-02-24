@@ -280,11 +280,16 @@ async function updateUser(event) {
             };
         } else {
             user.email = newEmail;
-            user.verifyEmail = {
+            user.verifiedEmail = {
                 token: crypto.randomBytes(50).toString("hex"),
                 verified: false,
             };
-            await sendVerificationEmail(newEmail, user.verifyEmail.token, displayName, false);
+            await sendVerificationEmail(
+                user.email,
+                user.verifiedEmail.token,
+                user.displayName,
+                false
+            );
         }
     }
 
