@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress, InputAdornment } from "@mui/material";
+import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress, InputAdornment, Stack, Select, InputLabel, FormControl } from "@mui/material";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import Axios from "axios";
@@ -12,7 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
+import FeedbackIcon from '@mui/icons-material/Feedback';
 
 const AccountMenu = (props) => {
     const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setCourseList, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
@@ -42,6 +42,11 @@ const AccountMenu = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showNewPassword, setShowNewPassword] = React.useState(false);
+
+    const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
+    const [feedbackSubject, setFeedbackSubject] = React.useState(null);
+    const [feedbackMessage, setFeedbackMessage] = React.useState(null);
+    const [feedbackType, setFeedbackType] = React.useState("suggestion");
 
     const handleEmailChange = useCallback(
         (event) => {
@@ -86,7 +91,7 @@ const AccountMenu = (props) => {
         setAnchorEl(null);
     }, [setAnchorEl]);
 
-    const handleDialogClose = useCallback(() => {
+    const handleProfileDialogClose = useCallback(() => {
         setNewName(null);
         setNewEmail(null);
         setEmailError(null);
@@ -105,6 +110,13 @@ const AccountMenu = (props) => {
         setShowNewPassword(false);
     }, [setOldPassword, setNewPassword, setNewPasswordConfirm, setValidPasswordLength, setValidPasswordNumber, setValidPasswordSpecial, setValidPasswordCapital, setValidPasswordMatch]);
 
+    const handleFeedbackDialogClose = useCallback(() => {
+        setFeedbackDialogOpen(false);
+        setFeedbackSubject(null);
+        setFeedbackMessage(null);
+        setFeedbackType("suggestion");
+    }, [])
+
     const handleUserUpdate = useCallback(() => {
         const data = {
             newEmail: !newEmail ? null : newEmail.replace(/\s/g, ""),
@@ -117,7 +129,7 @@ const AccountMenu = (props) => {
         Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, data).then((response) => {
             setLoading(false);
             if (response.status === 200) {
-                handleDialogClose();
+                handleProfileDialogClose();
                 const userObj = {
                     email: response.data.email,
                     displayName: response.data.displayName,
@@ -144,10 +156,10 @@ const AccountMenu = (props) => {
                 setApiAlert("Something went wrong");
             }
         });
-    }, [newEmail, newName, oldPassword, newPassword, userDetails.email, handleDialogClose, setUserDetails, setSessionData, sessionData]);
+    }, [newEmail, newName, oldPassword, newPassword, userDetails.email, handleProfileDialogClose, setUserDetails, setSessionData, sessionData]);
 
     const handleLogout = useCallback(() => {
-        handleDialogClose();
+        handleProfileDialogClose();
         setIsLoggedIn(false);
         setUserDetails(null);
         setSessionData(null);
@@ -155,7 +167,7 @@ const AccountMenu = (props) => {
         setViewedCourse(null);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
-    }, [handleDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
+    }, [handleProfileDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
 
     const handleKeyDown = useCallback(
         (event) => {
@@ -167,6 +179,20 @@ const AccountMenu = (props) => {
         },
         [handleUserUpdate, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]
     );
+
+    const sendFeedback = () => {
+        Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/feedback", {
+            subject: feedbackSubject,
+            message: feedbackMessage,
+            feedbackType,
+            email: userDetails.email,
+            displayName: userDetails.displayName,
+        }).then((response) => {
+            
+        }).catch((error) => {
+            
+        })
+    }
 
     return (
         <Box sx={{ mr: 2 }}>
@@ -180,6 +206,12 @@ const AccountMenu = (props) => {
                         <TagFacesRoundedIcon fontSize="small"/>
                     </ListItemIcon>
                     Profile
+                </MenuItem>
+                <MenuItem onClick={() => {setFeedbackDialogOpen(true); handleMenuClose();}}>
+                    <ListItemIcon>
+                        <FeedbackIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <Typography variant="body1">Feedback</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => {handleMenuClose();handleLogout()}}>
                     <ListItemIcon>
@@ -206,7 +238,7 @@ const AccountMenu = (props) => {
             </Snackbar>
 
             {profileDialogOpen && (
-                <Dialog open={profileDialogOpen} onClose={() => handleDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
+                <Dialog open={profileDialogOpen} onClose={() => handleProfileDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
                     <DialogTitle>Update Information</DialogTitle>
                     <DialogContent>
                         <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
@@ -245,7 +277,7 @@ const AccountMenu = (props) => {
                         { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                     </DialogContent>
                     <DialogActions sx={{px: 2}}>
-                        <Button onClick={() => handleDialogClose()}>Close</Button>
+                        <Button onClick={() => handleProfileDialogClose()}>Close</Button>
                         <Box sx={{ position: 'relative' }}>
                             <Button
                                 onClick={() => handleUserUpdate()}
@@ -264,6 +296,49 @@ const AccountMenu = (props) => {
                     </DialogActions>
                 </Dialog>
             )}
+
+            <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
+                <DialogTitle>Send Feedback</DialogTitle>
+                <DialogContent>
+                    <Stack direction="row">
+                        <TextField label="Subject" sx={{width:"70%"}} margin="normal" value={feedbackSubject ? feedbackSubject : ""} onChange={(e) => {setFeedbackSubject(e.target.value)}} 
+                            error={feedbackSubject !== null && (feedbackSubject.length === 0 || feedbackSubject.length > 40)} 
+                            helperText={feedbackSubject === null ? "" : feedbackSubject.length === 0 ? "Subject field cannot be empty" : feedbackSubject.length > 40 ? "Subject length has to be below 41 characters" : ""}
+                        />
+                        <FormControl sx={{width:"30%", my: 2, ml: 2}}>
+                            <InputLabel>Type</InputLabel>
+                            <Select
+                                value={feedbackType}
+                                label="Type"
+                                onChange={(e) => {setFeedbackType(e.target.value)}}
+                            >
+                                <MenuItem value={"suggestion"}>Suggestion</MenuItem>
+                                <MenuItem value={"bug"}>Bug</MenuItem>
+                                <MenuItem value={"support"}>Support</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Stack>
+                    <TextField label="Message Content" fullWidth margin="normal" value={feedbackMessage ? feedbackMessage : ""} onChange={(e) => {setFeedbackMessage(e.target.value)}} multiline rows={6} 
+                        error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
+                        helperText={feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? "Message content has to be below 351 characters" : ""}
+                    />
+                    { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                </DialogContent>
+                <DialogActions sx={{px: 2}}>
+                    <Button onClick={() => handleFeedbackDialogClose()}>Close</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button
+                            onClick={() => {sendFeedback()}}
+                            disabled={loading || (!feedbackSubject || !feedbackMessage || feedbackSubject.length > 40 || feedbackMessage.length > 350)}
+                        >
+                            Send
+                        </Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
