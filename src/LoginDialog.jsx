@@ -38,6 +38,9 @@ const LoginDialog = (props) => {
         onClose();
         setLoginError(null);
         setLoginState(true);
+        setEmail("");
+        setPassword("");
+        setShowPassword(false);
     }, [onClose]);
 
     const handleLogin = useCallback(async () => {

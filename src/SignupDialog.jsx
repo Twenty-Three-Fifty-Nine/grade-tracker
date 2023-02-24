@@ -30,6 +30,11 @@ const SignupDialog = (props) => {
         onClose();
         setSignupErrorText("");
         setSignupError(false);
+        setDisplayName("");
+        setEmail("");
+        setPassword("");
+        setPasswordConfirm("");
+        setShowPassword(false);
     }, [onClose]);
 
     const handleSignup = useCallback(async () => {
