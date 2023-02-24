@@ -38,15 +38,18 @@ const App = () => {
     const [resetData, setResetData] = React.useState(null);
     const [emailSent, setEmailSent] = React.useState(false);
     const [emailVerified, setEmailVerified] = React.useState(false);
+    const [verifying, setVerifying] = React.useState(false);
 
     const activeTri = useMemo(() => {
         return { year: 2023, tri: 1 };
     }, []);
 
-    const verifyUser = (email, token) => {
-        Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
+    const verifyUser = async (email, token) => {
+        setVerifying(true);
+        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
             token: token,
         }).then((response) => {
+            console.log(response)
             if (response.status === 200) {
                 setEmailVerified(true);
                 new Cookies().set("userDetails", response.data, {
@@ -56,13 +59,14 @@ const App = () => {
                 setUserDetails(response.data);
             }
         })
+        setVerifying(false);
     };
 
     React.useEffect(() => {
         const cookies = new Cookies();
         const detailsCookie = cookies.get("userDetails");
         if (detailsCookie) {
-            setUserDetails(detailsCookie);
+            if (location.pathname !== "/verify") setUserDetails(detailsCookie);
             setIsLoggedIn(true);
         }
 
@@ -115,7 +119,7 @@ const App = () => {
                         component="div"
                         sx={{ textAlign: "center", m: isMobile ? 0 : "auto" }}
                     >
-                        {isLoggedIn
+                        {isLoggedIn && !verifying
                             ? isMobile && viewedCourse
                                 ? viewedCourse.code
                                 : userDetails.displayName +
@@ -186,7 +190,7 @@ const App = () => {
                         sessionData={sessionData}
                         setCourseList={setCourseList}
                     />
-                ) : (
+                ) : !verifying ? (
                     <GradesOverview
                         userEmail={userDetails.email}
                         userName={userDetails.name}
@@ -198,7 +202,7 @@ const App = () => {
                         setCourseList={setCourseList}
                         activeTri={activeTri}
                     />
-                )}
+                ) : null}
             </Box>
             <PasswordResetDialog resetData={resetData} onClose={() => setResetData(null)} setIsLoggedIn={setIsLoggedIn}
                         setUserDetails={setUserDetails}
