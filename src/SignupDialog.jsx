@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment, Snackbar } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
@@ -9,7 +9,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const SignupDialog = (props) => {
-    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri } = props;
+    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -88,6 +88,7 @@ const SignupDialog = (props) => {
         )
             .then((result) => {
                 setIsLoggedIn(true);
+                setEmailSent(true);
                 const data = {
                     displayName: displayName,
                     email: email,

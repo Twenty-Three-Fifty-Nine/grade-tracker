@@ -4,7 +4,7 @@ import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 
 const Login = (props) => {
-    const { setIsLoggedIn, setUserDetails, activeTri } = props;
+    const { setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 
@@ -33,7 +33,7 @@ const Login = (props) => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Sign Up</Typography>
         </Button>
         <LoginDialog open={loginOpen} onClose={handleCloseLogin} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} />
-        <SignupDialog open={signupOpen} onClose={handleCloseSignup} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} />
+        <SignupDialog open={signupOpen} onClose={handleCloseSignup} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} setEmailSent={setEmailSent} />
         </>
     )
 };

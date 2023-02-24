@@ -36,6 +36,7 @@ const App = () => {
 
     const location = useLocation();
     const [resetData, setResetData] = React.useState(null);
+    const [emailSent, setEmailSent] = React.useState(false);
     const [emailVerified, setEmailVerified] = React.useState(false);
 
     const activeTri = useMemo(() => {
@@ -168,6 +169,7 @@ const App = () => {
                         setIsLoggedIn={setIsLoggedIn}
                         setUserDetails={setUserDetails}
                         activeTri={activeTri}
+                        setEmailSent={setEmailSent}
                     />
                 ) : viewedCourse ? (
                     <CourseViewer
@@ -195,8 +197,13 @@ const App = () => {
                         setUserDetails={setUserDetails}
                 activeTri={activeTri} />
             
-            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)}>
-                <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: '100%' }}>
+            <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}>
+                <Alert onClose={() => setEmailSent(false)} severity="success"  sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                    Signup successful. Please check your email to verify your account.
+                </Alert>
+            </Snackbar>
+            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}>
+                <Alert onClose={() => setEmailVerified(false)} severity="success"  sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
                     Email verified!
                 </Alert>
             </Snackbar>
