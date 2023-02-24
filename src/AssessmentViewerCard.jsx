@@ -51,7 +51,7 @@ const AssessmentViewerCard = (props) => {
                             {assData.isAss ? <MenuBookRoundedIcon sx={{mt: 0.3}}/> :
                             <DescriptionRoundedIcon sx={{mt: 0.4}}/>}
                         </Tooltip>
-                        <Tooltip title={<h3>Edit Assessment</h3>} placement="bottom" arrow>
+                        <Tooltip title={isMobile ? "" : <h3>Edit Assessment</h3>} placement="bottom" arrow>
                             <IconButton sx={{ml:"auto", mt:-0.5}} onClick={() => {setCurrentEdit(assData)}}>    
                                 <EditIcon />
                             </IconButton>

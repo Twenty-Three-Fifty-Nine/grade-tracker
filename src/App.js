@@ -49,7 +49,6 @@ const App = () => {
         await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
             token: token,
         }).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 setEmailVerified(true);
                 new Cookies().set("userDetails", response.data, {

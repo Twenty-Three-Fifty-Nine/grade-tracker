@@ -185,7 +185,7 @@ const GradesOverview = (props) => {
                                 <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
                             </Box>
                     }
-                    <Tooltip title={<h3>Add a new course</h3>} placement="left" arrow>
+                    <Tooltip title={isMobile ? "" : <h3>Add a new course</h3>} placement="left" arrow>
                         <Fab color="primary" size={isMobile ? "large" : "large"} onClick={handleOpenAddCourse} disabled={selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0}}>
                             <Icon>add</Icon>
                         </Fab>

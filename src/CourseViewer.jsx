@@ -397,11 +397,9 @@ const CourseViewer = (props) => {
                                     <Button disabled variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Tooltip title={<h3>Remove Course</h3>} placement="bottom" arrow>
-                                        <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}} sx={{zIndex: sliderPos === 0 ? 0 : 2}}>
+                                        <DeleteIcon />
+                                    </IconButton>
                                 </Box>
                             </Stack>
                         </Stack>
@@ -620,7 +618,7 @@ const CourseViewer = (props) => {
 
             {isMobile && (
                 <Box sx={{ position:"fixed", top: 90, right: sliderPos, transition: "all 0.3s linear"}}>
-                    <Stack direction="row">
+                    <Stack direction="row" sx={{zIndex: sliderPos === 0 ? 3 : 1}}>
                         <Stack>
                             <Box sx={{backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25}}>
                                 <IconButton onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.3s linear", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
