@@ -42,7 +42,7 @@ const App = () => {
         return { year: 2023, tri: 1 };
     }, []);
 
-    const verifyUser = async (email, token) => {
+    const verifyUser = (email, token) => {
         Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
             token: token,
         }).then((response) => {
