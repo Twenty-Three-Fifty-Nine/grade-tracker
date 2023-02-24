@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField, CircularProgress, Box } from '@mui/material';
+import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField, CircularProgress, Box, Tooltip } from '@mui/material';
 import NewCourseDialog from './NewCourseDialog';
 import { SessionContext } from './GradesOverview';
 import Axios from 'axios';
@@ -99,7 +99,11 @@ const AddCourseDialog = (props) => {
                 If your course is not in this list, you can create an entry for the course offering.
             </DialogContentText>
             <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
-                <Button onClick={handleNewCourse} variant="outlined" >Create New Course</Button>
+                <Tooltip title={session && session !== "Reloading" && session.userData.verifiedEmail ? "" : <h3>Please verify your email address to create a new course.</h3>} placement="bottom" arrow>
+                    <Box>
+                        <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail} >Create New Course</Button>
+                    </Box>
+                </Tooltip>
                 <Box sx={{ position: 'relative' }}>
                     <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" >Add Course</Button>
                     {loadingAddRequest &&

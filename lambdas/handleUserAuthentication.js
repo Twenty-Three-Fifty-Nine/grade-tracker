@@ -4,11 +4,16 @@ import {
     PutItemCommand,
     DeleteItemCommand,
 } from "@aws-sdk/client-dynamodb";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import crypto from "crypto";
+import VerificationEmailTemplate from "./VerificationEmailTemplate.mjs";
 
 const client = new DynamoDBClient({ region: "ap-southeast-2" });
 const userTable = "users";
+
+const sesClient = new SESClient({ region: "ap-southeast-2" });
+const fromEmail = "2359gradetracker@gmail.com";
 
 export const handler = async (event) => {
     if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH") {
@@ -26,6 +31,8 @@ export const handler = async (event) => {
         return await addUser(event);
     } else if (route === "/users/{user}") {
         return await updateUser(event);
+    } else if (route === "/users/{user}/verify") {
+        return await verifyEmail(event);
     } else {
         return {
             statusCode: 401,
@@ -104,7 +111,7 @@ function generateSalt() {
     return crypto.randomBytes(16).toString("hex");
 }
 
-async function getUser(email){
+async function getUser(email) {
     return await client.send(
         new GetItemCommand({
             TableName: userTable,
@@ -143,6 +150,7 @@ async function authenticateUser(event) {
                 body: JSON.stringify({
                     email: user.email,
                     displayName: user.displayName,
+                    verifiedEmail: user.verifiedEmail.verified,
                 }),
             };
         } else {
@@ -193,6 +201,12 @@ async function addUser(event, years = []) {
     const yearsValue =
         years.length === 0 ? [{ year: year, courses: [] }] : years;
 
+    const token = crypto.randomBytes(50).toString("hex");
+    const obj = {
+        token: token,
+        verified: false,
+    };
+
     // Add the user to the database
     const command = new PutItemCommand({
         TableName: userTable,
@@ -202,16 +216,20 @@ async function addUser(event, years = []) {
             password: hash,
             salt: salt,
             years: yearsValue,
+            verifiedEmail: obj,
         }),
     });
 
-    await client.send(command);
+    await client.send(command).then(async (res) => {
+        await sendVerificationEmail(email, token, displayName, true);
+    });
 
     return {
         statusCode: 200,
         body: JSON.stringify({
             email: email,
             displayName: displayName,
+            verifiedEmail: false,
         }),
     };
 }
@@ -264,6 +282,16 @@ async function updateUser(event) {
             };
         } else {
             user.email = newEmail;
+            user.verifiedEmail = {
+                token: crypto.randomBytes(50).toString("hex"),
+                verified: false,
+            };
+            await sendVerificationEmail(
+                user.email,
+                user.verifiedEmail.token,
+                user.displayName,
+                false
+            );
         }
     }
 
@@ -279,8 +307,9 @@ async function updateUser(event) {
         body: JSON.stringify({
             email: user.email,
             displayName: user.displayName,
+            verifiedEmail: user.verifiedEmail.verified,
         }),
-    };    
+    };
 }
 
 /**
@@ -295,4 +324,72 @@ async function deleteUser(email) {
     });
 
     await client.send(command);
+}
+
+async function verifyEmail(event) {
+    console.log(event);
+    const email = event.pathParameters.user;
+    const token = JSON.parse(event.body).token;
+    const result = await getUser(email);
+
+    if (!result.Item) {
+        return {
+            statusCode: 404,
+            body: "User does not exist",
+        };
+    }
+
+    const user = unmarshall(result.Item);
+
+    if (user.verifiedEmail.token === token) {
+        user.verifiedEmail.verified = true;
+        user.verifiedEmail.token = null;
+        const command = new PutItemCommand({
+            TableName: userTable,
+            Item: marshall(user),
+        });
+
+        await client.send(command);
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                email: user.email,
+                displayName: user.displayName,
+                verifiedEmail: user.verifiedEmail.verified,
+            }),
+        };
+    } else {
+        return {
+            statusCode: 401,
+            body: "Unauthorized",
+        };
+    }
+}
+
+async function sendVerificationEmail(email, token, displayName, newSignUp) {
+    const params = {
+        Destination: {
+            ToAddresses: [email],
+        },
+        Message: {
+            Body: {
+                Html: {
+                    Charset: "UTF-8",
+                    Data: VerificationEmailTemplate({
+                        email,
+                        displayName,
+                        token,
+                        newSignUp,
+                    }),
+                },
+            },
+            Subject: {
+                Charset: "UTF-8",
+                Data: "Verify your email",
+            },
+        },
+        Source: fromEmail,
+    };
+
+    await sesClient.send(new SendEmailCommand(params));
 }

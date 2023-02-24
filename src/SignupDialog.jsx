@@ -9,7 +9,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const SignupDialog = (props) => {
-    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri } = props;
+    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -88,12 +88,9 @@ const SignupDialog = (props) => {
         )
             .then((result) => {
                 setIsLoggedIn(true);
-                const data = {
-                    displayName: displayName,
-                    email: email,
-                };
-                setUserDetails(data);
-                new Cookies().set("userDetails", data, { path: '/', sameSite: 'strict' });
+                setEmailSent(true);
+                setUserDetails(result.data);
+                new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
                 handleClose();
             })
             .catch((e) => {
@@ -108,7 +105,7 @@ const SignupDialog = (props) => {
                 setSignupError(true);
             });
         setLoading(false)
-    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
+    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {

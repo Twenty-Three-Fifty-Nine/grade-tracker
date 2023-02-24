@@ -347,7 +347,11 @@ const CourseViewer = (props) => {
                         </Typography>
                         <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                             <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
+                                <Tooltip title={sessionData && sessionData !== "Reloading" && sessionData.userData.verifiedEmail ? "" : <h3>Please verify your email address to update a template.</h3>} placement="bottom" arrow>
+                                    <Box>
+                                        <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}} disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}> Update Template </Button>
+                                    </Box>
+                                </Tooltip>
                             </Box>
                             <Box sx={{alignSelf:"center"}}>
                                 <Button variant="contained" disabled={changesMade} sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
@@ -383,7 +387,11 @@ const CourseViewer = (props) => {
                             </Typography>
                             <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}}> Update Template </Button>
+                                    <Tooltip title={sessionData && sessionData !== "Reloading" && sessionData.userData.verifiedEmail ? "" : <h3>Please verify your email address to update a template.</h3>} placement="bottom" arrow>
+                                        <Box>
+                                            <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}} disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}> Update Template </Button>
+                                        </Box>
+                                    </Tooltip>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
                                     <Button disabled variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>

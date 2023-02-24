@@ -132,16 +132,12 @@ const AccountMenu = (props) => {
             setLoading(false);
             if (response.status === 200) {
                 handleProfileDialogClose();
-                const userObj = {
-                    email: response.data.email,
-                    displayName: response.data.displayName,
-                };
-                setUserDetails(userObj);
+                setUserDetails(response.data);
                 setSessionData({
                     ...sessionData,
-                    userData: userObj,
+                    userData: response.data,
                 });
-                new Cookies().set("userDetails", userObj, {
+                new Cookies().set("userDetails", response.data, {
                     path: "/",
                     sameSite: "strict",
                 });
