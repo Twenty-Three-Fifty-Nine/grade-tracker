@@ -21,6 +21,7 @@ const AccountMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
     const [newName, setNewName] = React.useState(null);
     const [newEmail, setNewEmail] = React.useState(null);
@@ -38,7 +39,7 @@ const AccountMenu = (props) => {
     const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
 
-    const [apiAlert, setApiAlert] = React.useState(false);
+    const [apiAlert, setApiAlert] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showNewPassword, setShowNewPassword] = React.useState(false);
@@ -115,6 +116,7 @@ const AccountMenu = (props) => {
         setFeedbackSubject(null);
         setFeedbackMessage(null);
         setFeedbackType("suggestion");
+        setApiAlert(null);
     }, [])
 
     const handleUserUpdate = useCallback(() => {
@@ -144,6 +146,7 @@ const AccountMenu = (props) => {
                     sameSite: "strict",
                 });
                 setSnackbarOpen(true);
+                setSnackbarMessage("Profile updated successfully");
             }
         })
         .catch((error) => {
@@ -180,18 +183,22 @@ const AccountMenu = (props) => {
         [handleUserUpdate, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]
     );
 
-    const sendFeedback = () => {
-        Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/feedback", {
+    const sendFeedback = async () => {
+        setLoading(true);
+        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/feedback", {
             subject: feedbackSubject,
             message: feedbackMessage,
             feedbackType,
             email: userDetails.email,
             displayName: userDetails.displayName,
         }).then((response) => {
-            
+            setSnackbarOpen(true);
+            setSnackbarMessage("Feedback sent successfully");
+            handleFeedbackDialogClose();
         }).catch((error) => {
-            
+            setApiAlert("Something went wrong");
         })
+        setLoading(false);
     }
 
     return (
@@ -234,7 +241,7 @@ const AccountMenu = (props) => {
             </Menu>
 
             <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}>
-                <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }} >Profile updated successfully</Alert>
+                <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
 
             {profileDialogOpen && (
@@ -274,7 +281,7 @@ const AccountMenu = (props) => {
                                 validPasswordMatch={validPasswordMatch}
                             />
                         )}
-                        { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                        { <Collapse in={apiAlert !== null}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                     </DialogContent>
                     <DialogActions sx={{px: 2}}>
                         <Button onClick={() => handleProfileDialogClose()}>Close</Button>
@@ -322,7 +329,7 @@ const AccountMenu = (props) => {
                         error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
                         helperText={feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? "Message content has to be below 351 characters" : ""}
                     />
-                    { <Collapse in={apiAlert}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                    { <Collapse in={apiAlert !== null}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                 </DialogContent>
                 <DialogActions sx={{px: 2}}>
                     <Button onClick={() => handleFeedbackDialogClose()}>Close</Button>
