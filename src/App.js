@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+    Alert,
     AppBar,
     Box,
     CssBaseline,
@@ -8,6 +9,7 @@ import {
     Toolbar,
     Typography,
     Stack,
+    Snackbar,
 } from "@mui/material";
 import WelcomePage from "./WelcomePage";
 import GradesOverview from "./GradesOverview";
@@ -21,6 +23,7 @@ import Cookies from "universal-cookie";
 import AccountMenu from "./AccountMenu";
 import { useLocation } from "react-router-dom";
 import PasswordResetDialog from "./PasswordResetDialog";
+import Axios from "axios";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -33,10 +36,21 @@ const App = () => {
 
     const location = useLocation();
     const [resetData, setResetData] = React.useState(null);
+    const [emailVerified, setEmailVerified] = React.useState(false);
 
     const activeTri = useMemo(() => {
         return { year: 2023, tri: 1 };
     }, []);
+
+    const verifyUser = async (email, token) => {
+        Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
+            token: token,
+        }).then((response) => {
+            if (response.status === 200) {
+                setEmailVerified(true);
+            }
+        })
+    };
 
     React.useEffect(() => {
         const cookies = new Cookies();
@@ -47,12 +61,19 @@ const App = () => {
         }
 
         const query = new URLSearchParams(location.search);
+        const path = location.pathname;
         const email = query.get("email");
         const token = query.get("token");
         query.delete("email");
         query.delete("token");
         window.history.replaceState({}, "", `/`);
-        if (token && email) setResetData({ email, token });
+        if (token && email) {
+            if (path === "/reset-password") {
+                setResetData({ email, token });
+            } else if (path === "/verify") {
+                verifyUser(email, token);
+            }
+        }
     }, [location]);
 
     return (
@@ -172,7 +193,13 @@ const App = () => {
             </Box>
             <PasswordResetDialog resetData={resetData} onClose={() => setResetData(null)} setIsLoggedIn={setIsLoggedIn}
                         setUserDetails={setUserDetails}
-                        activeTri={activeTri} />
+                activeTri={activeTri} />
+            
+            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)}>
+                <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: '100%' }}>
+                    Email verified!
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 };
