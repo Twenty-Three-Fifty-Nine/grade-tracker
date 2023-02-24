@@ -60,13 +60,18 @@ const SignupDialog = (props) => {
         }
 
         if (password === "") {
-            text += "Password is required";
+            text += "Password is required - ";
             error = true;
         } else if (!validPasswordLength || !validPasswordNumber || !validPasswordSpecial || !validPasswordCapital) {
-            text += "Password does not meet requirements";
+            text += "Password does not meet requirements - ";
             error = true;
         } else if (!validPasswordMatch) {
-            text += "Passwords do not match";
+            text += "Passwords do not match - ";
+            error = true;
+        }
+
+        if (!acceptedTerms) {
+            text += "You must accept the terms and conditions";
             error = true;
         }
 
@@ -109,7 +114,7 @@ const SignupDialog = (props) => {
                 setSignupError(true);
             });
         setLoading(false)
-    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
+    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, acceptedTerms, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {
