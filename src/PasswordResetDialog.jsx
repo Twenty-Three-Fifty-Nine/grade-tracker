@@ -11,12 +11,15 @@ import {
     Collapse,
     IconButton,
     Box, 
-    CircularProgress
+    CircularProgress,
+    InputAdornment
 } from "@mui/material";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 import CloseIcon from "@mui/icons-material/Close";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const PasswordResetDialog = (props) => {
     const { onClose, resetData, setIsLoggedIn, setUserDetails } = props;
@@ -33,6 +36,7 @@ const PasswordResetDialog = (props) => {
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
     const [resetPasswordError, setResetPasswordError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const handlePasswordChange = useCallback(
         (e) => {
@@ -71,6 +75,7 @@ const PasswordResetDialog = (props) => {
         setValidPasswordMatch(false);
         setResetPasswordSuccess(false);
         setResetPasswordError(false);
+        setShowPassword(false);
     }, [onClose]);
 
     const resetPassword = useCallback(async () => {
@@ -137,7 +142,14 @@ const PasswordResetDialog = (props) => {
                         margin="dense"
                         id="password"
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
+                        InputProps={{endAdornment: 
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }}
                         fullWidth
                         value={password}
                         onChange={handlePasswordChange}
@@ -146,7 +158,7 @@ const PasswordResetDialog = (props) => {
                         margin="dense"
                         id="confirmPassword"
                         label="Confirm Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         fullWidth
                         value={passwordConfirm}
                         onChange={handlePasswordConfirmChange}
