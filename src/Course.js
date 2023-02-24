@@ -16,7 +16,7 @@ class Course {
         this.assessments.forEach((ass) => {
             if (ass.grade !== -1 && !isNaN(ass.grade)) finished++;
         });
-        return finished / this.grades.length;
+        return finished / this.assessments.length;
     }
 
     getCourseLetter() {
