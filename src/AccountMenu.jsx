@@ -307,12 +307,12 @@ const AccountMenu = (props) => {
             <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
                 <DialogTitle>Send Feedback</DialogTitle>
                 <DialogContent>
-                    <Stack direction="row">
-                        <TextField label="Subject" sx={{width:"70%"}} margin="normal" value={feedbackSubject ? feedbackSubject : ""} onChange={(e) => {setFeedbackSubject(e.target.value)}} 
+                    <Stack direction={isMobile ? "column" : "row"}>
+                        <TextField label="Subject" sx={{width: isMobile ? "100%" : "70%"}} margin="normal" value={feedbackSubject ? feedbackSubject : ""} onChange={(e) => {setFeedbackSubject(e.target.value)}} 
                             error={feedbackSubject !== null && (feedbackSubject.length === 0 || feedbackSubject.length > 40)} 
                             helperText={feedbackSubject === null ? "" : feedbackSubject.length === 0 ? "Subject field cannot be empty" : feedbackSubject.length > 40 ? "Subject length has to be below 41 characters" : ""}
                         />
-                        <FormControl sx={{width:"30%", my: 2, ml: 2}}>
+                        <FormControl sx={{width: isMobile ? "100%" : "30%", my: 2, ml: isMobile ? 0 : 2}}>
                             <InputLabel>Type</InputLabel>
                             <Select
                                 value={feedbackType}
