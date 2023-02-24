@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+# Twenty Three Fifty Nine
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Abdulrahman Asfari and Chris Sa
 
-## Available Scripts
+## About
 
-In the project directory, you can run:
+This was created as a summer project in preparation for our third year of university. The idea was suggested to us as we couldn't find a decent way to track grades. Chris had a spreadsheet but it was a pain to update and so we decided to make 23:59.
 
-### `npm start`
+### The name
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The name Twenty Three Fifty Nine (2359) came around after a lot of discussions. The idea behind the name is that a lot of students hand in their work at the last minute and so we thought it was a fitting name to track grades.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## How did we make 2359?
 
-### `npm test`
+### Front end
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The front end of the website is made using ReactJS and the MUI package. This combination made it easier to quickly develop, and have things look great at the same time.
 
-### `npm run build`
+Chris has done web development before but not using a framework and this was Abdulrahman's first time, so there was a lot to learn about UX and UI design.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Back end
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The back end started as a local NodeJS server but was soon migrated to AWS after Chris got his Cloud Practitioner certification and showed Abdulrahman around while completing the move. It is run in a completely serverless environment and fits mostly within the free tier.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Future
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+We plan to continue the development of this website and are open to suggestions as to how we can improve it.
