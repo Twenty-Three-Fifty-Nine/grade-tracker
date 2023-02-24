@@ -16,10 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Alert, Chip, Icon, Skeleton, Stack, Typography } from '@mui/material';
-import CourseOverview from './CourseOverview';
-import { SessionContext } from './GradesOverview';
+import React from "react";
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Alert,
+    Chip,
+    Icon,
+    Skeleton,
+    Stack,
+    Typography,
+} from "@mui/material";
+
+import CourseOverview from "./CourseOverview";
+import { SessionContext } from "./GradesOverview";
 
 const TrimesterOverview = ({triInfo, open, toggleAccordion, setViewedCourse}) => {
     const courses = React.useContext(SessionContext).courses;

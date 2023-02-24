@@ -16,8 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Dialog, DialogContent, DialogTitle, Typography, Divider, Button, Box } from '@mui/material';
+import React from "react";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Typography,
+} from "@mui/material";
+
 import { isMobile } from "react-device-detect";
 
 const TermsAndConditions = (props) => {

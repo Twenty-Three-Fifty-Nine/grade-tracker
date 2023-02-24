@@ -16,14 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Card, CardContent, Stack, Box, IconButton, TextField, ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
-import DeleteIcon from "@mui/icons-material/Delete";
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
-import { DesktopDatePicker, MobileDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React from "react";
+import {
+    Card,
+    CardContent,
+    Stack,
+    Box,
+    IconButton,
+    TextField,
+    ToggleButtonGroup,
+    ToggleButton,
+    Typography,
+} from "@mui/material";
+
+import {
+    DesktopDatePicker,
+    MobileDatePicker,
+    LocalizationProvider,
+} from "@mui/x-date-pickers";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { isMobile } from "react-device-detect";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 
 const CreateAssessmentCard = (props) => {
     const {index, removeAssessment, details, checkFormat, assessments, setParentUpdater, parentUpdater} = props;

@@ -16,12 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Alert, Stack } from '@mui/material';
-import TrimesterOverview from './TrimesterOverview';
-import { SessionContext } from './GradesOverview';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import {
+    Alert,
+    Stack,
+} from '@mui/material';
+
 import { isMobile } from "react-device-detect";
+import { SessionContext } from './GradesOverview';
+import TrimesterOverview from './TrimesterOverview';
 
 const YearOverview = (props) => {
     const {setViewedCourse} = props;

@@ -17,11 +17,17 @@
 */
 
 import React from 'react';
-import { Card, CardContent, Box, Typography} from '@mui/material';
+import {
+    Card,
+    CardContent,
+    Box,
+    Typography,
+} from '@mui/material';
+
 import dayjs from "dayjs";
 
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 
 const Field = (props) => {
     const { text } = props;

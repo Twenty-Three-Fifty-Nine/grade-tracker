@@ -17,7 +17,11 @@
 */
 
 import React, { useCallback } from 'react';
-import { Button, Typography } from '@mui/material';
+import {
+    Button,
+    Typography,
+} from '@mui/material';
+
 import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 

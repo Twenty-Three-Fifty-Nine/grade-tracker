@@ -17,7 +17,11 @@
 */
 
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import {
+    Box,
+    Typography,
+} from "@mui/material";
+
 import Login from "./Login";
 
 const WelcomePage = (props) => {

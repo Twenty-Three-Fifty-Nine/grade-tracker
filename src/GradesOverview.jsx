@@ -16,12 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useCallback } from 'react';
-import { Box, Fab, Icon, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import YearOverview from './YearOverview';
-import AddCourseDialog from './AddCourseDialog';
-import Axios from 'axios';
+import React, { useCallback } from "react";
+import {
+    Box,
+    Fab,
+    Icon,
+    Tab,
+    Tabs,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+
+import AddCourseDialog from "./AddCourseDialog";
+import Axios from "axios";
 import { isMobile } from "react-device-detect";
+import YearOverview from "./YearOverview";
 
 class Course {
     constructor(code, name, names, weights, deadlines, grades, isAssList, totalGrade, tri, year, url, lastUpdated, lastSynced) {

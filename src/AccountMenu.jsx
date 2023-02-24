@@ -17,21 +17,46 @@
 */
 
 import React, { useCallback } from "react";
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Alert, Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, IconButton, ListItemIcon, Menu, MenuItem, Snackbar, TextField, Typography, CircularProgress, InputAdornment, Stack, Select, InputLabel, FormControl } from "@mui/material";
-import Cookies from "universal-cookie";
-import PasswordValidation from "./PasswordValidation";
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    Collapse,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Snackbar,
+    TextField,
+    Typography,
+    Select,
+    Stack,
+} from "@mui/material";
+
 import Axios from "axios";
+import Cookies from "universal-cookie";
 import { isMobile } from "react-device-detect";
+import PasswordValidation from "./PasswordValidation";
 import ThemeSwitch from "./ThemeSwitch";
 
-import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded';
-import LogoutIcon from '@mui/icons-material/Logout';
-import CloseIcon from '@mui/icons-material/Close';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FeedbackIcon from '@mui/icons-material/Feedback';
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import LogoutIcon from "@mui/icons-material/Logout";
+import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const AccountMenu = (props) => {
     const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setCourseList, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;

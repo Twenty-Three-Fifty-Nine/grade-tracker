@@ -16,13 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
-import { Alert, Autocomplete, Button, Dialog, DialogContentText, DialogTitle, IconButton, Snackbar, Stack, TextField, CircularProgress, Box, Tooltip } from '@mui/material';
-import NewCourseDialog from './NewCourseDialog';
-import { SessionContext } from './GradesOverview';
-import Axios from 'axios';
+import React from "react";
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Snackbar,
+    Stack,
+    TextField,
+    Tooltip,
+} from "@mui/material";
+
+import Axios from "axios";
 import { isMobile } from "react-device-detect";
-import RefreshIcon from '@mui/icons-material/Refresh';
+import NewCourseDialog from "./NewCourseDialog";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { SessionContext } from "./GradesOverview";
 
 const AddCourseDialog = (props) => {
     const { onClose, open, activeTri, updateData, courseList, setCourseList } = props;
