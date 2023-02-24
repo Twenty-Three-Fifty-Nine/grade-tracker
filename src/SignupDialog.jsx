@@ -85,7 +85,7 @@ const SignupDialog = (props) => {
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
             {
                 displayName: displayName,
-                email: email,
+                email: email.toLowerCase(),
                 password: password,
                 activeTri: activeTri
             }

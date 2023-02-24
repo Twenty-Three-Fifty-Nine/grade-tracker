@@ -49,7 +49,7 @@ const LoginDialog = (props) => {
         await Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/authorise",
             {
-                email: email,
+                email: email.toLowerCase(),
                 password: password,
                 activeTri: activeTri,
             }
@@ -79,7 +79,7 @@ const LoginDialog = (props) => {
         Axios.post(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/forgot",
             {
-                email: email,
+                email: email.toLowerCase(),
             }
         )
             .then((result) => {
