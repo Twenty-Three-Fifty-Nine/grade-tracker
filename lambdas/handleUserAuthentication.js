@@ -4,11 +4,16 @@ import {
     PutItemCommand,
     DeleteItemCommand,
 } from "@aws-sdk/client-dynamodb";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import crypto from "crypto";
+import VerificationEmailTemplate from "./VerificationEmailTemplate.mjs";
 
 const client = new DynamoDBClient({ region: "ap-southeast-2" });
 const userTable = "users";
+
+const sesClient = new SESClient({ region: "ap-southeast-2" });
+const fromEmail = "2359gradetracker@gmail.com";
 
 export const handler = async (event) => {
     if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH") {
@@ -192,6 +197,12 @@ async function addUser(event, years = []) {
 
     const yearsValue =
         years.length === 0 ? [{ year: year, courses: [] }] : years;
+    
+    const token = crypto.randomBytes(50).toString("hex");
+    const obj = {
+        token: token,
+        verified: false,
+    };
 
     // Add the user to the database
     const command = new PutItemCommand({
@@ -202,10 +213,32 @@ async function addUser(event, years = []) {
             password: hash,
             salt: salt,
             years: yearsValue,
+            verifiedEmail: obj,
         }),
     });
 
-    await client.send(command);
+    await client.send(command).then(async () => {
+        const params = {
+            Destination: {
+                ToAddresses: [email],
+            },
+            Message: {
+                Body: {
+                    Html: {
+                        Charset: "UTF-8",
+                        Data: VerificationEmailTemplate(email, displayName, token),
+                    },
+                },
+                Subject: {
+                    Charset: "UTF-8",
+                    Data: "Verify your email",
+                },
+            },
+            Source: fromEmail,
+        };
+
+        await sesClient.send(new SendEmailCommand(params));
+    });
 
     return {
         statusCode: 200,
