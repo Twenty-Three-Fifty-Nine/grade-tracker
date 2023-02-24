@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AccountMenu = (props) => {
     const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setCourseList, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
@@ -21,6 +22,7 @@ const AccountMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
     const [newName, setNewName] = React.useState(null);
@@ -31,6 +33,7 @@ const AccountMenu = (props) => {
 
     const [oldPassword, setOldPassword] = React.useState(null);
     const [newPassword, setNewPassword] = React.useState(null);
+    const [deletePassword, setDeletePassword] = React.useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = React.useState(null);
 
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
@@ -43,6 +46,7 @@ const AccountMenu = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showNewPassword, setShowNewPassword] = React.useState(false);
+    const [showDeletePassword, setShowDeletePassword] = React.useState(false);
 
     const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
     const [feedbackSubject, setFeedbackSubject] = React.useState(null);
@@ -164,22 +168,27 @@ const AccountMenu = (props) => {
         setSessionData(null);
         setCourseList(null)
         setViewedCourse(null);
+        setConfirmDeleteAccount(false);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
     }, [handleProfileDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
 
-    const handleKeyDown = useCallback(
-        (event) => {
-            if (event.key === "Enter" && !(!newEmail &&
-                !newName &&
-                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))) {
-                handleUserUpdate();
-            }
-        },
-        [handleUserUpdate, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]
-    );
+    const deleteUser = useCallback(async () => {
+        await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, 
+            {data: {
+                password: deletePassword, 
+                email: userDetails.email.toLowerCase(),
+                activeTri: sessionData.timeInfo.activeTri, 
+            }}
+        ).then((response) => {
+                if(response.status === 200) handleLogout();
+        }).catch((error) => {
+            setApiAlert("Incorrect password");
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deletePassword, handleLogout, userDetails.email]);
 
-    const sendFeedback = async () => {
+    const sendFeedback = useCallback(async () => {
         setLoading(true);
         await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/feedback", {
             subject: feedbackSubject,
@@ -195,7 +204,19 @@ const AccountMenu = (props) => {
             setApiAlert("Something went wrong");
         })
         setLoading(false);
-    }
+    }, [feedbackMessage, feedbackSubject, feedbackType, handleFeedbackDialogClose, userDetails.displayName, userDetails.email]);
+
+    const handleKeyDown = useCallback(
+        (event) => {
+            if (event.key === "Enter" && !loading){
+                if(profileDialogOpen && !(!newEmail && !newName &&
+                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))) {
+                    handleUserUpdate();
+                }
+            }
+        },
+        [handleUserUpdate, loading, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, profileDialogOpen, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]
+    );
 
     return (
         <Box sx={{ mr: 2 }}>
@@ -240,67 +261,109 @@ const AccountMenu = (props) => {
                 <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
 
-            {profileDialogOpen && (
-                <Dialog open={profileDialogOpen} onClose={() => handleProfileDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
-                    <DialogTitle>Update Information</DialogTitle>
-                    <DialogContent>
-                        <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
-                        <TextField label="Email" defaultValue={userDetails.email} fullWidth margin="normal" onChange={handleEmailChange} error={emailError !== null} helperText={emailError} />
-                        <Divider variant="middle" sx={{ my: 0.5, borderWidth: 2 }} />
-                        <TextField label="Current Password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}
-                            type={showPassword ? 'text' : 'password'}
-                            InputProps={{endAdornment: 
-                                <InputAdornment position="end">
-                                    <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }}
+            <Dialog open={profileDialogOpen} onClose={() => handleProfileDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
+                <Stack direction="row">
+                    <Typography variant="h6" sx={{flexGrow: 1, ml: 3, mt: 2}}> Update Information </Typography>
+                    <IconButton onClick={() => {
+                        setConfirmDeleteAccount(true);
+                    }} sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" }, mr: 1.5, mt: 1.5}}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Stack>
+                
+                <DialogContent>
+                    <TextField label="Name" defaultValue={userDetails.displayName} fullWidth margin="normal" onChange={(event) => setNewName(event.target.value === userDetails.displayName ? null : event.target.value)} />
+                    <TextField label="Email" defaultValue={userDetails.email} fullWidth margin="normal" onChange={handleEmailChange} error={emailError !== null} helperText={emailError} />
+                    <Divider variant="middle" sx={{ my: 0.5, borderWidth: 2 }} />
+                    <TextField label="Current Password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        InputProps={{endAdornment: 
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                    />
+                    <TextField label="New Password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} 
+                        type={showNewPassword ? 'text' : 'password'}
+                        InputProps={{endAdornment: 
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => {setShowNewPassword(!showNewPassword)}} tabIndex={-1}>
+                                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                    />
+                    <TextField label="Confirm New Password" type={showNewPassword ? 'text' : 'password'} fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
+                    {oldPassword && (
+                        <PasswordValidation
+                            validPasswordLength={validPasswordLength}
+                            validPasswordNumber={validPasswordNumber}
+                            validPasswordSpecial={validPasswordSpecial}
+                            validPasswordCapital={validPasswordCapital}
+                            validPasswordMatch={validPasswordMatch}
                         />
-                        <TextField label="New Password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} 
-                            type={showNewPassword ? 'text' : 'password'}
-                            InputProps={{endAdornment: 
-                                <InputAdornment position="end">
-                                    <IconButton onClick={() => {setShowNewPassword(!showNewPassword)}} tabIndex={-1}>
-                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }}
-                        />
-                        <TextField label="Confirm New Password" type={showNewPassword ? 'text' : 'password'} fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
-                        {oldPassword && (
-                            <PasswordValidation
-                                validPasswordLength={validPasswordLength}
-                                validPasswordNumber={validPasswordNumber}
-                                validPasswordSpecial={validPasswordSpecial}
-                                validPasswordCapital={validPasswordCapital}
-                                validPasswordMatch={validPasswordMatch}
-                            />
-                        )}
-                        { <Collapse in={apiAlert !== null}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
-                    </DialogContent>
-                    <DialogActions sx={{px: 2}}>
-                        <Button onClick={() => handleProfileDialogClose()}>Close</Button>
-                        <Box sx={{ position: 'relative' }}>
-                            <Button
-                                onClick={() => handleUserUpdate()}
-                                disabled={
-                                    loading || (!newEmail &&
-                                    !newName &&
-                                    !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))
-                                }
-                            >
-                                Update
-                            </Button>
-                            {loading &&
-                                <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                    )}
+                    { <Collapse in={apiAlert !== null && !confirmDeleteAccount}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                </DialogContent>
+                <DialogActions sx={{px: 2}}>
+                    <Button onClick={() => handleProfileDialogClose()}>Close</Button>
+                    <Box sx={{ position: 'relative' }}>
+                        <Button
+                            onClick={() => handleUserUpdate()}
+                            disabled={
+                                loading || (!newEmail &&
+                                !newName &&
+                                !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && validPasswordSpecial && validPasswordCapital && validPasswordMatch && (newPassword !== oldPassword)))
                             }
-                        </Box>
-                    </DialogActions>
-                </Dialog>
-            )}
+                        >
+                            Update
+                        </Button>
+                        {loading &&
+                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
+                        }
+                    </Box>
+                </DialogActions>
+            </Dialog>
 
-            <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth  onKeyDown={handleKeyDown}>
+            <Dialog onClose={() => {setConfirmDeleteAccount(false); setDeletePassword(""); setShowDeletePassword(false);}} open={confirmDeleteAccount} >
+                <Stack sx={{pr: 5, pl: 5}}>
+                    <DialogTitle sx={{ textAlign:"center", paddingBottom: 2}}>
+                        Delete your account?
+                    </DialogTitle>
+                    <Typography sx={{ textAlign:"center", maxWidth: 300}}>
+                        This action CANNOT be reverted. You will lose all of your data and be unable to retrieve it.
+                    </Typography>
+                    <TextField
+                        margin="dense"
+                        id="password"
+                        label="Password"
+                        type={showDeletePassword ? 'text' : 'password'}
+                        InputProps={{endAdornment: 
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => {setShowDeletePassword(!showDeletePassword)}} tabIndex={-1}>
+                                    {showDeletePassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                        fullWidth
+                        value={deletePassword}
+                        onChange={(e) => {
+                            setDeletePassword(e.target.value);
+                        }}
+                    />
+                    { <Collapse in={apiAlert !== null}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                    <Stack spacing={2} direction="row" sx={{ margin:"auto", paddingTop: 3, paddingBottom: 3 }}>
+                        <Button onClick={() => {setConfirmDeleteAccount(false); setDeletePassword(""); setShowDeletePassword(false);}} variant="outlined">Cancel</Button>
+                        <Box sx={{ position: 'relative' }}>
+                            <Button onClick={deleteUser} variant="contained"> Delete </Button>
+                        </Box>
+                    </Stack>
+                </Stack>
+            </Dialog>
+
+            <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth>
                 <DialogTitle>Send Feedback</DialogTitle>
                 <DialogContent>
                     <Stack direction={isMobile ? "column" : "row"}>
@@ -325,7 +388,7 @@ const AccountMenu = (props) => {
                         error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
                         helperText={feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? "Message content has to be below 351 characters" : ""}
                     />
-                    { <Collapse in={apiAlert !== null}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
+                    { <Collapse in={apiAlert !== null && !confirmDeleteAccount}><Alert severity="error" sx={{ mt: 2 }} action={<IconButton onClick={() => setApiAlert(null)}><CloseIcon fontSize="small"/></IconButton>}>{apiAlert}</Alert></Collapse> }
                 </DialogContent>
                 <DialogActions sx={{px: 2}}>
                     <Button onClick={() => handleFeedbackDialogClose()}>Close</Button>

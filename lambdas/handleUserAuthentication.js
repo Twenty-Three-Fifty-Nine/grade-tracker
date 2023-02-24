@@ -16,7 +16,7 @@ const sesClient = new SESClient({ region: "ap-southeast-2" });
 const fromEmail = "2359gradetracker@gmail.com";
 
 export const handler = async (event) => {
-    if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH") {
+    if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH" && event.requestContext.http.method !== "DELETE") {
         return {
             statusCode: 401,
             body: "Unauthorized",
@@ -30,7 +30,20 @@ export const handler = async (event) => {
     } else if (route === "/users/signup") {
         return await addUser(event);
     } else if (route === "/users/{user}") {
-        return await updateUser(event);
+        if(event.requestContext.http.method === "DELETE"){
+            let authResponse = 500;
+            await authenticateUser(event).then((result) => {
+                authResponse = result.statusCode;
+                if(authResponse === 200){
+                    deleteUser(JSON.parse(event.body)["email"]);
+                }
+            });
+            return {
+                statusCode: authResponse,
+                body: authResponse === 401 ? "Unauthorized" : "Deleted user",
+            };
+        }
+        else return await updateUser(event);
     } else if (route === "/users/{user}/verify") {
         return await verifyEmail(event);
     } else {
