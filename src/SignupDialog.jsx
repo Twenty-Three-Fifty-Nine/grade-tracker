@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
 
 import CloseIcon from '@mui/icons-material/Close';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const SignupDialog = (props) => {
     const { open, onClose, setIsLoggedIn, setUserDetails, activeTri } = props;
@@ -22,6 +24,7 @@ const SignupDialog = (props) => {
     const [signupError, setSignupError] = React.useState(false);
     const [signupErrorText, setSignupErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClose = useCallback(() => {
         onClose();
@@ -131,8 +134,17 @@ const SignupDialog = (props) => {
             <DialogContent>
                 <TextField autoFocus margin="dense" id="displayName" label="Display Name" type="text" fullWidth value={displayName} onChange={(e) => { setDisplayName(e.target.value) }}/>
                 <TextField margin="dense" id="email" label="Email Address" type="email" fullWidth value={email} onChange={(e) => { setEmail(e.target.value) }} />
-                <TextField margin="dense" id="password" label="Password" type="password" fullWidth value={password} onChange={handlePasswordChange} />
-                <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type="password" fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} />
+                <TextField margin="dense" id="password" label="Password" fullWidth value={password} onChange={handlePasswordChange} 
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{endAdornment: 
+                        <InputAdornment position="end">
+                            <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }}
+                />
+                <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type={showPassword ? 'text' : 'password'} fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} />
 
                 <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} />
                 
