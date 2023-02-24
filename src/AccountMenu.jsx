@@ -121,7 +121,7 @@ const AccountMenu = (props) => {
 
     const handleUserUpdate = useCallback(() => {
         const data = {
-            newEmail: !newEmail ? null : newEmail.replace(/\s/g, ""),
+            newEmail: !newEmail ? null : newEmail.replace(/\s/g, "").toLowerCase(),
             displayName: !newName ? null : newName.replace(/\s/g, ""),
             oldPassword: !oldPassword ? null : oldPassword,
             newPassword: !newPassword ? null : newPassword,
@@ -185,7 +185,7 @@ const AccountMenu = (props) => {
             subject: feedbackSubject,
             message: feedbackMessage,
             feedbackType,
-            email: userDetails.email,
+            email: userDetails.email.toLowerCase(),
             displayName: userDetails.displayName,
         }).then((response) => {
             setSnackbarOpen(true);
