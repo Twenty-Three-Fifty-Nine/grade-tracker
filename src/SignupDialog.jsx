@@ -186,7 +186,7 @@ const SignupDialog = (props) => {
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Box sx={{ position: 'relative' }}>
-                    <Button onClick={handleSignup} disabled={loading || !acceptedTerms}>Signup</Button>
+                    <Button onClick={handleSignup} disabled={loading || !acceptedTerms || !validPasswordLength || !validPasswordNumber || !validPasswordSpecial || !validPasswordCapital || !validPasswordMatch || !displayName || !email || !password || !passwordConfirm}>Sign Up</Button>
                     {loading &&
                         <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                     }
