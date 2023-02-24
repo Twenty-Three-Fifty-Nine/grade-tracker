@@ -150,6 +150,7 @@ async function authenticateUser(event) {
                 body: JSON.stringify({
                     email: user.email,
                     displayName: user.displayName,
+                    verifiedEmail: user.verifiedEmail.verified,
                 }),
             };
         } else {
@@ -228,6 +229,7 @@ async function addUser(event, years = []) {
         body: JSON.stringify({
             email: email,
             displayName: displayName,
+            verifiedEmail: false,
         }),
     };
 }
@@ -305,6 +307,7 @@ async function updateUser(event) {
         body: JSON.stringify({
             email: user.email,
             displayName: user.displayName,
+            verifiedEmail: user.verifiedEmail.verified,
         }),
     };
 }
@@ -349,7 +352,11 @@ async function verifyEmail(event) {
         await client.send(command);
         return {
             statusCode: 200,
-            body: "Email verified",
+            body: JSON.stringify({
+                email: user.email,
+                displayName: user.displayName,
+                verifiedEmail: user.verifiedEmail.verified,
+            }),
         };
     } else {
         return {

@@ -49,6 +49,11 @@ const App = () => {
         }).then((response) => {
             if (response.status === 200) {
                 setEmailVerified(true);
+                new Cookies().set("userDetails", response.data, {
+                    path: "/",
+                    sameSite: "strict",
+                });
+                setUserDetails(response.data);
             }
         })
     };
@@ -75,6 +80,7 @@ const App = () => {
                 verifyUser(email, token);
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
     return (
@@ -184,6 +190,7 @@ const App = () => {
                     <GradesOverview
                         userEmail={userDetails.email}
                         userName={userDetails.name}
+                        verifiedEmail={userDetails.verifiedEmail}
                         setViewedCourse={setViewedCourse}
                         sessionData={sessionData}
                         setSessionData={setSessionData}

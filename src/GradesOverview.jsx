@@ -56,7 +56,7 @@ class Course {
 }
 
 const GradesOverview = (props) => {
-    const {userEmail, userName, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
+    const {userEmail, userName, verifiedEmail, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
 
     const [selectedYear, setYear] = React.useState(activeTri.year);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
@@ -114,6 +114,7 @@ const GradesOverview = (props) => {
 
     const getSessionData = useCallback(async (year) => {
         console.log("Getting Session Data");
+        
         await setSessionData("Reloading");
         return parseCourseData(
             "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
@@ -121,12 +122,12 @@ const GradesOverview = (props) => {
                 "/courses"
         ).then((courseData) => {
             return {
-                userData: { email: userEmail, displayName: userName },
+                userData: { email: userEmail, displayName: userName, verifiedEmail },
                 timeInfo: { activeTri, selectedYear: year },
                 courses: courseData,
             };
         });
-    }, [activeTri, parseCourseData, setSessionData, userEmail, userName]);
+    }, [activeTri, parseCourseData, setSessionData, userEmail, userName, verifiedEmail]);
 
     const handleLoadData = useCallback(async () => {
         getSessionData(selectedYear).then((data) => {

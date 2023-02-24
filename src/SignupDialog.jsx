@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment, Snackbar } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
@@ -89,12 +89,8 @@ const SignupDialog = (props) => {
             .then((result) => {
                 setIsLoggedIn(true);
                 setEmailSent(true);
-                const data = {
-                    displayName: displayName,
-                    email: email,
-                };
-                setUserDetails(data);
-                new Cookies().set("userDetails", data, { path: '/', sameSite: 'strict' });
+                setUserDetails(result.data);
+                new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
                 handleClose();
             })
             .catch((e) => {
@@ -109,7 +105,7 @@ const SignupDialog = (props) => {
                 setSignupError(true);
             });
         setLoading(false)
-    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
+    }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
 
     const handleKeyDown = useCallback(
         (event) => {
