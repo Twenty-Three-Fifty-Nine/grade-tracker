@@ -115,7 +115,8 @@ const CourseViewer = (props) => {
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
     const [changeOverride, setChangeOverride] = React.useState(false);
-    const changesMadeR = React.useRef(false);
+    const changesMadeR = React.useRef();
+    changesMadeR.current = changesMade;
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
@@ -123,6 +124,9 @@ const CourseViewer = (props) => {
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
     const [sliderPos, setSliderPos] = React.useState(-270);
+    const sliderPosR = React.useRef();
+    sliderPosR.current = sliderPos;
+    const [deleteZIndex, setDeleteZIndex] = React.useState(1);
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
@@ -144,15 +148,21 @@ const CourseViewer = (props) => {
     const [templateData, setTemplateData] = React.useState(false);
 
     let handleKeyDown = null;
+    let handleTransitionEnd = null;
+    let handleTransitionStart = null;
 
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
+        if(isMobile){
+            document.getElementById("slidePanelButton").removeEventListener("transitionend", handleTransitionEnd, false);
+            document.getElementById("slidePanelButton").removeEventListener("transitionstart", handleTransitionStart, false);
+        }
         setViewedCourse(null);
         setTemplateData(null);
-    }, [handleKeyDown, setViewedCourse]);
+    }, [handleKeyDown, handleTransitionEnd, handleTransitionStart, setViewedCourse]);
 
     const attemptClose = useCallback(() => {
-        if(changesMadeR.changes) setConfirmExit(true);
+        if(changesMadeR.current) setConfirmExit(true);
         else exitViewer();
     }, [exitViewer]);
 
@@ -162,9 +172,21 @@ const CourseViewer = (props) => {
         }
     }, [attemptClose]);
 
+    handleTransitionEnd = useCallback((event) => {
+        if(sliderPosR.current === -270) setDeleteZIndex(1);
+    }, []);
+
+    handleTransitionStart = useCallback((event) => {
+        if(sliderPosR.current === 0) setDeleteZIndex(0);
+    }, []);
+
     React.useEffect(() => {
         if(assessments.length > 0) return;
         document.addEventListener("keydown", handleKeyDown, false);
+        if(isMobile){
+            document.getElementById("slidePanelButton").addEventListener("transitionend", handleTransitionEnd, false);
+            document.getElementById("slidePanelButton").addEventListener("transitionstart", handleTransitionStart, false);
+        }
         window.scrollTo(0, 0);
 
         setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
@@ -180,7 +202,7 @@ const CourseViewer = (props) => {
             setAssessments(current => [...current, assessment]);
             setFilteredAssessments(current => [...current, assessment]);
         };
-    }, [assessments.length, courseData, handleKeyDown]);
+    }, [assessments.length, courseData, handleKeyDown, handleTransitionEnd, handleTransitionStart]);
 
     const sort = useCallback((type = sortType, list = filteredAssessments) => {
         if(type === "name-a") return sortAlgorithm(true, "name", list);
@@ -229,7 +251,6 @@ const CourseViewer = (props) => {
         })
         setChangesMade(changes || override);
         setValidChanges(valid);
-        changesMadeR.changes = changes || override;
     }
 
     const saveChanges = (synced = false) => {
@@ -415,7 +436,7 @@ const CourseViewer = (props) => {
                                     <Button disabled variant="contained" sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
                                 </Box>
                                 <Box sx={{alignSelf:"center"}}>
-                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}} sx={{zIndex: sliderPos === 0 ? 0 : 2}}>
+                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}} sx={{zIndex: deleteZIndex}}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Box>
@@ -636,10 +657,11 @@ const CourseViewer = (props) => {
 
             {isMobile && (
                 <Box sx={{ position:"fixed", top: 90, right: sliderPos, transition: "all 0.3s linear"}}>
-                    <Stack direction="row" sx={{zIndex: sliderPos === 0 ? 3 : 1}}>
+                    <Stack direction="row"> 
+                    {/* //sx={{zIndex: sliderPos === 0 ? 3 : 1}} */}
                         <Stack>
                             <Box sx={{backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25}}>
-                                <IconButton onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.3s linear", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
+                                <IconButton id="slidePanelButton" onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.3s linear", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
                                     <KeyboardArrowLeftIcon />
                                 </IconButton>
                             </Box>
