@@ -129,7 +129,7 @@ const LoginDialog = (props) => {
                                 type={showPassword ? 'text' : 'password'}
                                 InputProps={{endAdornment: 
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => {setShowPassword(!showPassword)}}>
+                                        <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
