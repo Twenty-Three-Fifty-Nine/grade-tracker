@@ -220,30 +220,7 @@ async function addUser(event, years = []) {
     });
 
     await client.send(command).then(async (res) => {
-        const params = {
-            Destination: {
-                ToAddresses: [email],
-            },
-            Message: {
-                Body: {
-                    Html: {
-                        Charset: "UTF-8",
-                        Data: VerificationEmailTemplate({
-                            email,
-                            displayName,
-                            token,
-                        }),
-                    },
-                },
-                Subject: {
-                    Charset: "UTF-8",
-                    Data: "Verify your email",
-                },
-            },
-            Source: fromEmail,
-        };
-
-        await sesClient.send(new SendEmailCommand(params));
+        await sendVerificationEmail(email, token, displayName, true);
     });
 
     return {
@@ -303,6 +280,11 @@ async function updateUser(event) {
             };
         } else {
             user.email = newEmail;
+            user.verifyEmail = {
+                token: crypto.randomBytes(50).toString("hex"),
+                verified: false,
+            };
+            await sendVerificationEmail(newEmail, user.verifyEmail.token, displayName, false);
         }
     }
 
@@ -370,4 +352,32 @@ async function verifyEmail(event) {
             body: "Unauthorized",
         };
     }
+}
+
+async function sendVerificationEmail(email, token, displayName, newSignUp) {
+    const params = {
+        Destination: {
+            ToAddresses: [email],
+        },
+        Message: {
+            Body: {
+                Html: {
+                    Charset: "UTF-8",
+                    Data: VerificationEmailTemplate({
+                        email,
+                        displayName,
+                        token,
+                        newSignUp,
+                    }),
+                },
+            },
+            Subject: {
+                Charset: "UTF-8",
+                Data: "Verify your email",
+            },
+        },
+        Source: fromEmail,
+    };
+
+    await sesClient.send(new SendEmailCommand(params));
 }
