@@ -8,9 +8,9 @@ This was created as a summer project in preparation for our third year of univer
 
 ### The name
 
-The name Twenty Three Fifty Nine (2359) came around after a lot of discussions. The idea behind the name is that a lot of students hand in their work at the last minute and so we thought it was a fitting name to track grades.
+The name Twenty Three Fifty Nine (23:59) came around after a lot of discussions. The idea behind the name is that a lot of students hand in their work at the last minute and so we thought it was a fitting name to track grades.
 
-## How did we make 2359?
+## How did we make 23:59?
 
 ### Front end
 
