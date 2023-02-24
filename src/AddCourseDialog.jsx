@@ -138,7 +138,7 @@ const AddCourseDialog = (props) => {
                     </Box>
                 </Tooltip>
                 <Box sx={{ position: 'relative' }}>
-                    <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" >Add Course</Button>
+                    <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" fullWidth>Add Course</Button>
                     {loadingAddRequest &&
                         <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                     }
