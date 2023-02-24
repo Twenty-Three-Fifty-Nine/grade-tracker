@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton, Collapse, CircularProgress, Box, InputAdornment, Stack, Checkbox, Typography } from '@mui/material';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
 import PasswordValidation from './PasswordValidation';
@@ -14,6 +14,7 @@ const SignupDialog = (props) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
+    const [acceptedTerms, setAcceptedTerms] = React.useState(false);
 
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
@@ -35,6 +36,7 @@ const SignupDialog = (props) => {
         setPassword("");
         setPasswordConfirm("");
         setShowPassword(false);
+        setAcceptedTerms(false);
     }, [onClose]);
 
     const handleSignup = useCallback(async () => {
@@ -153,6 +155,13 @@ const SignupDialog = (props) => {
 
                 <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} />
                 
+                <Stack direction="row" sx={{ml: -1.1, mt: 1}}>
+                    <Checkbox checked={acceptedTerms} onChange={(e, newValue) => {setAcceptedTerms(newValue)}} />
+                    <Typography variant="h6" sx={{mt:1.2, fontSize:"16px"}}> 
+                        Accept <Box display="inline-block" onClick={() => {console.log("hi")}} sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
+                    </Typography> 
+                </Stack>
+
                 {<Collapse in={signupError}>
                     <Alert severity="error" sx={{ mt: 2 }}
                         action={
@@ -172,7 +181,7 @@ const SignupDialog = (props) => {
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Box sx={{ position: 'relative' }}>
-                    <Button onClick={handleSignup} disabled={loading}>Signup</Button>
+                    <Button onClick={handleSignup} disabled={loading || !acceptedTerms}>Signup</Button>
                     {loading &&
                         <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                     }
