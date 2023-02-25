@@ -3,23 +3,16 @@ import {
     Box,
     Card,
     CardContent,
-    Checkbox,
     Chip,
     Collapse,
-    Divider,
-    FormControl,
-    FormControlLabel,
     IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
     Stack,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import ClearIcon from "@mui/icons-material/Clear";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { FilterSelect, SortSelect } from "./CourseViewerFields";
 
 const CourseViewerFilterDesktop = (props) => {
     const {
@@ -47,35 +40,16 @@ const CourseViewerFilterDesktop = (props) => {
                         <FilterListIcon fontSize="large"/>
                     </IconButton>
                 </Tooltip>
-                <FormControl sx={{ width:200 }}>
-                    <InputLabel> Sort By </InputLabel>
-                    <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
-                        <MenuItem value={"name-a"}> Name (Ascending) </MenuItem>
-                        <MenuItem value={"name-d"}> Name (Descending) </MenuItem>
-                        <MenuItem value={"deadline-a"}> Due Date (Closest) </MenuItem>
-                        <MenuItem value={"deadline-d"}> Due Date (Furthest) </MenuItem>
-                        <MenuItem value={"weight-a"}> Weight (Highest) </MenuItem>
-                        <MenuItem value={"weight-d"}> Weight (Lowest) </MenuItem>
-                    </Select>
-                </FormControl>
+
+                <SortSelect sortType={sortType} handleChangeSort={handleChangeSort} />
             </Stack>
             <Collapse in={filterPanelOpen}>
                 <Card sx={{ width: 300 }}>
                     <CardContent>
-                        <Stack spacing={0.5}>
-                            <Typography variant="h5" sx={{ ml: 1.3 }}> Assessment Filters </Typography>
-                            <Divider />
-                            <FormControlLabel control={<Checkbox checked={finishedFilter} 
-                                onChange={() => setFinishedFilter(!finishedFilter)} />} label="Finished" />
-                            <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
-                                onChange={() => setMissingGradeFilter(!missingGradeFilter)} />} label="Missing Grade" />
-                            <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
-                                onChange={() => setPastDeadlineFilter(!pastDeadlineFilter)} />} label="Past Deadline" />
-                            <FormControlLabel control={<Checkbox checked={testFilter} 
-                                onChange={() => setTestFilter(!testFilter)} />} label="Test" />
-                            <FormControlLabel control={<Checkbox checked={assignmentFilter} 
-                                onChange={() => setAssignmentFilter(!assignmentFilter)} />} label="Assignment" />
-                        </Stack>
+                        <FilterSelect finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}  pastDeadlineFilter={pastDeadlineFilter} 
+                            testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
+                            setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                        />
                     </CardContent>
                 </Card>
             </Collapse>
