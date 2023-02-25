@@ -35,6 +35,7 @@ import {
     Typography,
 } from "@mui/material";
 
+import Assessment from "./Assessment";
 import Axios from "axios";
 import ConfirmDialog from "./ConfirmDialog";
 import { isMobile } from "react-device-detect";
@@ -42,7 +43,6 @@ import SyncAssessmentCard from "./SyncAssessmentCard";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
-import Assessment from "./Assessment";
 
 const SyncDialog = (props) => {
     const { onClose, open, courseData, templateData, setTemplateData, assessments, setAssessments, saveChanges} = props;

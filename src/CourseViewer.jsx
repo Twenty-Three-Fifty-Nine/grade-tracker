@@ -51,6 +51,7 @@ import {
     LocalizationProvider,
 } from "@mui/x-date-pickers";
 
+import Assessment from "./Assessment";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import Axios from "axios";
@@ -68,7 +69,6 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import LaunchIcon from "@mui/icons-material/Launch";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
-import Assessment from "./Assessment";
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;

@@ -28,11 +28,11 @@ import {
 } from "@mui/material";
 
 import AddCourseDialog from "./AddCourseDialog";
+import Assessment from "./Assessment";
 import Axios from "axios";
+import Course from "./Course";
 import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
-import Assessment from "./Assessment";
-import Course from "./Course";
 
 const GradesOverview = (props) => {
     const {userEmail, userName, verifiedEmail, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props

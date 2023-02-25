@@ -36,6 +36,7 @@ import {
     Typography,
 } from "@mui/material";
 
+import Assessment from "./Assessment";
 import Axios from "axios";
 import ConfirmDialog from "./ConfirmDialog";
 import CreateAssessmentCard from "./CreateAssessmentCard";
@@ -43,7 +44,6 @@ import { isMobile } from "react-device-detect";
 import { TransitionGroup } from "react-transition-group";
 
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
-import Assessment from "./Assessment";
 
 const NewCourseDialog = (props) => {
     const { onClose, open, activeTri, editCode, templateData, setTemplateData } = props;
