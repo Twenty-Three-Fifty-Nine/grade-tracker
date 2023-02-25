@@ -37,7 +37,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
 const AssessmentViewerCard = (props) => {
-    const { assData, checkChanges, setCurrentEdit } = props;
+    const {
+        assData,
+        checkChanges,
+        setCurrentEdit
+    } = props;
+    
     const [updater, setUpdater] = React.useState(false);
 
     const getCourseLetter = () => {

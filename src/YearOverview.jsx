@@ -28,7 +28,10 @@ import { SessionContext } from './GradesOverview';
 import TrimesterOverview from './TrimesterOverview';
 
 const YearOverview = (props) => {
-    const {setViewedCourse} = props;
+    const {
+        setViewedCourse
+    } = props;
+    
     const session = React.useContext(SessionContext);
 
     const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);

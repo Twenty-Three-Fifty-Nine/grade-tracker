@@ -43,7 +43,16 @@ import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 
 const CreateAssessmentCard = (props) => {
-    const {index, removeAssessment, details, checkFormat, assessments, setParentUpdater, parentUpdater} = props;
+    const {
+        assessments,
+        checkFormat,
+        details,
+        index,
+        parentUpdater,
+        removeAssessment,
+        setParentUpdater,
+    } = props;
+
     const [updater, setUpdater] = React.useState(false);
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [weightCheckOn, setWeightCheckOn] = React.useState(false);

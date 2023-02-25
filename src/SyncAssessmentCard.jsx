@@ -30,7 +30,10 @@ import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 
 const Field = (props) => {
-    const { text } = props;
+    const {
+        text
+    } = props;
+
     return (
         <Box sx={{ width: "100%", minWidth: 168, borderRadius: 2, border: "1px solid gray", p: 1 }}>
             {text}
@@ -39,7 +42,10 @@ const Field = (props) => {
 }
 
 const SyncAssessmentCard = (props) => {
-    const { assessment } = props;
+    const {
+        assessment
+    } = props;
+
     return (
         assessment.name !== "" ? (
         <Card sx={{ width: 400, minHeight: 200 }} >
@@ -76,5 +82,3 @@ const SyncAssessmentCard = (props) => {
 }
 
 export default SyncAssessmentCard;
-
-//

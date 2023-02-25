@@ -25,6 +25,13 @@ import {
 import Login from "./Login";
 
 const WelcomePage = (props) => {
+    const {
+        activeTri,
+        setEmailSent,
+        setIsLoggedIn,
+        setUserDetails,
+    } = props;
+    
     return (
         <>
             <Box>
@@ -52,10 +59,10 @@ const WelcomePage = (props) => {
                         color="primary.main"
                     >
                         <Login
-                            setIsLoggedIn={props.setIsLoggedIn}
-                            setUserDetails={props.setUserDetails}
-                            activeTri={props.activeTri}
-                            setEmailSent={props.setEmailSent}
+                            setIsLoggedIn={setIsLoggedIn}
+                            setUserDetails={setUserDetails}
+                            activeTri={activeTri}
+                            setEmailSent={setEmailSent}
                         />
                     </Box>
                 </Box>

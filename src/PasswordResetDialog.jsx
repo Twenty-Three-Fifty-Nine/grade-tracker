@@ -42,7 +42,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const PasswordResetDialog = (props) => {
-    const { onClose, resetData, setIsLoggedIn, setUserDetails } = props;
+    const {
+        onClose,
+        resetData,
+        setIsLoggedIn,
+        setUserDetails
+    } = props;
 
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");

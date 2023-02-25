@@ -35,7 +35,17 @@ import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
 
 const GradesOverview = (props) => {
-    const {userEmail, userName, verifiedEmail, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
+    const {
+        activeTri,
+        courseList,
+        sessionData,
+        setCourseList,
+        setSessionData,
+        setViewedCourse,
+        userEmail,
+        userName,
+        verifiedEmail,
+    } = props
 
     const [selectedYear, setYear] = React.useState(activeTri.year);
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
