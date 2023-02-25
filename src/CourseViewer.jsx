@@ -329,19 +329,28 @@ const CourseViewer = (props) => {
                     />}
                 </Box>  
             </Stack>
-
             
+            {!isMobile && (<Box>
+                <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
+                    <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
+                        <KeyboardArrowLeftIcon fontSize="large" />
+                    </Fab>
+                </Tooltip>
+                
+                {changesMade && (
+                    <Box>
+                        <Button disabled={!validChanges || apiLoading} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} 
+                            variant="contained" onClick={() => {saveChanges()}}> 
+                            Save Changes
+                        </Button>
+                        {apiLoading && <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px', }} />}
+                    </Box>
+                )}
+            </Box>)}
+
             {isMobile && <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
                 changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges}
             />}
-
-            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
-                subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
-            />
-
-            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} 
-                subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
-            />
 
             {isMobile && <Box id="mobileSlidePanel"> 
                 <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
@@ -351,34 +360,28 @@ const CourseViewer = (props) => {
                 />
             </Box>}
             
-
             <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
                 changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
             />
 
-            {!isMobile && (<>
-                <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                    <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                        <KeyboardArrowLeftIcon fontSize="large" />
-                    </Fab>
-                </Tooltip>
-                
-                {changesMade && (
-                    <Box>
-                        <Button disabled={!validChanges || apiLoading} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save Changes</Button>
-                        {apiLoading &&
-                            <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px', }} />
-                        }
-                    </Box>
-                )}
-            </>)}
-            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}} anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}>
-                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
-                    {isSuccess ? successText : errorText}
-                </Alert>
-            </Snackbar>
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
+                subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
+            />
 
-            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} templateData={templateData} setTemplateData={setTemplateData} 
+            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} 
+                subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
+            />
+
+            <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} 
+                subMessage={"You have updated the template but not your instance. Sync to update your course instance."} 
+                confirmAction={() => {
+                    setSyncMenuOpen(true); 
+                    setSyncSuggestion(false)
+                }} 
+            />
+
+            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+                templateData={templateData} setTemplateData={setTemplateData} 
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
                     if(didUpdate){
@@ -388,9 +391,18 @@ const CourseViewer = (props) => {
                 }}
             />
 
-            <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} subMessage={"You have updated the template but not your instance. Sync to update your course instance."} confirmAction={() => {setSyncMenuOpen(true); setSyncSuggestion(false)}} />
+            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} 
+                setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} 
+            />
 
-            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} />
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
+                anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}
+            >
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
+                    {isSuccess ? successText : errorText}
+                </Alert>
+            </Snackbar>
+
         </Box>
     )
 }
