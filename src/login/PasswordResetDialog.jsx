@@ -46,7 +46,7 @@ const PasswordResetDialog = (props) => {
         onClose,
         resetData,
         setIsLoggedIn,
-        setUserDetails
+        setUserDetails,
     } = props;
 
     const [password, setPassword] = React.useState("");
@@ -63,31 +63,19 @@ const PasswordResetDialog = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const handlePasswordChange = useCallback(
-        (e) => {
-            setPassword(e.target.value);
-            setValidPasswordLength(e.target.value.length >= 8);
-            setValidPasswordNumber(e.target.value.match(/\d/) !== null);
-            setValidPasswordSpecial(
-                e.target.value.match(/[!@#$%^&*(),.?":{}|<>]/) !== null
-            );
-            setValidPasswordCapital(e.target.value.match(/[A-Z]/) !== null);
-            setValidPasswordMatch(
-                e.target.value === passwordConfirm && e.target.value !== ""
-            );
-        },
-        [passwordConfirm]
-    );
+    const handlePasswordChange = useCallback((e) => {
+        setPassword(e.target.value);
+        setValidPasswordLength(e.target.value.length >= 8);
+        setValidPasswordNumber(e.target.value.match(/\d/) !== null);
+        setValidPasswordSpecial(e.target.value.match(/[!@#$%^&*(),.?":{}|<>]/) !== null);
+        setValidPasswordCapital(e.target.value.match(/[A-Z]/) !== null);
+        setValidPasswordMatch(e.target.value === passwordConfirm && e.target.value !== "");
+    }, [passwordConfirm]);
 
-    const handlePasswordConfirmChange = useCallback(
-        (e) => {
-            setPasswordConfirm(e.target.value);
-            setValidPasswordMatch(
-                e.target.value === password && e.target.value !== ""
-            );
-        },
-        [password]
-    );
+    const handlePasswordConfirmChange = useCallback((e) => {
+        setPasswordConfirm(e.target.value);
+        setValidPasswordMatch(e.target.value === password && e.target.value !== "");
+    }, [password]);
 
     const handleClose = useCallback(() => {
         onClose();
@@ -105,14 +93,12 @@ const PasswordResetDialog = (props) => {
 
     const resetPassword = useCallback(async () => {
         setLoading(true);
-        await Axios.post(
-            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/reset",
-            {
-                email: resetData.email.toLowerCase(),
-                token: resetData.token,
-                password,
-            }
-        ).then((response) => {
+
+        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/reset", {
+            email: resetData.email.toLowerCase(),
+            token: resetData.token,
+            password,
+        }).then((response) => {
             setIsLoggedIn(true);
             const data = response.data;
             setUserDetails(data);
@@ -127,47 +113,26 @@ const PasswordResetDialog = (props) => {
             setResetPasswordError(true);
             setResetPasswordSuccess(false);
         });
+
         setLoading(false);
     }, [resetData, password, setIsLoggedIn, setUserDetails, handleClose]);
 
-    const handleKeyDown = useCallback(
-        (e) => {
-            if (e.key === "Enter") {
-                if (
-                    validPasswordLength &&
-                    validPasswordNumber &&
-                    validPasswordSpecial &&
-                    validPasswordCapital &&
-                    validPasswordMatch
-                ) {
-                    resetPassword();
-                }
-            }
-        },
-        [
-            validPasswordLength,
-            validPasswordNumber,
-            validPasswordSpecial,
-            validPasswordCapital,
-            validPasswordMatch,
-            resetPassword,
-        ]
-    );
+    const handleKeyDown = useCallback((e) => {
+        if (e.key === "Enter") {
+            if (validPasswordLength && validPasswordNumber && validPasswordSpecial && 
+               validPasswordCapital && validPasswordMatch) 
+                resetPassword();
+        }
+    }, [validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, resetPassword]);
+
     return (
-        <>
-            <Dialog
-                open={resetData !== null}
-                onClose={handleClose}
-                onKeyDown={handleKeyDown}
-            >
+        <Box>
+            <Dialog open={resetData !== null} onClose={handleClose} onKeyDown={handleKeyDown}>
                 <DialogTitle>Reset Password</DialogTitle>
+
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="password"
-                        label="Password"
-                        type={showPassword ? 'text' : 'password'}
+                    <TextField autoFocus id="password" label="Password" type={showPassword ? 'text' : 'password'}
+                        fullWidth value={password} onChange={handlePasswordChange} margin="dense"
                         InputProps={{endAdornment: 
                             <InputAdornment position="end">
                                 <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
@@ -175,37 +140,20 @@ const PasswordResetDialog = (props) => {
                                 </IconButton>
                             </InputAdornment>
                         }}
-                        fullWidth
-                        value={password}
-                        onChange={handlePasswordChange}
                     />
-                    <TextField
-                        margin="dense"
-                        id="confirmPassword"
-                        label="Confirm Password"
-                        type={showPassword ? 'text' : 'password'}
-                        fullWidth
-                        value={passwordConfirm}
-                        onChange={handlePasswordConfirmChange}
+                    <TextField margin="dense" id="confirmPassword" label="Confirm Password" type={showPassword ? 'text' : 'password'}
+                        fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange}
                     />
-                    <PasswordValidation
-                        validPasswordLength={validPasswordLength}
-                        validPasswordNumber={validPasswordNumber}
-                        validPasswordSpecial={validPasswordSpecial}
-                        validPasswordCapital={validPasswordCapital}
-                        validPasswordMatch={validPasswordMatch}
+                    
+                    <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber}
+                        validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch}
                     />
+
                     <Collapse in={resetPasswordError}>
-                        <Alert
-                            severity="error"
-                            sx={{ width: "100%", mt: 2 }}
+                        <Alert severity="error" sx={{ width: "100%", mt: 2 }}
                             action={
-                                <IconButton
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => {
-                                        setResetPasswordError(false);
-                                    }}
+                                <IconButton color="inherit" size="small"
+                                    onClick={() => setResetPasswordError(false)}
                                 >
                                     <CloseIcon fontSize="inherit" />
                                 </IconButton>
@@ -215,47 +163,30 @@ const PasswordResetDialog = (props) => {
                         </Alert>
                     </Collapse>
                 </DialogContent>
+
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
+                    <Button onClick={handleClose} color="primary"> Cancel </Button>
 
                     <Box sx={{ position: 'relative' }}>
-                        <Button
-                            onClick={resetPassword}
-                            color="primary"
-                            disabled={
-                                !(
-                                    validPasswordLength &&
-                                    validPasswordNumber &&
-                                    validPasswordSpecial &&
-                                    validPasswordCapital &&
-                                    validPasswordMatch
-                                ) || loading
+                        <Button onClick={resetPassword} color="primary"
+                            disabled= {
+                                !( validPasswordLength && validPasswordNumber && validPasswordSpecial &&
+                                   validPasswordCapital && validPasswordMatch) || loading
                             }
                         >
                             Reset Password
                         </Button>
-                        {loading &&
-                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
-                        }
+                        {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />}
                     </Box>
                 </DialogActions>
             </Dialog>
-            <Snackbar
-                open={resetPasswordSuccess}
-                autoHideDuration={6000}
-                onClose={handleClose}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
+
+            <Snackbar open={resetPasswordSuccess} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
                     Password reset successfully
                 </Alert>
             </Snackbar>
-        </>
+        </Box>
     );
 };
 
