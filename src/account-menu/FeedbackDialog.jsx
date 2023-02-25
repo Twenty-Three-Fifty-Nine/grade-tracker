@@ -45,7 +45,7 @@ const FeedbackDialog = (props) => {
         setFeedbackMessage(null);
         setFeedbackType("suggestion");
         setApiAlert(null);
-    }, [setApiAlert, setFeedbackDialogOpen])
+    }, [setApiAlert, setFeedbackDialogOpen]);
     
     const sendFeedback = useCallback(async () => {
         setLoading(true);

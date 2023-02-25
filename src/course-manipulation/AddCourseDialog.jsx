@@ -64,16 +64,15 @@ const AddCourseDialog = (props) => {
         onClose();
     };
 
-    const handleAddCourse = async (code = courseCode, isNewTemplate) => {
-        console.log("Adding course " + code + " to user");
-        
+    const handleAddCourse = async (code = courseCode, isNewTemplate = false) => {
         setLoadingAddRequest(true);
+
         await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + session.userData.email + "/courses", {
             courseCode: code,
             year: activeTri.year,
-            trimester: activeTri.tri,
+            trimester: activeTri.tri
         }).then(() => {
-            if(!isNewTemplate){
+            if (!isNewTemplate) {
                 setSnackbar("success");
                 setIsSuccess(true);
             }
@@ -83,30 +82,29 @@ const AddCourseDialog = (props) => {
         }).catch((e) => {
             setSnackbar("error");
             setIsSuccess(false);
-        })
+        });
+
         setLoadingAddRequest(false);
-    }
+    };
 
     const handleNewCourse = () => {
         handleClose();
         setCourseCreator(true);
-    }
+    };
 
     const handleCancelCreation = async (newCourse, isNewTemplate) => {
-        if(newCourse){
-            handleAddCourse(newCourse, isNewTemplate);
-        }
+        if (newCourse) handleAddCourse(newCourse, isNewTemplate);
         setCourseCreator(false);
-    }
+    };
 
     const getTemplatesList = async () => {
         const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if(!trimesters || loading) return null;
-        console.log("Getting Course Templates");
         
         setLoading(true);
+
         let tempList = [];
-        Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
+        await Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
                 let courseAdded = false;
                 const courseCode = course.codeYearTri.split("|")[0];
@@ -116,53 +114,59 @@ const AddCourseDialog = (props) => {
                 if (!courseAdded) tempList.push(courseCode);
             });
             setCourseList(tempList.sort());
-            setLoading(false);
         });
+
+        setLoading(false);
         
         return "Loading...";
-    }
+    };
 
     return (
-        <>
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle sx={{ textAlign:"center", padding: 5, pr: 5, pl: 5, paddingBottom: 2}}>
-                Add Course for {isMobile && <br />} Trimester {activeTri.tri} {activeTri.year}
-            </DialogTitle>
-            <Stack spacing={2} direction="row" sx={{ margin: "auto", paddingBottom: 2 }}>
-                <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: isMobile ? 200 : 240 }} 
-                renderInput={(params) => <TextField {...params} label="Course Code" />}
-                value={courseCode} onChange={(e, value) => { setCourseCode(value); }} />
-                <IconButton onClick={() => getTemplatesList()}>
-                    <RefreshIcon fontSize='large' />
-                </IconButton>
-            </Stack>
-            <DialogContentText sx={{ margin:"auto", maxWidth: 300, textAlign:"center", paddingTop: 1, paddingBottom: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
-                If your course is not in this list, you can create an entry for the course offering.
-            </DialogContentText>
-            <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ margin:"auto", paddingTop: 1, paddingBottom: 5 }}>
-                <Tooltip title={session && session !== "Reloading" && session.userData.verifiedEmail ? "" : <h3>Please verify your email address to create a new course.</h3>} placement="bottom" arrow>
-                    <Box>
+        <Box>
+            <Dialog onClose={handleClose} open={open}>
+                <DialogTitle sx={{ textAlign:"center", p: 5, pb: 2 }}>
+                    Add Course for {isMobile && <br />} Trimester {activeTri.tri} {activeTri.year}
+                </DialogTitle>
+
+                <Stack spacing={2} direction="row" sx={{ m: "auto", pb: 2 }}>
+                    <Autocomplete options={courseList ? courseList : [getTemplatesList()]} sx={{ width: isMobile ? 200 : 240 }} 
+                        renderInput={(params) => <TextField {...params} label="Course Code" />}
+                        value={courseCode} onChange={(e, value) => setCourseCode(value)} 
+                    />
+                    <IconButton onClick={() => getTemplatesList()}>
+                        <RefreshIcon fontSize='large' />
+                    </IconButton>
+                </Stack>
+
+                <DialogContentText sx={{ m:"auto", maxWidth: 300, textAlign:"center", pt: 1, pb: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
+                    If your course is not in this list, you can create an entry for the course offering.
+                </DialogContentText>
+
+                <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ m:"auto", pt: 1, pb: 5 }}>
+                    <Tooltip title={session && session !== "Reloading" && session.userData.verifiedEmail ? "" : 
+                        <h3> Please verify your email address to create a new course. </h3>} 
+                        placement="bottom" arrow
+                    >
                         <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail} >Create New Course</Button>
+                    </Tooltip>
+
+                    <Box sx={{ position: 'relative' }}>
+                        <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" fullWidth> Add Course </Button>
+                        { loadingAddRequest && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
                     </Box>
-                </Tooltip>
-                <Box sx={{ position: 'relative' }}>
-                    <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" fullWidth>Add Course</Button>
-                    {loadingAddRequest &&
-                        <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
-                    }
-                </Box>
-            </Stack>
-        </Dialog>
-        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
-            anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
-        >
-            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
-                {isSuccess ? "Course added successfully." : "Error adding course."}
-            </Alert>
-        </Snackbar>
-        <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
-        </>
+                </Stack>
+            </Dialog>
+
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+            >
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                    {isSuccess ? "Course added successfully." : "Error adding course."}
+                </Alert>
+            </Snackbar>
+            <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
+        </Box>
     );
-}
+};
 
 export default AddCourseDialog;

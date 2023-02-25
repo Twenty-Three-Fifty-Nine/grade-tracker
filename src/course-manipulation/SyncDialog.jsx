@@ -72,16 +72,16 @@ const SyncDialog = (props) => {
 
         let foundChangeSelection = false;
         changedAssessments.forEach(assessment => {
-            if(assessment.newSelected) foundChangeSelection = true;
+            if (assessment.newSelected) foundChangeSelection = true;
         })
 
         let foundNewSelection = false;
         newAssessments.forEach(assessment => {
-            if(assessment.selected) foundNewSelection = true;
+            if (assessment.selected) foundNewSelection = true;
         })
 
         setValidSync(changesAvailable && (foundChangeSelection || foundNewSelection));
-    }
+    };
 
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
@@ -95,12 +95,12 @@ const SyncDialog = (props) => {
             let newAss = new Assessment(assessment.name, assessment.weight, -1, assessment.deadline, assessment.isAss, false);
             newAss.isUserAss = true;
             assignments.push(newAss);  
-        })
+        });
 
         const blankAssessment = new Assessment("", 0, -1, "", null, false);
 
         const groupedAssignments = assignments.map((assignment) => {
-            let found = assignments.filter((ass) => ass.name === assignment.name)
+            let found = assignments.filter((ass) => ass.name === assignment.name);
             if (found.length === 2) {
                 let a1 = found[0]
                 let a2 = found[1]
@@ -111,6 +111,7 @@ const SyncDialog = (props) => {
                     selected: true
                 }
             }
+
             return {
                 user: found[0].isUserAss ? found[0] : blankAssessment,
                 template: found[0].isUserAss ? blankAssessment : found[0],
@@ -128,14 +129,14 @@ const SyncDialog = (props) => {
         
         let changeFound = false;
         filtered.forEach((assessment) => {
-            if(assessment.user.name === "") {
+            if (assessment.user.name === "") {
                 changeFound = true;
                 setNewAssessments(curr => [...curr, assessment]);
-            }else if (assessment.template.name === "") {
+            } else if (assessment.template.name === "") {
                 setUnchangedAssessments(curr => [...curr, assessment]);
-            }else if(assessment.user.equalsTemplate(assessment.template)) {
+            } else if(assessment.user.equalsTemplate(assessment.template)) {
                 setEqualAssessments(curr => [...curr, assessment]);
-            }else {
+            } else {
                 changeFound = true;
                 setChangedAssessments(curr => [...curr, assessment]);
             }
@@ -146,7 +147,7 @@ const SyncDialog = (props) => {
     }, [courseData.deadlines, courseData.isAssList, courseData.names, courseData.weights, templateData]);
 
     useEffect(() => {
-        if(!open) return;
+        if (!open) return;
         
         setChangedAssessments([]);
         setUnchangedAssessments([]);
@@ -154,11 +155,11 @@ const SyncDialog = (props) => {
         setEqualAssessments([]);
         setNewAssessmentPreference(true);
         setKeepNewURL(true);
-        if(templateData){
+        if (templateData) {
             setValidSync(loadAssesmentList());
-        }else{
+        } else {
             Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + courseData.code + "?year=" + courseData.year + "&trimester=" + courseData.tri).then((response) => {
-                setTemplateData(response.data)
+                setTemplateData(response.data);
                 setValidSync(loadAssesmentList(response.data));
             }).catch((error) => {
                 console.log(error);
@@ -168,13 +169,13 @@ const SyncDialog = (props) => {
     }, [open]);
 
     useEffect(() => {
-        if(!open) return;
-        if(keepNewURL) courseData.url = templateData.url;
+        if (!open) return;
+        if (keepNewURL) courseData.url = templateData.url;
         saveChanges(true);
         onClose();
         setConfirmSync(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [assessments])
+    }, [assessments]);
 
     const sync = () => {
         let syncList = equalAssessments.map((assessment) => assessment.user);
@@ -183,97 +184,106 @@ const SyncDialog = (props) => {
         syncList.forEach((assessment) => {
             let grade = assessments[existingAssessments.indexOf(assessment.name)].grade;
             assessment.grade = grade;
-        })
+        });
 
         changedAssessments.forEach(assessment => {
             let grade = assessments[existingAssessments.indexOf(assessment.user.name)].grade;
             assessment.user.grade = grade;
             assessment.template.grade = grade;
             syncList.push(assessment.newSelected ? assessment.template : assessment.user);
-        })
+        });
 
         unchangedAssessments.forEach(assessment => {
             let grade = assessments[existingAssessments.indexOf(assessment.user.name)].grade;
             assessment.user.grade = grade;
-            if(assessment.selected) syncList.push(assessment.user);
-        })
+            if (assessment.selected) syncList.push(assessment.user);
+        });
 
         newAssessments.forEach(assessment => {
-            if(assessment.selected) syncList.push(assessment.template);
-        })
+            if (assessment.selected) syncList.push(assessment.template);
+        });
 
         setAssessments(syncList);
-    }
+    };
 
     return (
-        <Dialog fullScreen open={open} onClose={onClose} sx={{}}>
+        <Dialog fullScreen open={open} onClose={onClose}>
             <AppBar position="fixed" component="nav">
                 <Toolbar>
                     <IconButton color="inherit" onClick={onClose}>
                         <Icon>close</Icon>
                     </IconButton>
-                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } </Typography>
-                    <Button color="inherit" onClick={() => {setConfirmSync(true)}} disabled={!validSync}> Sync </Button>
+                    <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
+                        { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } 
+                    </Typography>
+                    <Button color="inherit" onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
                 </Toolbar>
             </AppBar>
 
             <Box sx={{ mt: 10, mb: 10 }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <Typography variant="h4" textAlign="center">{courseData.code}</Typography>
-                    <HelpRoundedIcon onClick={() => {setSyncInfo(true)}} sx={{ fontSize: 40, color: "grey", ml: 2, "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }} />
+                    <Typography variant="h4" textAlign="center"> {courseData.code} </Typography>
+                    <HelpRoundedIcon onClick={() => setSyncInfo(true)} sx={{ fontSize: 40, color: "grey", ml: 2, 
+                        "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }} 
+                    />
                 </Box>
                 
                 <Stack direction="column" spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
                     <Card sx={{display: "flex", alignItems:"center", justifyContent:"center"}}>
-                        <CardContent sx={{width: 800, py: 4}}>
-                            <Stack sx={{display: "flex", alignItems:"center", justifyContent:"center"}}>
-                                <Stack direction="row" sx={{ display: "flex", alignItems:"center", justifyContent:"center"}}>
-                                    <Typography sx={{flexGrow: 1, flexBasis: 0, width: 300, textAlign:"end"}} variant="h6">Current Assessments</Typography>
-                                    <IconButton sx={{mx: 2, backgroundColor:"secondary.main"}} 
+                        <CardContent sx={{ width: 800, py: 4 }}>
+                            <Stack sx={{ display: "flex", alignItems:"center", justifyContent:"center" }}>
+                                <Stack direction="row" sx={{ display: "flex", alignItems:"center", justifyContent:"center" }}>
+                                    <Typography sx={{ flexGrow: 1, flexBasis: 0, width: 300, textAlign:"end" }} variant="h6"> Current Assessments </Typography>
+                                    <IconButton sx={{ mx: 2, backgroundColor:"secondary.main" }} 
                                         onClick={() => {
                                             setNewAssessmentPreference(!newAssessmentPreference);
                                             changedAssessments.forEach((assessment) => {
                                                 assessment.newSelected = !newAssessmentPreference;
-                                            })
+                                            });
                                             checkValidSync();
-                                        }}> 
+                                        }}
+                                    > 
                                         <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: newAssessmentPreference ? "rotate(0deg)" : "rotate(-180deg)"}} />
                                     </IconButton>
                                     <Typography variant="h6" sx={{flexGrow: 1, flexBasis: 0, width: 300}}>Template Assessments</Typography>
                                 </Stack>
 
-                                <FormControlLabel control={<Checkbox defaultChecked />} 
+                                <FormControlLabel control={ <Checkbox defaultChecked /> } 
+                                    label={ <Typography variant="h6"> Keep New Assessments </Typography> } labelPlacement="start" 
                                     onChange={(e, newValue) => {
                                         newAssessments.forEach((assessment) => {
                                             assessment.selected = newValue;
-                                        })
+                                        });
                                         checkValidSync();
-                                    }} label={<Typography variant="h6">Keep New Assessments</Typography>} labelPlacement="start" 
+                                    }} 
                                 />
 
-                                <FormControlLabel control={<Checkbox defaultChecked />} 
+                                <FormControlLabel control={ <Checkbox defaultChecked /> } 
+                                    label={ <Typography variant="h6"> Keep Your Assessments </Typography> } labelPlacement="start" 
                                     onChange={(e, newValue) => {
                                         unchangedAssessments.forEach((assessment) => {
                                             assessment.selected = newValue;
-                                        })
-                                    }} label={<Typography variant="h6">Keep Your Assessments</Typography>} labelPlacement="start" 
+                                        });
+                                    }} 
                                 />
                                 
-                                {templateData && templateData.url !== courseData.url && 
-                                (<Stack direction="row">
-                                    <FormControlLabel control={<Checkbox checked={keepNewURL} />} 
-                                        onChange={(e, newValue) => {
-                                            setKeepNewURL(newValue);
-                                        }} label={<Typography variant="h6">Keep New Course URL </Typography>} labelPlacement="start" 
-                                    />
+                                {   templateData && templateData.url !== courseData.url && (
+                                    <Stack direction="row">
+                                        <FormControlLabel control={ <Checkbox checked={keepNewURL} /> } 
+                                            label={ <Typography variant="h6"> Keep New Course URL </Typography> } labelPlacement="start" 
+                                            onChange={(e, newValue) => {
+                                                setKeepNewURL(newValue);
+                                            }} 
+                                        />
 
-                                    <Button disabled={templateData.url === ""} href={templateData.url} target="_blank" sx={{fontSize: 18, ml: 2}}> Open URL </Button>
-                                </Stack>)}
+                                        <Button disabled={templateData.url === ""} href={templateData.url} target="_blank" sx={{ fontSize: 18, ml: 2 }}> Open URL </Button>
+                                    </Stack>
+                                )}
                             </Stack>
                         </CardContent>
                     </Card>
 
-                    {changedAssessments.length + equalAssessments.length + newAssessments.length + unchangedAssessments.length === 0 && 
+                    {   changedAssessments.length + equalAssessments.length + newAssessments.length + unchangedAssessments.length === 0 && 
                         <Stack direction="column" spacing={2} justifyContent="center" alignItems="center">
                             <Skeleton variant="rounded" width={900} height={150} />
                             <Skeleton variant="rounded" width={900} height={150} />
@@ -281,89 +291,103 @@ const SyncDialog = (props) => {
                         </Stack>
                     }
 
-                    {changedAssessments.length > 0 && (<>
-                        <Typography variant="h5" textAlign="center">Changed Assessments</Typography>
-                        <Divider sx={{width: "50%", borderWidth: 2}} />
+                    {   changedAssessments.length > 0 && (
+                        <Box>
+                            <Typography variant="h5" textAlign="center"> Changed Assessments </Typography>
+                            <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
-                        {changedAssessments.map((assignment, i) => {
-                            return (
-                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
-                                    <SyncAssessmentCard assessment={assignment.user}/>
-                                    <Box sx={{mx: 4}}>
-                                        <IconButton onClick={() => {assignment.newSelected = !assignment.newSelected; checkValidSync();}} sx={{backgroundColor:"secondary.main"}}> 
-                                            <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)"}} />
-                                        </IconButton>
-                                    </Box>
-                                    <SyncAssessmentCard assessment={assignment.template} />
-                                </Stack>
-                            )
-                        })}
-                        <Box visibility="hidden" sx={{mb: 4}} />
-                    </>)}
+                            {   changedAssessments.map((assignment, i) => {
+                                return (
+                                    <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
+                                        <SyncAssessmentCard assessment={assignment.user} />
+                                        <Box sx={{ mx: 4 }}>
+                                            <IconButton onClick={() => { assignment.newSelected = !assignment.newSelected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main" }}> 
+                                                <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)" }} />
+                                            </IconButton>
+                                        </Box>
+                                        <SyncAssessmentCard assessment={assignment.template} />
+                                    </Stack>
+                                )
+                            })}
+                            <Box visibility="hidden" sx={{ mb: 4 }} />
+                        </Box>
+                    )}
 
-                    {newAssessments.length > 0 && (<>
-                        <Typography variant="h5" textAlign="center">New Assessments</Typography>
-                        <Divider sx={{width: "50%", borderWidth: 2}} />
+                    {   newAssessments.length > 0 && (
+                        <Box>
+                            <Typography variant="h5" textAlign="center"> New Assessments </Typography>
+                            <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
-                        {newAssessments.map((assignment) => {
-                            return (
-                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
-                                    <SyncAssessmentCard assessment={assignment.user}/>
-                                    <Box sx={{mx: 4}}>
-                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected; checkValidSync();}} />
-                                    </Box>
-                                    <SyncAssessmentCard assessment={assignment.template} />
-                                </Stack>
-                            )
-                        })}
-                        <Box visibility="hidden" sx={{mb: 4}} />
-                    </>)}
+                            {   newAssessments.map((assignment) => {
+                                return (
+                                    <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
+                                        <SyncAssessmentCard assessment={assignment.user}/>
+                                        <Box sx={{ mx: 4 }}>
+                                            <Checkbox checked={assignment.selected} onChange={() => { assignment.selected = !assignment.selected; checkValidSync(); }} />
+                                        </Box>
+                                        <SyncAssessmentCard assessment={assignment.template} />
+                                    </Stack>
+                                )
+                            })}
+                            <Box visibility="hidden" sx={{ mb: 4 }} />
+                        </Box>
+                    )}
 
                     
-                    {unchangedAssessments.length > 0 && (<>
-                        <Typography variant="h5" textAlign="center">Your Assessments </Typography>
-                        <Divider sx={{width: "50%", borderWidth: 2}} />
+                    {   unchangedAssessments.length > 0 && (
+                        <Box>
+                            <Typography variant="h5" textAlign="center"> Your Assessments </Typography>
+                            <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
-                        {unchangedAssessments.map((assignment) => {
-                            return (
-                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
-                                    <SyncAssessmentCard assessment={assignment.user}/>
-                                    <Box sx={{mx: 4}}>
-                                        <Checkbox checked={assignment.selected} onChange={() => {assignment.selected = !assignment.selected;}} />
-                                    </Box>
-                                    <SyncAssessmentCard assessment={assignment.template} />
-                                </Stack>
-                            )
-                        })}
-                        <Box visibility="hidden" sx={{mb: 4}} />
-                    </>)} 
+                            {unchangedAssessments.map((assignment) => {
+                                return (
+                                    <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
+                                        <SyncAssessmentCard assessment={assignment.user}/>
+                                        <Box sx={{ mx: 4 }}>
+                                            <Checkbox checked={assignment.selected} onChange={() => { assignment.selected = !assignment.selected; }} />
+                                        </Box>
+                                        <SyncAssessmentCard assessment={assignment.template} />
+                                    </Stack>
+                                )
+                            })}
+                            <Box visibility="hidden" sx={{ mb: 4 }} />
+                        </Box>
+                    )} 
 
-                    {equalAssessments.length > 0 && (<>
-                        <Typography variant="h5" textAlign="center">Equal Assessments</Typography>
-                        <Divider sx={{width: "50%", borderWidth: 2}} />
+                    {equalAssessments.length > 0 && (
+                        <Box>
+                            <Typography variant="h5" textAlign="center"> Equal Assessments </Typography>
+                            <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
-                        {equalAssessments.map((assignment) => {
-                            return (
-                                <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
-                                    <SyncAssessmentCard assessment={assignment.user}/>
-                                    <Box sx={{mx: 5.1}}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 10H5V8h14v2m0 6H5v-2h14v2Z" /></svg>
-                                    </Box>
-                                    <SyncAssessmentCard assessment={assignment.template} />
-                                </Stack>
-                            )
-                        })}
-                        <Box visibility="hidden" sx={{mb: 4}} />
-                    </>)}
+                            {   equalAssessments.map((assignment) => {
+                                return (
+                                    <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
+                                        <SyncAssessmentCard assessment={assignment.user} />
+                                        <Box sx={{ mx: 5.1 }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path fill="currentColor" d="M19 10H5V8h14v2m0 6H5v-2h14v2Z" />
+                                            </svg>
+                                        </Box>
+                                        <SyncAssessmentCard assessment={assignment.template} />
+                                    </Stack>
+                                )
+                            })}
+                            <Box visibility="hidden" sx={{ mb: 4 }} />
+                        </Box>
+                    )}
                 </Stack>
             </Box>
-            <ConfirmDialog open={confirmSync} handleClose={() => {setConfirmSync(false)}} buttonText={"Sync"} message={"Sync " + courseData.code + " to it's Template?"} subMessage={"This action cannot be reverted."} confirmAction={sync} />
+
+            <ConfirmDialog open={confirmSync} handleClose={() => {setConfirmSync(false)}} buttonText={"Sync"} message={"Sync " + courseData.code + " to it's Template?"} 
+                subMessage={"This action cannot be reverted."} confirmAction={sync} 
+            />
+            
             <ConfirmDialog open={syncInfo} handleClose={() => {setSyncInfo(false)}} buttonText={"Got It"} message={"How Template Syncing Works"} confirmAction={null} 
                 subMessage={"Syncing is the process of updating your course information with a newer version of the template." + 
                 " You can choose what changes you want to keep from the new template and how much you want to keep from your current instance."}
             />
         </Dialog>
-    )
-}
+    );
+};
 
 export default SyncDialog;
