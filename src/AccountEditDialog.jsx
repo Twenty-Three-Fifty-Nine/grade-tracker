@@ -29,20 +29,17 @@ const AccountEditDialog = (props) => {
     const {
         open,
         onClose,
-        loading,
-        setLoading,
-        apiAlert,
-        setApiAlert,
         userDetails,
         setUserDetails,
         setSessionData,
         sessionData,
-        setSnackbarOpen,
         setSnackbarMessage,
         confirmDeleteAccount,
         setConfirmDeleteAccount,
     } = props;
 
+    const [loading, setLoading] = React.useState(false);
+    const [apiAlert, setApiAlert] = React.useState(null);
 
     const [newName, setNewName] = React.useState(null);
     const [newEmail, setNewEmail] = React.useState(null);
@@ -104,7 +101,6 @@ const AccountEditDialog = (props) => {
                     path: "/",
                     sameSite: "strict",
                 });
-                setSnackbarOpen(true);
                 setSnackbarMessage("Profile updated successfully");
             }
         })
@@ -118,7 +114,7 @@ const AccountEditDialog = (props) => {
                 setApiAlert("Something went wrong");
             }
         });
-    }, [newEmail, newName, oldPassword, newPassword, setLoading, userDetails.email, handleDialogClose, setUserDetails, setSessionData, sessionData, setSnackbarOpen, setSnackbarMessage, setApiAlert]);
+    }, [newEmail, newName, oldPassword, newPassword, setLoading, userDetails.email, handleDialogClose, setUserDetails, setSessionData, sessionData, setSnackbarMessage, setApiAlert]);
 
     const handleKeyDown = useCallback(
         (event) => {

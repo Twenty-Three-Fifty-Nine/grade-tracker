@@ -24,11 +24,14 @@ import { isMobile } from "react-device-detect";
 import CloseIcon from "@mui/icons-material/Close";
 
 const FeedbackDialog = (props) => {
-    const { feedbackDialogOpen, setFeedbackDialogOpen, userDetails, setSnackbarOpen, setSnackbarMessage, setApiAlert, setLoading, apiAlert, loading, confirmDeleteAccount } = props;
+    const { feedbackDialogOpen, setFeedbackDialogOpen, userDetails, setSnackbarMessage, confirmDeleteAccount } = props;
 
     const [feedbackSubject, setFeedbackSubject] = React.useState(null);
     const [feedbackMessage, setFeedbackMessage] = React.useState(null);
     const [feedbackType, setFeedbackType] = React.useState("suggestion");
+    
+    const [loading, setLoading] = React.useState(false);
+    const [apiAlert, setApiAlert] = React.useState(null);
 
     const handleFeedbackDialogClose = useCallback(() => {
         setFeedbackDialogOpen(false);
@@ -47,14 +50,13 @@ const FeedbackDialog = (props) => {
             email: userDetails.email.toLowerCase(),
             displayName: userDetails.displayName,
         }).then((response) => {
-            setSnackbarOpen(true);
             setSnackbarMessage("Feedback sent successfully");
             handleFeedbackDialogClose();
         }).catch((error) => {
             setApiAlert("Something went wrong");
         })
         setLoading(false);
-    }, [feedbackMessage, feedbackSubject, feedbackType, handleFeedbackDialogClose, setApiAlert, setLoading, setSnackbarMessage, setSnackbarOpen, userDetails.displayName, userDetails.email]);
+    }, [feedbackMessage, feedbackSubject, feedbackType, handleFeedbackDialogClose, setApiAlert, setLoading, setSnackbarMessage, userDetails.displayName, userDetails.email]);
 
     return (
         <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth>

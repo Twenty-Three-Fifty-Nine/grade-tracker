@@ -20,10 +20,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const DeleteAccountDialog = (props) => {
-    const { confirmDeleteAccount, setConfirmDeleteAccount, setApiAlert, apiAlert, userDetails, sessionData, handleLogout } = props;
+    const { confirmDeleteAccount, setConfirmDeleteAccount, userDetails, sessionData, handleLogout } = props;
 
     const [deletePassword, setDeletePassword] = React.useState("");
     const [showDeletePassword, setShowDeletePassword] = React.useState(false);
+
+    const [apiAlert, setApiAlert] = React.useState(null);
 
     const deleteUser = useCallback(async () => {
         await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, 

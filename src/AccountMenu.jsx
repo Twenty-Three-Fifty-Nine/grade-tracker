@@ -48,30 +48,18 @@ const AccountMenu = (props) => {
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
-    const [apiAlert, setApiAlert] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
-
     const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
-    
-
-    
 
     const handleMenuClose = useCallback(() => {
         setAnchorEl(null);
     }, [setAnchorEl]);
 
     const handleProfileDialogClose = useCallback(() => {
-        setApiAlert(null);
         setProfileDialogOpen(false);
     }, []);
-
-    
-
-    
 
     const handleLogout = useCallback(() => {
         handleProfileDialogClose();
@@ -124,30 +112,23 @@ const AccountMenu = (props) => {
                 </MenuItem>
             </Menu>
 
-            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}>
+            <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}>
                 <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
 
             <AccountEditDialog
                 open={profileDialogOpen}
                 onClose={handleProfileDialogClose}
-                loading={loading}
-                setLoading={setLoading}
-                apiAlert={apiAlert}
-                setApiAlert={setApiAlert}
                 userDetails={userDetails}
                 setUserDetails={setUserDetails}
                 setSessionData={setSessionData}
                 sessionData={sessionData}
-                setSnackbarOpen={setSnackbarOpen}
                 setSnackbarMessage={setSnackbarMessage}
                 setConfirmDeleteAccount={setConfirmDeleteAccount}
                 confirmDeleteAccount={confirmDeleteAccount}
             />
 
             <DeleteAccountDialog
-                setApiAlert={setApiAlert}
-                apiAlert={apiAlert}
                 userDetails={userDetails}
                 sessionData={sessionData}
                 handleLogout={handleLogout}
@@ -159,13 +140,8 @@ const AccountMenu = (props) => {
                 feedbackDialogOpen={feedbackDialogOpen}
                 setFeedbackDialogOpen={setFeedbackDialogOpen}
                 userDetails={userDetails}
-                setSnackbarOpen={setSnackbarOpen}
-                setSnackbarMessage={setSnackbarMessage}
-                setApiAlert={setApiAlert}
-                setLoading={setLoading}
-                apiAlert={apiAlert}
-                loading={loading}
                 confirmDeleteAccount={confirmDeleteAccount}
+                setSnackbarMessage={setSnackbarMessage}
             />
         </Box>
     );
