@@ -35,7 +35,7 @@ import {
     Typography,
 } from "@mui/material";
 
-import { Assessment } from "./CourseViewer";
+import Assessment from "./Assessment";
 import Axios from "axios";
 import ConfirmDialog from "./ConfirmDialog";
 import { isMobile } from "react-device-detect";
@@ -81,11 +81,12 @@ const SyncDialog = (props) => {
             assessment.isUserAss = false;
             assignments.push(assessment);
         }    
-        for (let i = 0; i < courseData.names.length; i++) {
-            let assessment = new Assessment(courseData.names[i], courseData.weights[i], -1, courseData.deadlines[i], courseData.isAssList[i], false);
-            assessment.isUserAss = true;
-            assignments.push(assessment);
-        }
+
+        courseData.assessments.forEach(assessment => {
+            let newAss = new Assessment(assessment.name, assessment.weight, -1, assessment.deadline, assessment.isAss, false);
+            newAss.isUserAss = true;
+            assignments.push(newAss);  
+        })
 
         const blankAssessment = new Assessment("", 0, -1, "", null, false);
 

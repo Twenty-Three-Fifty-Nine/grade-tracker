@@ -100,8 +100,8 @@ const CreateAssessmentCard = (props) => {
                         <Stack sx={{ ml: 2 }}>
                             <ToggleButtonGroup
                                 exclusive size="small"
-                                value={details.isAssignment ? "ass" : "test"}
-                                onChange={(e, newValue) => { details.setIsAssignment(newValue === "ass"); setUpdater(!updater); }}
+                                value={details.isAss ? "ass" : "test"}
+                                onChange={(e, newValue) => { details.setIsAss(newValue === "ass"); setUpdater(!updater); }}
                             >
                                 <ToggleButton value="ass">
                                     <MenuBookRoundedIcon />
@@ -110,7 +110,7 @@ const CreateAssessmentCard = (props) => {
                                     <DescriptionRoundedIcon />
                                 </ToggleButton>
                             </ToggleButtonGroup>
-                            <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAssignment ? "Assignment" : "Test" } </Typography>
+                            <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAss ? "Assignment" : "Test" } </Typography>
                         </Stack>
                         <IconButton onClick={() => {
                             removeAssessment(index); 

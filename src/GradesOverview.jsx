@@ -28,59 +28,11 @@ import {
 } from "@mui/material";
 
 import AddCourseDialog from "./AddCourseDialog";
+import Assessment from "./Assessment";
 import Axios from "axios";
+import Course from "./Course";
 import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
-
-class Course {
-    constructor(code, name, names, weights, deadlines, grades, isAssList, totalGrade, tri, year, url, lastUpdated, lastSynced) {
-        this.code = code;
-        this.name = name;
-        this.names = names;
-        this.weights = weights;
-        this.deadlines = deadlines;
-        this.grades = grades;
-        this.isAssList = isAssList;
-        this.totalGrade = totalGrade;
-        this.tri = tri;
-        this.year = year;
-        this.url = url;
-        this.lastUpdated = new Date(lastUpdated);
-        this.lastSynced = new Date(lastSynced);
-    }
-
-    getCourseCompletion() {
-        let finished = 0;
-        this.grades.forEach((grade) => {
-            if (grade !== -1 && !isNaN(grade)) finished++;
-        });
-        return finished / this.grades.length;
-    }
-
-    getCourseLetter() {
-        if(isNaN(this.totalGrade)) return "N/A";
-        else if(this.totalGrade >= 90) return "A+";
-        else if(this.totalGrade >= 85) return "A";
-        else if(this.totalGrade >= 80) return "A-";
-        else if(this.totalGrade >= 75) return "B+";
-        else if(this.totalGrade >= 70) return "B";
-        else if(this.totalGrade >= 65) return "B-";
-        else if(this.totalGrade >= 60) return "C+";
-        else if(this.totalGrade >= 55) return "C";
-        else if(this.totalGrade >= 50) return "C-";
-        else if(this.totalGrade >= 40) return "D";
-        return "E";
-    }
-
-    updateTotal() {
-        let temp = 0;
-        for(let i = 0; i < this.grades.length; i++){
-            let num = isNaN(this.grades[i]) ? 0 : this.grades[i];
-            temp += (num * this.weights[i] * 0.01);
-        }
-        this.totalGrade = temp.toFixed(2);
-    }
-}
 
 const GradesOverview = (props) => {
     const {userEmail, userName, verifiedEmail, setViewedCourse, sessionData, setSessionData, courseList, setCourseList, activeTri} = props
@@ -99,38 +51,32 @@ const GradesOverview = (props) => {
             if (result.data[0] === undefined) return ret;
             for(const yearPair of result.data){
                 ret[yearPair.year] = [[], [], []];
-                for (const element of yearPair.courses) {
-                    const data = element;
-                    let grades = parseGrades(data.assignments);
-                    const assignmentNames = data.assignments.map(
-                        (assignment) => assignment.name
+                for (const courseData of yearPair.courses) {
+                    let assessments = courseData.assignments.map((assessment) => 
+                        new Assessment(
+                            assessment.name, 
+                            assessment.weight, 
+                            assessment.grade, 
+                            assessment.dueDate, 
+                            assessment.isAssignment,
+                            false
+                        )
                     );
-                    const assignmentWeights = data.assignments.map(
-                        (assignment) => assignment.weight
-                    );
-                    const assignmentDeadlines = data.assignments.map(
-                        (assignment) => assignment.dueDate
-                    );
-                    const assignmentIsAssValues = data.assignments.map(
-                        (assignment) => assignment.isAssignment
-                    );
+
                     const course = new Course(
-                        data.courseCode,
-                        data.courseName,
-                        assignmentNames,
-                        assignmentWeights,
-                        assignmentDeadlines,
-                        grades,
-                        assignmentIsAssValues,
-                        data.totalGrade,
-                        data.trimester,
+                        courseData.courseCode,
+                        courseData.courseName,
+                        courseData.url,
+                        assessments,
+                        courseData.totalGrade,
+                        courseData.lastUpdated,
+                        courseData.lastSynced,
+                        courseData.trimester,
                         yearPair.year,
-                        data.url,
-                        data.lastUpdated,
-                        data.lastSynced
                     );
-                    ret[yearPair.year][data.trimester - 1].push(course);
-                    ret[yearPair.year][data.trimester - 1].sort((a, b) => {
+
+                    ret[yearPair.year][courseData.trimester - 1].push(course);
+                    ret[yearPair.year][courseData.trimester - 1].sort((a, b) => {
                         return a.code.localeCompare(b.code);
                     });
                 }
@@ -148,6 +94,7 @@ const GradesOverview = (props) => {
                 userEmail +
                 "/courses"
         ).then((courseData) => {
+            console.log(courseData)
             return {
                 userData: { email: userEmail, displayName: userName, verifiedEmail },
                 timeInfo: { activeTri, selectedYear: year },
@@ -179,16 +126,6 @@ const GradesOverview = (props) => {
 
     const handleCloseAddCourse = () => {
         setAddCourseOpen(false);
-    };
-
-    const parseGrades = (assignments) => {
-        const ret = [];
-        assignments.forEach((assignment) => {
-            const grade = assignment.grade;
-            if (grade === -1) ret.push(-1);
-            else ret.push(grade);
-        });
-        return ret;
     };
 
     return (

@@ -36,6 +36,7 @@ import {
     Typography,
 } from "@mui/material";
 
+import Assessment from "./Assessment";
 import Axios from "axios";
 import ConfirmDialog from "./ConfirmDialog";
 import CreateAssessmentCard from "./CreateAssessmentCard";
@@ -44,55 +45,8 @@ import { TransitionGroup } from "react-transition-group";
 
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
-class Assessment {
-    constructor(name, weight, deadline, isNew = true, existing = false, isAssignment = true) {
-        this.name = name;
-        this.weight = weight;
-        this.deadline = deadline;
-        this.isAssignment = isAssignment;
-
-        this.isNew = isNew;
-        this.hasChanged = false;
-        this.valid = existing;
-        this.duplicate = false;
-
-        this.initName = name;
-        this.initWeight = weight;
-        this.initDeadline = deadline;
-        this.initIsAss = isAssignment;
-    }
-
-    checkIfChanged() {
-        let nameChanged = this.name !== this.initName;
-        let deadlineChanged = new Date(this.deadline).toString() !== new Date(this.initDeadline).toString();
-        let isAssChanged = this.isAssignment !== this.initIsAss;
-        let weightChanged = this.weight.toString() !== this.initWeight.toString();
-        this.hasChanged = nameChanged || deadlineChanged || isAssChanged || weightChanged;
-    }
-
-    setName(name) {
-        this.name = name;
-        this.checkIfChanged();
-    }
-
-    setWeight(weight) {
-        this.weight = weight;
-        this.checkIfChanged();
-    }
-
-    setDeadline(deadline) {
-        this.deadline = deadline;
-        this.checkIfChanged();
-    }
-
-    setIsAssignment(isAssignment) {
-        this.isAssignment = isAssignment;
-        this.checkIfChanged();
-    }
-} 
-
 const NewCourseDialog = (props) => {
-    const { onClose, open, activeTri, editCode, templateData, setTemplateData } = props;
+    const { onClose, open, activeTri, editCode = "", templateData, setTemplateData } = props;
 
     const [assessments, setAssessments] = React.useState([]);
     const [courseName, setCourseName] = React.useState("");
@@ -120,7 +74,7 @@ const NewCourseDialog = (props) => {
     const [changeOverride, setChangeOverride] = React.useState(false);
 
     useEffect(() => {
-        if(!editCode || !open) return;
+        if(editCode === "" || !open) return;
 
         setCourseCode(editCode);
 
@@ -138,7 +92,7 @@ const NewCourseDialog = (props) => {
             setInitURL(templateData.url);
 
             templateData.assignments.forEach((ass) => {
-                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
+                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)]);    
             })
         }else{
             Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
@@ -150,7 +104,7 @@ const NewCourseDialog = (props) => {
                 setInitURL(data.url);
 
                 data.assignments.forEach((ass) => {
-                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
+                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)]);    
                 })
             })
         }
@@ -199,7 +153,7 @@ const NewCourseDialog = (props) => {
     const addAssessment = () => {
         const date = new Date();
         date.setSeconds(0);
-        setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
+        setAssessments(oldArray => [...oldArray, new Assessment("", 0, 0, date, true, true)]);
     }
 
     const removeAssessment = (index) => {
@@ -225,7 +179,7 @@ const NewCourseDialog = (props) => {
                     weight: a.weight,
                     dueDate: a.deadline,
                     grade: -1,
-                    isAssignment: a.isAssignment
+                    isAssignment: a.isAss
                 }
             })
         }).then((e) => {
@@ -260,14 +214,14 @@ const NewCourseDialog = (props) => {
         await Axios.put("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
-            url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
+            url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,
             assignments: assessments.map((a) => {
                 return {
                     name: toTitleCase(a.name),
                     weight: a.weight,
                     dueDate: a.deadline,
                     grade: -1,
-                    isAssignment: a.isAssignment
+                    isAssignment: a.isAss
                 }
             })
         }).then((e) => {
@@ -295,7 +249,7 @@ const NewCourseDialog = (props) => {
     }
 
     const attemptClose = () => {
-        if((editCode === null || changesMade || changeOverride) && (assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "")) setCloseDialog(true);
+        if((editCode === "" || changesMade || changeOverride) && (assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "")) setCloseDialog(true);
         else stopCreating();
     }
 
@@ -322,9 +276,9 @@ const NewCourseDialog = (props) => {
                     <IconButton color="inherit" onClick={attemptClose}>
                         <Icon>close</Icon>
                     </IconButton>
-                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { editCode ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } </Typography>
+                    <Typography sx={{ flex: 1, paddingLeft: 1 }} variant={isMobile ? "body1" : "h6"}> { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } </Typography>
                     <Box sx={{ position: 'relative' }}>
-                        <Button color="inherit" onClick={editCode ? updateCourse : createCourse} disabled={loading || !formatValid || (editCode && !(changesMade || changeOverride))}> {editCode ? "Update" : "Create" } </Button>
+                        <Button color="inherit" onClick={editCode !== "" ? updateCourse : createCourse} disabled={loading || !formatValid || (editCode !== "" && !(changesMade || changeOverride))}> {editCode !== "" ? "Update" : "Create" } </Button>
                         {loading &&
                             <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
                         }
@@ -342,11 +296,11 @@ const NewCourseDialog = (props) => {
                 
                 <Divider sx={{marginBottom: 3}} />
                 <Stack spacing={2}>
-                    <TextField value={courseName} disabled={editCode ? true : false} label="Course Name" fullWidth onChange={handleNameChange} error={!nameValid && nameCheckOn} 
+                    <TextField value={courseName} disabled={editCode !== "" ? true : false} label="Course Name" fullWidth onChange={handleNameChange} error={!nameValid && nameCheckOn} 
                         helperText={courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : courseName.length > 50 && nameCheckOn ? "This field  is too long" : ""} 
                     />
                     <Box sx={{ display: "flex", justifyItems: "center" }}>
-                        <TextField value={courseCode} disabled={editCode ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
+                        <TextField value={courseCode} disabled={editCode !== "" ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
                             error={!codeValid && codeCheckOn} 
                             helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
                         />
@@ -368,14 +322,14 @@ const NewCourseDialog = (props) => {
                                         <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} />
                                     </Collapse>
                                 ))}
-                            </TransitionGroup>) : (editCode && 
+                            </TransitionGroup>) : (editCode !== "" && 
                             <Stack spacing={2}>
                                 <Skeleton variant="rounded" height={150} />
                                 <Skeleton variant="rounded" height={150} />
                                 <Skeleton variant="rounded" height={150} />
                             </Stack>
                         )}
-                        {(assessments.length > 0 || !editCode) && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
+                        {(assessments.length > 0 || editCode === "") && <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> Add New Assessment </Button>}
                     </Stack>
                 
             </Box>
@@ -383,16 +337,16 @@ const NewCourseDialog = (props) => {
 
         <ConfirmDialog open={closeDialog} handleClose={() => {setCloseDialog(false)}} buttonText={"Stop"} message={"Stop template creation?"} subMessage={"Any inputted data will be lost."} confirmAction={stopCreating} />
         
-        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
-            anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : editCode === null ? "left" : "right" }}
+        <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none"); console.log(editCode === "")}}
+            anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : editCode === "" ? "left" : "right" }}
         >
-            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && isSuccess && !editCode ? 9 : 0}}>
-                {isSuccess ? editCode ? "Course updated successfully" : "Course created successfully" : errorText}
+            <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && isSuccess && editCode === "" ? 9 : 0}}>
+                {isSuccess ? editCode !== "" ? "Course updated successfully" : "Course created successfully" : errorText}
             </Alert>
         </Snackbar>
 
-        <ConfirmDialog open={templateInfo} handleClose={() => {setTemplateInfo(false)}} buttonText={"Got It"} message={editCode ? "How Template Updating Works" : "How Template Creation Works"} confirmAction={null} 
-            subMessage={editCode ? "When you add a course to your offering in a given trimester, sometimes the information may not be up to date. " + 
+        <ConfirmDialog open={templateInfo} handleClose={() => {setTemplateInfo(false)}} buttonText={"Got It"} message={editCode !== "" ? "How Template Updating Works" : "How Template Creation Works"} confirmAction={null} 
+            subMessage={editCode !== "" ? "When you add a course to your offering in a given trimester, sometimes the information may not be up to date. " + 
             "This is where the updating system comes in; you can change the assessment information of the template so everyone else can access it. " + 
             "Note that if the inputted information does not apply to the majority of a class, consider updating your personal copy of the course instead using the course viewer." 
             : "Templates are a powerful system that exist to preserve a students' most valuable resource: time. Only one student has to create a template for a course, " + 
