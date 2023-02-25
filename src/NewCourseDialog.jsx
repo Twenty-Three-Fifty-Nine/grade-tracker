@@ -214,7 +214,7 @@ const NewCourseDialog = (props) => {
         await Axios.put("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
-            url: courseURL.startsWith("https://") ? courseURL : "https://" + courseURL,
+            url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,
             assignments: assessments.map((a) => {
                 return {
                     name: toTitleCase(a.name),
