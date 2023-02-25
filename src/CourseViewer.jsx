@@ -158,12 +158,12 @@ const CourseViewer = (props) => {
         else if(type === "deadline-d") return sortAlgorithm(false, "deadline", list);
         else if(type === "weight-a") return sortAlgorithm(false, "weight", list);
         else if(type === "weight-d") return sortAlgorithm(true, "weight", list);
-    }, [filteredAssessments, sortType])
+    }, [filteredAssessments, sortType]);
 
     const sortAlgorithm = (isAsc, value, temp) => {
         temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
         return temp;
-    }
+    };
 
     const filter = useCallback(() => {
         let temp = [];
@@ -184,7 +184,7 @@ const CourseViewer = (props) => {
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
         setFilteredAssessments(sort(e.target.value));
-    }
+    };
 
     const checkChanges = (override = changeOverride) => {
         let changes = false;
@@ -195,7 +195,7 @@ const CourseViewer = (props) => {
         })
         setChangesMade(changes || override);
         setValidChanges(valid);
-    }
+    };
 
     const saveChanges = async (synced = false) => {
         setCurrentEdit(null);
@@ -243,7 +243,7 @@ const CourseViewer = (props) => {
         assessments.forEach((assessment) => {
             assessment.grade = assessment.grade === -1 ? NaN : assessment.grade;
         });
-    }
+    };
 
     const deleteCourse = async () => {
         setAPILoading(true);
@@ -267,7 +267,7 @@ const CourseViewer = (props) => {
             setErrorText("Removing course failed, try again later");
         });
         setAPILoading(false);
-    }
+    };
 
     const checkDuplicateName = () => {
         assessments.forEach((ass) => {
@@ -279,7 +279,7 @@ const CourseViewer = (props) => {
             })
             ass.checkValid();
         });
-    }
+    };
 
     return (
         <Box>  
@@ -405,7 +405,7 @@ const CourseViewer = (props) => {
                 </Alert>
             </Snackbar>
         </Box>
-    )
-}
+    );
+};
 
 export default CourseViewer;
