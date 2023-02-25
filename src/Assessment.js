@@ -64,6 +64,15 @@ class Assessment {
         this.checkIfChanged();
     }
 
+    resetStates() {
+        this.hasChanged = false;
+        this.isNew = false;
+        this.initGrade = parseInt(this.grade);
+        this.initName = this.name;
+        this.initAss = this.isAss;
+        this.initDeadline = this.deadline; 
+    }
+
     equalsTemplate(template) {
         return this.name === template.name && this.deadline === template.deadline && 
             this.isAss === template.isAss && this.weight.toString() === template.weight.toString();

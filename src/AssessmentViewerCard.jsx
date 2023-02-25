@@ -18,47 +18,37 @@
 
 import React from "react";
 import {
-    Box,
     Card,
     CardContent,
     Divider,
     IconButton,
     Stack,
-    TextField,
     Tooltip,
     Typography,
 } from "@mui/material";
 
 import dayjs from "dayjs";
+import { getLetterGrade } from './Course';
 import { isMobile } from "react-device-detect";
 
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import EditIcon from "@mui/icons-material/Edit";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
+import AssessmentViewerGrades from "./AssessmentViewerGrades";
 
 const AssessmentViewerCard = (props) => {
-    const {
+    const { 
         assData,
         checkChanges,
-        setCurrentEdit
+        setCurrentEdit,
     } = props;
     
     const [updater, setUpdater] = React.useState(false);
 
     const getCourseLetter = () => {
-        if(isNaN(assData.grade) || !assData.gradeValid) return "-";
-        else if(assData.grade >= 90) return "A+";
-        else if(assData.grade >= 85) return "A";
-        else if(assData.grade >= 80) return "A-";
-        else if(assData.grade >= 75) return "B+";
-        else if(assData.grade >= 70) return "B";
-        else if(assData.grade >= 65) return "B-";
-        else if(assData.grade >= 60) return "C+";
-        else if(assData.grade >= 55) return "C";
-        else if(assData.grade >= 50) return "C-";
-        else if(assData.grade >= 40) return "D";
-        return "E";
-    }
+        if(isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
+        else return getLetterGrade(parseInt(assData.grade));
+    };
 
     const handleGradeChange = (e) => {
         if(e.target.value === "") assData.setGrade(NaN);
@@ -67,11 +57,11 @@ const AssessmentViewerCard = (props) => {
         assData.checkValid();
         checkChanges();
         setUpdater(!updater);
-    }
+    };
 
     React.useEffect(() => {
         assData.stopTransition = false;
-    }, [assData])
+    }, [assData]);
 
     return (
         <Card>
@@ -91,54 +81,23 @@ const AssessmentViewerCard = (props) => {
                             </IconButton>
                         </Tooltip>
                     </Stack>
+
                     <Divider />
+
                     <Typography variant={"h6"} component="div" >
                         Due: {new dayjs(assData.deadline).format("DD/MM/YYYY")}
                     </Typography>
                     <Typography variant={"h6"} component="div">
                         Worth: {assData.weight}%
                     </Typography>
-                    {isMobile && (<>
-                    <Divider />
-                    <Typography variant={"h5"} component="div" sx={{flex:1}}>
-                        Grade:
-                    </Typography>
-                    <Stack direction="row">
-                        <TextField InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
-                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 180}} 
-                            error={!assData.gradeValid}
-                            onChange={handleGradeChange}
-                        />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
-                            <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
-                                {getCourseLetter()}
-                            </Typography>
-                        </Box>
-                    </Stack></>)}
+
+                    {isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
                 </Stack>
-                {!isMobile && (<>
-                <Divider orientation="vertical" flexItem sx={{borderRightWidth: 3, mr: 5, ml: 2}} />
-                <Stack spacing={1} sx={{pr: 0, minWidth: isMobile ? 0 : 290}} >
-                    <Typography variant={"h5"} component="div" sx={{flex:1}}>
-                        Grade
-                    </Typography>
-                    <Stack direction="row">
-                        <TextField 
-                        InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
-                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: isMobile ? 50 : 150}} 
-                            error={!assData.gradeValid}
-                            onChange={handleGradeChange}
-                        />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
-                            <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
-                                {getCourseLetter()}
-                            </Typography>
-                        </Box>
-                    </Stack>
-                </Stack></>)}
+
+                {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
             </CardContent>
         </Card>
     );
-}
+};
 
 export default AssessmentViewerCard;
