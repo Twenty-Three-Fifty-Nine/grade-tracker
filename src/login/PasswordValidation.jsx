@@ -20,7 +20,7 @@ import React from "react";
 import {
     Box,
     Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

@@ -16,17 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
     Alert,
     Box,
     Stack,
-} from '@mui/material';
+} from "@mui/material";
 
-import { getLetterGrade } from '../classes/Course';
+import { getLetterGrade } from "../classes/Course";
 import { isMobile } from "react-device-detect";
-import { SessionContext } from './GradesOverview';
-import TrimesterOverview from './TrimesterOverview';
+import { SessionContext } from "./GradesOverview";
+import TrimesterOverview from "./TrimesterOverview";
 
 const YearOverview = (props) => {
     const {

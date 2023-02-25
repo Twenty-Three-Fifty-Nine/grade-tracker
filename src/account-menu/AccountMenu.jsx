@@ -81,8 +81,8 @@ const AccountMenu = (props) => {
                 <AccountCircleRoundedIcon color="inherit" fontSize="large"/>
             </IconButton>
             
-            <Menu open={menuOpen} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} 
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            <Menu open={menuOpen} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: "right", vertical: "top" }} 
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
                 <MenuItem onClick={() => { setProfileDialogOpen(true); setAnchorEl(null); }}>
                     <ListItemIcon>
@@ -119,7 +119,7 @@ const AccountMenu = (props) => {
             <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} 
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}
             >
-                <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
+                <Alert severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
 
             <AccountEditDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)} userDetails={userDetails}

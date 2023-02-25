@@ -38,8 +38,8 @@ import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 
 import CloseIcon from "@mui/icons-material/Close";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const PasswordResetDialog = (props) => {
     const {

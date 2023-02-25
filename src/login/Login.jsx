@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
+import React from "react";
 import {
     Box,
     Button,
     Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import LoginDialog from './LoginDialog';
-import SignupDialog from './SignupDialog';
+import LoginDialog from "./LoginDialog";
+import SignupDialog from "./SignupDialog";
 
 const Login = (props) => {
     const {

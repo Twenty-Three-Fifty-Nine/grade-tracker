@@ -28,7 +28,7 @@ import {
 } from "@mui/material";
 
 import dayjs from "dayjs";
-import { getLetterGrade } from '../classes/Course';
+import { getLetterGrade } from "../classes/Course";
 import { isMobile } from "react-device-detect";
 
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
@@ -65,7 +65,7 @@ const AssessmentViewerCard = (props) => {
 
     return (
         <Card>
-            <CardContent sx={{ display: 'flex' }}>
+            <CardContent sx={{ display: "flex" }}>
                 <Stack spacing={1}>
                     <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 300 : 350 }}>
                         <Typography variant={"h5"} component="div" sx={{ mr: 1 }}>

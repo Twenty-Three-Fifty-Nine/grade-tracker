@@ -343,7 +343,7 @@ const CourseViewer = (props) => {
             {   !isMobile && 
                 <Box>
                     <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
-                        <Fab color="primary" onClick={attemptClose} sx={{ position: 'fixed', bottom: 32, left: 32 }}>
+                        <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
                             <KeyboardArrowLeftIcon fontSize="large" />
                         </Fab>
                     </Tooltip>
@@ -354,7 +354,7 @@ const CourseViewer = (props) => {
                                 variant="contained" onClick={() => {saveChanges()}}> 
                                 Save Changes
                             </Button>
-                            {apiLoading && <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px' }} />}
+                            {apiLoading && <CircularProgress size={36} sx={{ position: "fixed", bottom: 50, right: 90, mt: "-18px", ml: "-18px" }} />}
                         </Box>
                     )}
                 </Box>
@@ -414,7 +414,7 @@ const CourseViewer = (props) => {
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
                 anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}
             >
-                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%' }}>
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%" }}>
                     { isSuccess ? successText : errorText }
                 </Alert>
             </Snackbar>

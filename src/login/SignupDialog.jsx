@@ -138,7 +138,7 @@ const SignupDialog = (props) => {
             setIsLoggedIn(true);
             setEmailSent(true);
             setUserDetails(result.data);
-            new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
+            new Cookies().set("userDetails", result.data, { path: "/", sameSite: "strict" });
             handleClose();
         }).catch((e) => {
             console.log(e);

@@ -29,7 +29,7 @@ const CourseViewerMobileActionButtons = (props) => {
                 <Button sx={{ width: 150, fontSize:"medium" }} variant="contained" onClick={attemptClose}> Return </Button>
                 <Box sx={{ position: "relative" }}>
                     <Button disabled={!validChanges || !changesMade || apiLoading} sx={{ width: 150, fontSize:"medium" }} variant="contained" onClick={() => saveChanges()}> Save </Button>
-                    { apiLoading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} /> }
+                    { apiLoading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                 </Box>
             </Stack>
         </Box>

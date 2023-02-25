@@ -16,18 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from 'react';
+import React from "react";
 import {
     Card,
     CardContent,
     Box,
     Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 import dayjs from "dayjs";
 
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
 const Field = (props) => {
     const {

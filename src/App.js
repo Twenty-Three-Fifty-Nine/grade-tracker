@@ -129,7 +129,7 @@ const App = () => {
                     </Stack>
 
                     <Typography variant="h6" component="div" sx={{ textAlign: "center", m: isMobile ? 0 : "auto" }}>
-                        {isLoggedIn && !verifying
+                        {   isLoggedIn && !verifying
                             ? isMobile && viewedCourse
                                 ? viewedCourse.code
                                 : userDetails.displayName +
@@ -147,7 +147,7 @@ const App = () => {
                     </Typography>
 
                     <Stack direction={"row"} sx={{ position: "fixed", right: isMobile ? 10 : 0 }}>
-                        {isLoggedIn ? (
+                        {   isLoggedIn ? (
                             <AccountMenu
                                 setIsLoggedIn={setIsLoggedIn}
                                 userDetails={userDetails}
@@ -212,14 +212,14 @@ const App = () => {
             <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)} 
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
-                <Alert onClose={() => setEmailSent(false)} severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                <Alert onClose={() => setEmailSent(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Signup successful. Please check your email to verify your account.
                 </Alert>
             </Snackbar>
             <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)} 
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
-                <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Email verified!
                 </Alert>
             </Snackbar>

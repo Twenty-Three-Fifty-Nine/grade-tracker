@@ -32,7 +32,7 @@ import {
 import CourseOverview from "./CourseOverview";
 import { SessionContext } from "./GradesOverview";
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const TrimesterOverview = (props) => {
     const {
