@@ -210,19 +210,10 @@ const CourseViewer = (props) => {
 
     const saveChanges = (synced = false) => {
         setCurrentEdit(null)
-        courseData.names = [];
-        courseData.weights = [];
-        courseData.deadlines = [];
-        courseData.grades = [];
-        courseData.isAssList = [];
+        courseData.assessments = [];
         if(synced) courseData.lastSynced = new Date();
         assessments.forEach((assessment) => {
-            let index = assessments.indexOf(assessment);
-            courseData.names[index] = assessment.name;
-            courseData.weights[index] = assessment.weight;
-            courseData.deadlines[index] = assessment.deadline;
-            courseData.grades[index] = assessment.grade;
-            courseData.isAssList[index] = assessment.isAss;
+            courseData.assessments.push(assessment.clone());
         })
 
         courseData.updateTotal();
