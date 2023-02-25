@@ -161,8 +161,6 @@ const SyncDialog = (props) => {
             Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + courseData.code + "?year=" + courseData.year + "&trimester=" + courseData.tri).then((response) => {
                 setTemplateData(response.data);
                 setValidSync(loadAssesmentList(response.data));
-            }).catch((error) => {
-                console.log(error);
             });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps

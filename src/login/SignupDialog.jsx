@@ -141,7 +141,6 @@ const SignupDialog = (props) => {
             new Cookies().set("userDetails", result.data, { path: "/", sameSite: "strict" });
             handleClose();
         }).catch((e) => {
-            console.log(e);
             if (e.response.status === 409) {
                 setSignupErrorText("Email already in use");
             } else {
