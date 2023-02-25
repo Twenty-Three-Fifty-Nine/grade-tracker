@@ -22,8 +22,8 @@ import {
     AccordionSummary,
     AccordionDetails,
     Alert,
+    Box,
     Chip,
-    Icon,
     Skeleton,
     Stack,
     Typography,
@@ -31,6 +31,8 @@ import {
 
 import CourseOverview from "./CourseOverview";
 import { SessionContext } from "./GradesOverview";
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const TrimesterOverview = (props) => {
     const {
@@ -43,44 +45,34 @@ const TrimesterOverview = (props) => {
     const courses = React.useContext(SessionContext).courses;
     
     return (
-        <>
-            {
-                triInfo ?
+        <Box>
+            {   triInfo ?
                 <Accordion expanded={open} onChange={() => toggleAccordion(triInfo.tri)} key={triInfo.tri}>
-                    <AccordionSummary expandIcon={<Icon>expand_more</Icon>}>
-                        <Typography sx={{paddingTop: 0.5}}> Trimester {triInfo.tri} </Typography>
-                        { 
-                            triInfo.isActive ? 
-                            <Chip label="Current" color="success" sx={{marginLeft: 1}} /> :
-                            triInfo.isFinished ?
-                            <Chip label="Finished" color="secondary" sx={{marginLeft: 1}} /> :
-                            <Chip label="Inactive" color="primary" sx={{marginLeft: 1}} /> 
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography sx={{ pt: 0.5 }}> Trimester {triInfo.tri} </Typography>
+                        {   triInfo.isActive ? <Chip label="Current" color="success" sx={{ ml: 1 }} /> :
+                            triInfo.isFinished ? <Chip label="Finished" color="secondary" sx={{ ml: 1 }} /> :
+                            <Chip label="Inactive" color="primary" sx={{ ml: 1 }} /> 
                         } 
                     </AccordionSummary>
+
                     <AccordionDetails>
                         <Stack spacing={2}>
-                            {
-                                courses[triInfo.year][triInfo.tri - 1][0] ?
-                                courses[triInfo.year][triInfo.tri - 1].map((courseInfo) => {
-                                    return (
-                                        <CourseOverview key={courseInfo.code} courseInfo={courseInfo} setViewedCourse={setViewedCourse} />
-                                    )
-                                }) :
-                                <Alert severity="warning" sx={{marginTop: 1}}> 
-                                    { 
-                                        triInfo.isFinished ? 
-                                        "No courses were taken this trimester." :
-                                        "No courses added to this trimester yet." 
-                                    }
-                                </Alert>
+                            {   courses[triInfo.year][triInfo.tri - 1][0] ?
+                                courses[triInfo.year][triInfo.tri - 1].map((courseInfo) => 
+                                <CourseOverview key={courseInfo.code} courseInfo={courseInfo} setViewedCourse={setViewedCourse} />) :
+                                <Alert severity="warning" sx={{ mt: 1 }}> 
+                                    {triInfo.isFinished ? "No courses were taken this trimester." :
+                                        "No courses added to this trimester yet." }
+                                </Alert> 
                             }
                         </Stack>
                     </AccordionDetails>
                 </Accordion> :
                 <Skeleton variant="rounded" height={60} />
             }
-        </>
-    )
-}
+        </Box>
+    );
+};
 
 export default TrimesterOverview;

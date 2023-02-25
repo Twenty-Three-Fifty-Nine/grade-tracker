@@ -151,7 +151,7 @@ const PasswordResetDialog = (props) => {
 
                     <Collapse in={resetPasswordError}>
                         <Alert severity="error" sx={{ width: "100%", mt: 2 }}
-                            action={
+                            action= {
                                 <IconButton color="inherit" size="small"
                                     onClick={() => setResetPasswordError(false)}
                                 >
@@ -176,7 +176,7 @@ const PasswordResetDialog = (props) => {
                         >
                             Reset Password
                         </Button>
-                        {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />}
+                        { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
                     </Box>
                 </DialogActions>
             </Dialog>

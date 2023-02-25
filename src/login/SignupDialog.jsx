@@ -211,7 +211,7 @@ const SignupDialog = (props) => {
                         </Typography> 
                     </Stack>
 
-                    {<Collapse in={signupError}>
+                    <Collapse in={signupError}>
                         <Alert severity="error" sx={{ mt: 2 }}
                             action={
                                 <IconButton color="inherit" size="small" onClick={() => setSignupError(false)}>
@@ -221,7 +221,7 @@ const SignupDialog = (props) => {
                         >
                             {signupErrorText}   
                         </Alert>
-                    </Collapse>}
+                    </Collapse>
                 </DialogContent>
 
                 <DialogActions>
@@ -232,7 +232,7 @@ const SignupDialog = (props) => {
                         >
                             Sign Up
                         </Button>
-                        {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
+                        { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} /> }
                     </Box>
                 </DialogActions>
             </Dialog>

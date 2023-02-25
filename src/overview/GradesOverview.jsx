@@ -24,7 +24,6 @@ import {
     Tab,
     Tabs,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import AddCourseDialog from "../course-manipulation/AddCourseDialog";
@@ -51,15 +50,15 @@ const GradesOverview = (props) => {
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
     const [activateTab, setActivateTab] = React.useState(false);
 
-    setTimeout( () => {
+    setTimeout(() => {
         setActivateTab(true)
-    }, 500)
+    }, 500);
 
     const parseCourseData = useCallback(async (request) => {
         return Axios.get(request).then(async (result) => {
-            const ret = {}
+            const ret = {};
             if (result.data[0] === undefined) return ret;
-            for(const yearPair of result.data){
+            for (const yearPair of result.data) {
                 ret[yearPair.year] = [[], [], []];
                 for (const courseData of yearPair.courses) {
                     let assessments = courseData.assignments.map((assessment) => 
@@ -82,41 +81,31 @@ const GradesOverview = (props) => {
                         courseData.lastUpdated,
                         courseData.lastSynced,
                         courseData.trimester,
-                        yearPair.year,
+                        yearPair.year
                     );
 
                     ret[yearPair.year][courseData.trimester - 1].push(course);
-                    ret[yearPair.year][courseData.trimester - 1].sort((a, b) => {
-                        return a.code.localeCompare(b.code);
-                    });
-                }
-            }
+                    ret[yearPair.year][courseData.trimester - 1].sort((a, b) => a.code.localeCompare(b.code));
+                };
+            };
+
             return ret;
         });
     }, []);
 
     const getSessionData = useCallback(async (year) => {
-        console.log("Getting Session Data");
-        
         await setSessionData("Reloading");
-        return parseCourseData(
-            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" +
-                userEmail +
-                "/courses"
-        ).then((courseData) => {
-            console.log(courseData)
+        return parseCourseData("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userEmail + "/courses").then((courseData) => {
             return {
                 userData: { email: userEmail, displayName: userName, verifiedEmail },
                 timeInfo: { activeTri, selectedYear: year },
-                courses: courseData,
+                courses: courseData
             };
         });
     }, [activeTri, parseCourseData, setSessionData, userEmail, userName, verifiedEmail]);
 
     const handleLoadData = useCallback(async () => {
-        getSessionData(selectedYear).then((data) => {
-            setSessionData(data);
-        });
+        getSessionData(selectedYear).then((data) => setSessionData(data));
     }, [getSessionData, selectedYear, setSessionData]);
 
     React.useEffect(() => {
@@ -130,46 +119,36 @@ const GradesOverview = (props) => {
         setSessionData(tempData);
     };
 
-    const handleOpenAddCourse = () => {
-        setAddCourseOpen(true);
-    };
-
-    const handleCloseAddCourse = () => {
-        setAddCourseOpen(false);
-    };
-
     return (
         <Box>        
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 {sessionData && sessionData !== "Reloading" ? 
                     <Tabs value={selectedYear} onChange={handleChangedYear}>
-                        {activateTab && Object.entries(sessionData.courses).map(([key, value], index) => (
-                            <Tab key={key} value={parseInt(key)} label={key} />
-                        ))}
+                        {activateTab && Object.entries(sessionData.courses).map(([key, value]) => <Tab key={key} value={parseInt(key)} label={key} />)}
                     </Tabs>
-                        
                 : null}
             </Box>
-            <Box sx={{ marginTop: 2 }}>
+
+            <Box sx={{ mt: 2 }}>
                 <SessionContext.Provider value={sessionData !== null ? sessionData : "Reloading"}>
-                    { selectedYear <= activeTri.year ? 
-                            <YearOverview setViewedCourse={setViewedCourse} /> :
-                            <Box sx={{ mt: 30 }}>
-                                <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 2 }}>Academic year is not currently active.</Typography>
-                                <Typography variant={isMobile ? "h6" : "h5"} sx={{ textAlign: 'center', marginTop: 1 }}>It will be available on the <Box sx={{ display: "inline", backgroundColor: "highlight.main", borderRadius: 1, pl: 1, pr: 1 }}>20th of February</Box>.</Typography>
-                            </Box>
-                    }
-                    <Tooltip title={isMobile ? "" : <h3>Add a new course</h3>} placement="left" arrow>
-                        <Fab color="primary" size={isMobile ? "large" : "large"} onClick={handleOpenAddCourse} disabled={selectedYear !== activeTri.year} sx={{position: 'fixed', bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0}}>
+                    <YearOverview setViewedCourse={setViewedCourse} /> 
+
+                    <Tooltip title={isMobile ? "" : <h3> Add a new course </h3>} placement="left" arrow>
+                        <Fab color="primary" size={isMobile ? "large" : "large"} onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
+                            sx={{ position: 'fixed', bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0 }}
+                        >
                             <Icon>add</Icon>
                         </Fab>
                     </Tooltip>
-                    <AddCourseDialog open={addCourseOpen} onClose={handleCloseAddCourse} activeTri={activeTri} updateData={handleLoadData} courseList={courseList} setCourseList={setCourseList} />
+
+                    <AddCourseDialog open={addCourseOpen} onClose={() => setAddCourseOpen(false)} activeTri={activeTri} updateData={handleLoadData} 
+                        courseList={courseList} setCourseList={setCourseList} 
+                    />
                 </SessionContext.Provider> 
             </Box>
         </Box>
-    )
-}
+    );
+};
 
 export default GradesOverview;
 export const SessionContext = React.createContext();

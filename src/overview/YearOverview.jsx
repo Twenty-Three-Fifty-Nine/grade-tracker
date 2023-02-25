@@ -19,6 +19,7 @@
 import React, { useEffect } from 'react';
 import {
     Alert,
+    Box,
     Stack,
 } from '@mui/material';
 
@@ -29,7 +30,7 @@ import TrimesterOverview from './TrimesterOverview';
 
 const YearOverview = (props) => {
     const {
-        setViewedCourse
+        setViewedCourse,
     } = props;
     
     const session = React.useContext(SessionContext);
@@ -55,7 +56,7 @@ const YearOverview = (props) => {
             year: timeInfo.selectedYear,
             isActive: timeInfo.selectedYear === timeInfo.activeTri.year && tri === timeInfo.activeTri.tri,
             isFinished: timeInfo.selectedYear < timeInfo.activeTri.year || (timeInfo.selectedYear === timeInfo.activeTri.year && tri < timeInfo.activeTri.tri)
-        }
+        };
     }
 
     const getGPA = () => {
@@ -68,22 +69,23 @@ const YearOverview = (props) => {
             trimester.forEach(course => {
                 totalGrade += course.totalGrade;
                 totalCourses++;
-            })
-        })
+            });
+        });
         let gpa = (totalGrade / totalCourses);
         if(totalCourses === 0) return "N/A";
         else return getLetterGrade(gpa);
     }
 
     return (
-        <>
-        <Stack spacing={1}>
-            <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
-            <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
-            <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
-        </Stack>
-        <Alert severity="info" sx={{marginTop: 1, mb: isMobile ? 10 : 2}}>Current GPA for the Year: {getGPA()}</Alert>
-        </>
+        <Box>
+            <Stack spacing={1}>
+                <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+                <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+                <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+            </Stack>
+
+            <Alert severity="info" sx={{ mt: 1, mb: isMobile ? 10 : 2 }}> Current GPA for the Year: {getGPA()} </Alert>
+        </Box>
     )
 }
 

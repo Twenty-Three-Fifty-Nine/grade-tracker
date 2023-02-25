@@ -119,14 +119,14 @@ const LoginDialog = (props) => {
                         onChange={(e) => setEmail(e.target.value)}
                     />
 
-                    {loginState && (
+                    {   loginState && (
                         <Box>
                             <TextField margin="dense" id="password" label="Password" type={showPassword ? 'text' : 'password'}
                                 fullWidth value={password} onChange={(e) => setPassword(e.target.value)}
                                 InputProps={{ endAdornment: 
                                     <InputAdornment position="end">
                                         <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            { showPassword ? <VisibilityOff /> : <Visibility /> }
                                         </IconButton>
                                     </InputAdornment>
                                 }}
@@ -155,7 +155,7 @@ const LoginDialog = (props) => {
                 </DialogContent>
 
                 <DialogActions sx={{ display: "flex", justifyContent: "flex-end", px: 2 }}>
-                    {loginState ? (
+                    {   loginState ? (
                         <Stack direction="row">
                             <Button onClick={handleClose}>Cancel</Button>
                             <Box sx={{ position: 'relative' }}>
