@@ -60,7 +60,7 @@ const AccountMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
     const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
-    const [snackbarMessage, setSnackbarMessage] = React.useState("");
+    const [snackbarMessage, setSnackbarMessage] = React.useState(null);
 
     const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
 
