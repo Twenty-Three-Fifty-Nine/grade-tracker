@@ -46,7 +46,7 @@ const AssessmentViewerCard = (props) => {
     const [updater, setUpdater] = React.useState(false);
 
     const getCourseLetter = () => {
-        if(isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
+        if (isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
         else return getLetterGrade(parseInt(assData.grade));
     };
 
@@ -65,18 +65,20 @@ const AssessmentViewerCard = (props) => {
 
     return (
         <Card>
-            <CardContent sx={{display: 'flex'}}>
+            <CardContent sx={{ display: 'flex' }}>
                 <Stack spacing={1}>
-                    <Stack direction="row"sx={{display:"flex", minWidth: isMobile ? 300 : 350}}>
-                        <Typography variant={"h5"} component="div" sx={{mr: 1}}>
-                            {assData.name === "" ? "..." : assData.name}
+                    <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 300 : 350 }}>
+                        <Typography variant={"h5"} component="div" sx={{ mr: 1 }}>
+                            { assData.name === "" ? "..." : assData.name }
                         </Typography>
-                        <Tooltip title={<h3>{assData.isAss ? "Assignment" : "Test"}</h3>} placement="right" arrow>
-                            {assData.isAss ? <MenuBookRoundedIcon sx={{mt: 0.3}}/> :
-                            <DescriptionRoundedIcon sx={{mt: 0.4}}/>}
+                        <Tooltip title={<h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
+                            {   assData.isAss ? 
+                                <MenuBookRoundedIcon sx={{ mt: 0.3 }}/> :
+                                <DescriptionRoundedIcon sx={{ mt: 0.4 }} /> 
+                            }
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : <h3>Edit Assessment</h3>} placement="bottom" arrow>
-                            <IconButton sx={{ml:"auto", mt:-0.5}} onClick={() => {setCurrentEdit(assData)}}>    
+                        <Tooltip title={ isMobile ? "" : <h3> Edit Assessment </h3> } placement="bottom" arrow>
+                            <IconButton sx={{ ml:"auto", mt:-0.5 }} onClick={() => {setCurrentEdit(assData)}}>    
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
@@ -91,7 +93,7 @@ const AssessmentViewerCard = (props) => {
                         Worth: {assData.weight}%
                     </Typography>
 
-                    {isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
+                    { isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
                 </Stack>
 
                 {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
