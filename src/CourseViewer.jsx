@@ -91,7 +91,7 @@ const CourseViewer = (props) => {
     const sliderPosR = React.useRef();
     sliderPosR.current = sliderPos;
     const [deleteZIndex, setDeleteZIndex] = React.useState(1);
-    
+
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
@@ -133,9 +133,7 @@ const CourseViewer = (props) => {
     }, [exitViewer]);
 
     handleKeyDown = useCallback((event) => {
-        if(event.key === "Escape") {
-            attemptClose();
-        }
+        if(event.key === "Escape") attemptClose();
     }, [attemptClose]);
 
     handleTransitionEnd = useCallback((event) => {
@@ -148,6 +146,7 @@ const CourseViewer = (props) => {
 
     React.useEffect(() => {
         if(assessments.length > 0) return;
+
         document.addEventListener("keydown", handleKeyDown, false);
         if(isMobile){
             document.getElementById("slidePanelButton").addEventListener("transitionend", handleTransitionEnd, false);
@@ -173,16 +172,18 @@ const CourseViewer = (props) => {
         else if(type === "weight-d") return sortAlgorithm(true, "weight", list);
     }, [filteredAssessments, sortType])
 
+    const sortAlgorithm = (isAsc, value, temp) => {
+        temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
+        return temp;
+    }
+
     const filter = useCallback(() => {
         let temp = [];
         assessments.forEach((assessment) => {
-            if((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)){
-                if((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter){
-                    if((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)){
-                        temp.push(assessment)
-                    }
-                }
-            }
+            if(((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) &&
+              ((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter) &&
+              ((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)))
+                temp.push(assessment)
         })
         setFilteredAssessments(sort(sortType, temp));
     }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
@@ -195,11 +196,6 @@ const CourseViewer = (props) => {
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
         setFilteredAssessments(sort(e.target.value));
-    }
-
-    const sortAlgorithm = (isAsc, value, temp) => {
-        temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
-        return temp;
     }
 
     const checkChanges = (override = changeOverride) => {
