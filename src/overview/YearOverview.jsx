@@ -38,7 +38,7 @@ const YearOverview = (props) => {
     const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
 
     useEffect(() => {
-        if(session && session !== "Reloading") setAccordionsOpen([getTriInfo(1).isActive, getTriInfo(2).isActive, getTriInfo(3).isActive]);
+        if (session && session !== "Reloading") setAccordionsOpen([getTriInfo(1).isActive, getTriInfo(2).isActive, getTriInfo(3).isActive]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session])
 
@@ -50,7 +50,7 @@ const YearOverview = (props) => {
 
     const getTriInfo = (tri) => {
         const timeInfo = session && session !== "Reloading" ? session.timeInfo : null;
-        if(!timeInfo) return null;
+        if (!timeInfo) return null;
         return {
             tri,
             year: timeInfo.selectedYear,
@@ -61,7 +61,7 @@ const YearOverview = (props) => {
 
     const getGPA = () => {
         const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
-        if(!trimesters) return null;
+        if (!trimesters) return null;
         
         let totalGrade = 0;
         let totalCourses = 0;
@@ -72,7 +72,7 @@ const YearOverview = (props) => {
             });
         });
         let gpa = (totalGrade / totalCourses);
-        if(totalCourses === 0) return "N/A";
+        if (totalCourses === 0) return "N/A";
         else return getLetterGrade(gpa);
     }
 

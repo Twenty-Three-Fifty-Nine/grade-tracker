@@ -109,7 +109,7 @@ const GradesOverview = (props) => {
     }, [getSessionData, selectedYear, setSessionData]);
 
     React.useEffect(() => {
-        if(!sessionData) handleLoadData();
+        if (!sessionData) handleLoadData();
     }, [handleLoadData, sessionData]);
 
     const handleChangedYear = async (event, newValue) => {

@@ -20,7 +20,7 @@ class Course {
     }
 
     getCourseLetter() {
-        if(this.getCourseCompletion() === 0) return "N/A";
+        if (this.getCourseCompletion() === 0) return "N/A";
         return getLetterGrade(this.totalGrade);
     }
 
@@ -35,18 +35,18 @@ class Course {
 }
 
 const getLetterGrade = (grade) => {
-    if(grade >= 90) return "A+";
-    else if(grade >= 85) return "A";
-    else if(grade >= 80) return "A-";
-    else if(grade >= 75) return "B+";
-    else if(grade >= 70) return "B";
-    else if(grade >= 65) return "B-";
-    else if(grade >= 60) return "C+";
-    else if(grade >= 55) return "C";
-    else if(grade >= 50) return "C-";
-    else if(grade >= 40) return "D";
+    if (grade >= 90) return "A+";
+    else if (grade >= 85) return "A";
+    else if (grade >= 80) return "A-";
+    else if (grade >= 75) return "B+";
+    else if (grade >= 70) return "B";
+    else if (grade >= 65) return "B-";
+    else if (grade >= 60) return "C+";
+    else if (grade >= 55) return "C";
+    else if (grade >= 50) return "C-";
+    else if (grade >= 40) return "D";
     return "E";
-}
+};
 
 export default Course;
 export { getLetterGrade };
