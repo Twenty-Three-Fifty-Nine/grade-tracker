@@ -209,13 +209,14 @@ const CourseViewer = (props) => {
         setValidChanges(valid);
     }
 
-    const saveChanges = (synced = false) => {
-        setCurrentEdit(null)
+    const saveChanges = async (synced = false) => {
+        setCurrentEdit(null);
+
         courseData.assessments = [];
         if(synced) courseData.lastSynced = new Date();
         assessments.forEach((assessment) => {
             courseData.assessments.push(assessment.clone());
-        })
+        });
 
         courseData.updateTotal();
         setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
@@ -226,33 +227,28 @@ const CourseViewer = (props) => {
         });
 
         setAPILoading(true);
-        Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
+
+        await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
             synced: synced,
             url: courseData.url,
         }).then(() => {
-            setAPILoading(false);
-            assessments.forEach((assessment) => {
-                assessment.hasChanged = false;
-                assessment.isNew = false;
-                assessment.initGrade = parseInt(assessment.grade);
-                assessment.initName = assessment.name;
-                assessment.initAss = assessment.isAss;
-                assessment.initDeadline = assessment.deadline; 
-            })
+            assessments.forEach((assessment) => assessment.resetStates);
             setChangeOverride(false);
             checkChanges(false);
+
             setSnackbar("success")
             setIsSuccess(true);
             setSuccessText("Changes saved successfully");
         }).catch((e) => {
-            setAPILoading(false);
             setSnackbar("error");
             setIsSuccess(false);
             setErrorText("Saving to server failed, try again later");
         });
+
+        setAPILoading(false);
 
         assessments.forEach((assessment) => {
             assessment.grade = assessment.grade === -1 ? NaN : assessment.grade;
