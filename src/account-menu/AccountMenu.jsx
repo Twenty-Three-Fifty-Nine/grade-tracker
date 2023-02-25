@@ -35,7 +35,7 @@ import Cookies from "universal-cookie";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 import FeedbackDialog from "./FeedbackDialog";
 import { isMobile } from "react-device-detect";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../themes/ThemeSwitch";
 
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import FeedbackIcon from "@mui/icons-material/Feedback";

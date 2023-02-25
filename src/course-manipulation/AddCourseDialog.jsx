@@ -37,7 +37,7 @@ import Axios from "axios";
 import { isMobile } from "react-device-detect";
 import NewCourseDialog from "./NewCourseDialog";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { SessionContext } from "./GradesOverview";
+import { SessionContext } from "../overview/GradesOverview";
 
 const AddCourseDialog = (props) => {
     const {

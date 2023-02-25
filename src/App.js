@@ -30,20 +30,21 @@ import {
     Stack,
 } from "@mui/material";
 
-import AccountMenu from "./AccountMenu";
+import AccountMenu from "./account-menu/AccountMenu";
 import Axios from "axios";
 import Cookies from "universal-cookie";
-import CourseViewer from "./CourseViewer";
-import GradesOverview from "./GradesOverview";
+import CourseViewer from "./course-viewer/CourseViewer";
+import darkTheme from "./themes/DarkTheme";
+import GradesOverview from "./overview/GradesOverview";
 import { isMobile } from "react-device-detect";
-import { lightTheme, darkTheme } from "./Themes";
-import PasswordResetDialog from "./PasswordResetDialog";
-import ThemeSwitch from "./ThemeSwitch";
+import lightTheme from "./themes/LightTheme";
+import PasswordResetDialog from "./login/PasswordResetDialog";
+import ThemeSwitch from "./themes/ThemeSwitch";
 import { useLocation } from "react-router-dom";
 import WelcomePage from "./WelcomePage";
 
-import logoLight from "./2359LogoLight.svg";
-import logoDark from "./2359LogoDark.svg";
+import logoLight from "./images/2359LogoLight.svg";
+import logoDark from "./images/2359LogoDark.svg";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);

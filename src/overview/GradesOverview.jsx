@@ -27,10 +27,10 @@ import {
     Typography,
 } from "@mui/material";
 
-import AddCourseDialog from "./AddCourseDialog";
-import Assessment from "./Assessment";
+import AddCourseDialog from "../course-manipulation/AddCourseDialog";
+import Assessment from "../classes/Assessment";
 import Axios from "axios";
-import Course from "./Course";
+import Course from "../classes/Course";
 import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
 
