@@ -45,7 +45,16 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
 const SyncDialog = (props) => {
-    const { onClose, open, courseData, templateData, setTemplateData, assessments, setAssessments, saveChanges} = props;
+    const {
+        assessments,
+        courseData,
+        onClose,
+        open,
+        saveChanges,
+        setAssessments,
+        setTemplateData,
+        templateData,
+    } = props;
 
     const [changedAssessments, setChangedAssessments] = React.useState([]);
     const [unchangedAssessments, setUnchangedAssessments] = React.useState([]);

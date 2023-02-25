@@ -28,7 +28,15 @@ import {
 } from "@mui/material";
 
 const ConfirmDialog = (props) => {
-    const { open, handleClose, message, subMessage, confirmAction, buttonText, loading } = props;
+    const {
+        buttonText,
+        confirmAction,
+        handleClose,
+        loading,
+        message,
+        open,
+        subMessage,
+    } = props;
 
     return (
         <>

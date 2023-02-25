@@ -46,7 +46,14 @@ import { TransitionGroup } from "react-transition-group";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
 const NewCourseDialog = (props) => {
-    const { onClose, open, activeTri, editCode = "", templateData, setTemplateData } = props;
+    const {
+        activeTri,
+        onClose,
+        open,
+        setTemplateData,
+        templateData,
+        editCode = "",
+    } = props;
 
     const [assessments, setAssessments] = React.useState([]);
     const [courseName, setCourseName] = React.useState("");

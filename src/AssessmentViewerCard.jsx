@@ -38,9 +38,9 @@ import AssessmentViewerGrades from "./AssessmentViewerGrades";
 
 const AssessmentViewerCard = (props) => {
     const { 
-        assData, 
+        assData,
         checkChanges,
-        setCurrentEdit 
+        setCurrentEdit,
     } = props;
     
     const [updater, setUpdater] = React.useState(false);

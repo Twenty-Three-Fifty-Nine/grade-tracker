@@ -28,7 +28,12 @@ import {
 
 import { isMobile } from "react-device-detect";
 
-const CourseOverview = ({courseInfo, setViewedCourse}) => {
+const CourseOverview = (props) => {
+    const {
+        courseInfo,
+        setViewedCourse
+    } = props;
+    
     return (
         <Card sx={{maxWidth: 500}} onClick={() => {setViewedCourse(courseInfo)}} >
             <CardActionArea>

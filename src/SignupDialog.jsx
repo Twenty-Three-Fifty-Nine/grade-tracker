@@ -45,7 +45,15 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const SignupDialog = (props) => {
-    const { open, onClose, setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
+    const {
+        activeTri,
+        onClose,
+        open,
+        setEmailSent,
+        setIsLoggedIn,
+        setUserDetails,
+    } = props;
+
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");

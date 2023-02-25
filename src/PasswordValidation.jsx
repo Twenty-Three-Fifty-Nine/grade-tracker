@@ -26,7 +26,13 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const PasswordValidation = (props) => {
-    const { validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch } = props;
+    const {
+        validPasswordCapital,
+        validPasswordLength,
+        validPasswordMatch,
+        validPasswordNumber,
+        validPasswordSpecial,
+    } = props;
     
     return (
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 0.5 }}>

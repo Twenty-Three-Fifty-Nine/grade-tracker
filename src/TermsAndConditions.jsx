@@ -30,7 +30,10 @@ import {
 import { isMobile } from "react-device-detect";
 
 const TermsAndConditions = (props) => {
-    const {open, onClose} = props;
+    const {
+        onClose,
+        open,
+    } = props;
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md">

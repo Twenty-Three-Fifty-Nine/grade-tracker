@@ -44,7 +44,7 @@ export const handler = async(event) => {
     const command = new SendEmailCommand(params);
     await sesClient.send(command);
 
-    if (feedbackType !== "bug" || feedbackType !== "suggestion") {
+    if (feedbackType === "bug" || feedbackType === "suggestion") {
         const githubResponse = await fetch("https://api.github.com/repos/Twenty-Three-Fifty-Nine/grade-tracker/issues", {
             method: "POST",
             body: JSON.stringify({

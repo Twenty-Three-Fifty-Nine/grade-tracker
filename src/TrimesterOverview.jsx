@@ -32,7 +32,14 @@ import {
 import CourseOverview from "./CourseOverview";
 import { SessionContext } from "./GradesOverview";
 
-const TrimesterOverview = ({triInfo, open, toggleAccordion, setViewedCourse}) => {
+const TrimesterOverview = (props) => {
+    const {
+        open,
+        setViewedCourse,
+        toggleAccordion,
+        triInfo,
+    } = props;
+
     const courses = React.useContext(SessionContext).courses;
     
     return (
