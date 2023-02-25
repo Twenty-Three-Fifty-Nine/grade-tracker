@@ -171,8 +171,8 @@ const CourseViewer = (props) => {
             if(((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) &&
               ((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter) &&
               ((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)))
-                temp.push(assessment)
-        })
+                temp.push(assessment);
+        });
         setFilteredAssessments(sort(sortType, temp));
     }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
 
@@ -254,7 +254,7 @@ const CourseViewer = (props) => {
                     let index = temp.courses[courseData.year][courseData.tri - 1].indexOf(course)
                     temp.courses[courseData.year][courseData.tri - 1].splice(index, 1);
                 }
-            }))
+            }));
             setSessionData(temp);
 
             setConfirmDelete(false);
@@ -276,7 +276,7 @@ const CourseViewer = (props) => {
                 }
             })
             ass.checkValid();
-        })
+        });
     }
 
     return (
@@ -402,7 +402,6 @@ const CourseViewer = (props) => {
                     {isSuccess ? successText : errorText}
                 </Alert>
             </Snackbar>
-
         </Box>
     )
 }
