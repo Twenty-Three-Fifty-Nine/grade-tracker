@@ -67,9 +67,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import LaunchIcon from "@mui/icons-material/Launch";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import CourseViewerHeader from "./CourseViewerHeader";
+import CourseViewerEditor from "./CourseViewerEditorDesktop";
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
@@ -303,87 +303,11 @@ const CourseViewer = (props) => {
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
 
             <Stack direction="row" sx={{display:"flex", alignItems:"baseline", mb: 5}}>
-                {currentEdit && !isMobile ? (
-                    <Box sx={{flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline"}}>
-                        <Card sx={{width: 360, m: 0, display: "flex", alignItems:"baseline"}}>
-                            <CardContent sx={{pt: 1, pr: 5, display: "flex", alignItems:"baseline"}}>
-                                <Stack>
-                                    <Stack direction="row" spacing={0}>
-                                        <Typography variant="h5" sx={{mt: 1, ml: 0.3, width: 210}}> Edit {currentEdit.isAss ? "Assignment" : "Test"} </Typography>
-                                            <ToggleButtonGroup
-                                                exclusive size="small"
-                                                value={currentEdit.isAss ? "ass" : "test"}
-                                                onChange={(e, newValue) => { 
-                                                    currentEdit.setIsAss(newValue === "ass");
-                                                    checkChanges();
-                                                }}
-                                            >
-                                                <ToggleButton value="ass">
-                                                    <MenuBookRoundedIcon />
-                                                </ToggleButton>
-                                                <ToggleButton value="test">
-                                                    <DescriptionRoundedIcon />
-                                                </ToggleButton>
-                                            </ToggleButtonGroup>
+                {currentEdit && !isMobile ?  
+                <CourseViewerEditor currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                    changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                /> : <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
 
-                                            <Tooltip title={<h3>Delete Assessment</h3>} placement="bottom" arrow>
-                                                <IconButton color="error" sx={{ml: 1}} 
-                                                    onClick={() => {
-                                                        assessments.splice(assessments.indexOf(currentEdit), 1);
-                                                        if(!currentEdit.isNew) setChangeOverride(true);
-                                                        checkChanges(!currentEdit.isNew ? true : changeOverride);
-                                                        setCurrentEdit(null);
-                                                    }}
-                                                >    
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                    </Stack>
-                                    <Divider sx={{mb: 1.5, mt: 0.5}}/>
-                                    <Stack>
-                                        <TextField label="Assessment Name"
-                                            sx={{width: "90%", mb: 2}}
-                                            value={currentEdit.name} onChange={(e) => { 
-                                                currentEdit.stopTransition = true;
-                                                currentEdit.setName(e.target.value); 
-                                                checkDuplicateName();
-                                                checkChanges();
-                                            }} 
-                                            error={(currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
-                                            helperText={currentEdit.name.length === 0 ? "This field cannot be empty" : currentEdit.name.length > 30 ? "This field  is too long" : currentEdit.duplicateName ? "Another assessment has the same name" : ""} 
-                                        />
-
-                                        <Box>
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                <DesktopDatePicker label="Due Date"
-                                                    value={currentEdit.deadline}
-                                                    inputFormat="DD/MM/YYYY"
-                                                    onChange={(newValue) => {
-                                                        currentEdit.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
-                                                        checkChanges();
-                                                    }}
-                                                    renderInput={(params) => <TextField {...params} />}
-                                                    
-                                                />
-                                            </LocalizationProvider>
-                                        </Box>
-
-                                        <TextField label="Worth (%)" InputProps={{ inputProps: { min: 0 } }} value={currentEdit.weight} sx={{ mt: 2, width: "74%"}}
-                                            onChange={(e) => {
-                                                if(!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) currentEdit.setWeight(e.target.value);
-                                                checkChanges();
-                                            }} 
-                                            error={(currentEdit.weight <= 0 || currentEdit.weight > 100)} 
-                                            helperText={currentEdit.weight <= 0 ? "The value must be above 0" : currentEdit.weight > 100 ? "The value cannot be above 100" : ""} 
-                                        />
-
-                                        <Button variant="contained" sx={{mt: 2, mr: 1}} onClick={() => {setCurrentEdit(null)}}> Close </Button>
-                                    </Stack>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Box>
-                ): <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
                     {filteredAssessments.length > 0 ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                         {filteredAssessments.map((assessment, index) => (
