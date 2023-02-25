@@ -18,7 +18,7 @@ import {
 
 import Axios from "axios";
 import Cookies from "universal-cookie";
-import PasswordValidation from "./PasswordValidation";
+import PasswordValidation from "../login/PasswordValidation";
 
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";

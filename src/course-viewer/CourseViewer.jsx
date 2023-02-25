@@ -33,10 +33,10 @@ import {
     Typography,
 } from "@mui/material";
 
-import Assessment from "./Assessment";
+import Assessment from "../classes/Assessment";
 import AssessmentViewerCard from "./AssessmentViewerCard";
 import Axios from "axios";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "../ConfirmDialog";
 import CourseViewerEditorDesktop from "./CourseViewerEditorDesktop";
 import CourseViewerEditorMobile from "./CourseViewerEditorMobile";
 import CourseViewerFilterDesktop from "./CourseViewerFilterDesktop";
@@ -45,8 +45,8 @@ import CourseViewerHeader from "./CourseViewerHeader";
 import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
-import NewCourseDialog from "./NewCourseDialog";
-import SyncDialog from "./SyncDialog";
+import NewCourseDialog from "../course-manipulation/NewCourseDialog";
+import SyncDialog from "../course-manipulation/SyncDialog";
 import { TransitionGroup } from "react-transition-group";
 
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";

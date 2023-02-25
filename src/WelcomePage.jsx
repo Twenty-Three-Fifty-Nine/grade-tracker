@@ -22,7 +22,7 @@ import {
     Typography,
 } from "@mui/material";
 
-import Login from "./Login";
+import Login from "./login/Login";
 
 const WelcomePage = (props) => {
     const {

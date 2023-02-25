@@ -28,7 +28,7 @@ import {
 } from "@mui/material";
 
 import dayjs from "dayjs";
-import { getLetterGrade } from './Course';
+import { getLetterGrade } from '../classes/Course';
 import { isMobile } from "react-device-detect";
 
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";

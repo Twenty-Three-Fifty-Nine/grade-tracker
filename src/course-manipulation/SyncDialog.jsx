@@ -35,9 +35,9 @@ import {
     Typography,
 } from "@mui/material";
 
-import Assessment from "./Assessment";
+import Assessment from "../classes/Assessment";
 import Axios from "axios";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "../ConfirmDialog";
 import { isMobile } from "react-device-detect";
 import SyncAssessmentCard from "./SyncAssessmentCard";
 

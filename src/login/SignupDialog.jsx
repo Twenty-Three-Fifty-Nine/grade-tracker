@@ -40,7 +40,7 @@ import Cookies from "universal-cookie";
 import PasswordValidation from "./PasswordValidation";
 
 import CloseIcon from "@mui/icons-material/Close";
-import TermsAndConditions from "./TermsAndConditions";
+import TermsAndConditions from "../TermsAndConditions";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 

@@ -22,7 +22,7 @@ import {
     Stack,
 } from '@mui/material';
 
-import { getLetterGrade } from './Course';
+import { getLetterGrade } from '../classes/Course';
 import { isMobile } from "react-device-detect";
 import { SessionContext } from './GradesOverview';
 import TrimesterOverview from './TrimesterOverview';
