@@ -26,7 +26,13 @@ import LoginDialog from './LoginDialog';
 import SignupDialog from './SignupDialog';
 
 const Login = (props) => {
-    const { setIsLoggedIn, setUserDetails, activeTri, setEmailSent } = props;
+    const {
+        activeTri,
+        setEmailSent,
+        setIsLoggedIn,
+        setUserDetails,
+    } = props;
+
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 

@@ -40,7 +40,15 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { SessionContext } from "./GradesOverview";
 
 const AddCourseDialog = (props) => {
-    const { onClose, open, activeTri, updateData, courseList, setCourseList } = props;
+    const {
+        activeTri,
+        courseList,
+        onClose,
+        open,
+        setCourseList,
+        updateData,
+    } = props;
+
     const session = React.useContext(SessionContext);
 
     const [courseCode, setCourseCode] = React.useState(null);

@@ -42,7 +42,13 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginDialog = (props) => {
-    const { onClose, open, setIsLoggedIn, setUserDetails, activeTri } = props;
+    const {
+        activeTri,
+        onClose,
+        open,
+        setIsLoggedIn,
+        setUserDetails,
+    } = props;
 
     const [loginState, setLoginState] = React.useState(true);
 
