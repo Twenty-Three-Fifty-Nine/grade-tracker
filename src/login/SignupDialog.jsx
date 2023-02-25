@@ -129,44 +129,34 @@ const SignupDialog = (props) => {
 
         setLoading(true);
 
-        await Axios.post(
-            "https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup",
-            {
-                displayName: displayName,
-                email: email.toLowerCase(),
-                password: password,
-                activeTri: activeTri
+        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup", {
+            displayName: displayName,
+            email: email.toLowerCase(),
+            password: password,
+            activeTri: activeTri
+        }).then((result) => {
+            setIsLoggedIn(true);
+            setEmailSent(true);
+            setUserDetails(result.data);
+            new Cookies().set("userDetails", result.data, { path: "/", sameSite: "strict" });
+            handleClose();
+        }).catch((e) => {
+            if (e.response.status === 409) {
+                setSignupErrorText("Email already in use");
+            } else {
+                setSignupErrorText(
+                    "There was an error signing up. Please try again later or contact support."
+                );
             }
-        )
-            .then((result) => {
-                setIsLoggedIn(true);
-                setEmailSent(true);
-                setUserDetails(result.data);
-                new Cookies().set("userDetails", result.data, { path: '/', sameSite: 'strict' });
-                handleClose();
-            })
-            .catch((e) => {
-                console.log(e);
-                if (e.response.status === 409) {
-                    setSignupErrorText("Email already in use");
-                } else {
-                    setSignupErrorText(
-                        "There was an error signing up. Please try again later or contact support."
-                    );
-                }
-                setSignupError(true);
-            });
-        setLoading(false)
+            setSignupError(true);
+        });
+
+        setLoading(false);
     }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, acceptedTerms, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
 
-    const handleKeyDown = useCallback(
-        (event) => {
-            if (event.key === "Enter") {
-                handleSignup();
-            }
-        },
-        [handleSignup]
-    );
+    const handleKeyDown = useCallback((event) => {
+        if (event.key === "Enter") handleSignup();
+    }, [handleSignup]);
 
     const handlePasswordChange = useCallback((e) => {
         setPassword(e.target.value);
@@ -183,62 +173,71 @@ const SignupDialog = (props) => {
     }, [password]);
 
     return (
-        <>
-        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
-            <DialogTitle>Sign Up</DialogTitle>
-            <DialogContent>
-                <TextField autoFocus margin="dense" id="displayName" label="Display Name" type="text" fullWidth value={displayName} onChange={(e) => { setDisplayName(e.target.value) }}/>
-                <TextField margin="dense" id="email" label="Email Address" type="email" fullWidth value={email} onChange={(e) => { setEmail(e.target.value) }} />
-                <TextField margin="dense" id="password" label="Password" fullWidth value={password} onChange={handlePasswordChange} 
-                    type={showPassword ? 'text' : 'password'}
-                    InputProps={{endAdornment: 
-                        <InputAdornment position="end">
-                            <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                        </InputAdornment>
-                    }}
-                />
-                <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type={showPassword ? 'text' : 'password'} fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} />
+        <Box>
+            <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
+                <DialogTitle> Sign Up </DialogTitle>
 
-                <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} />
-                
-                <Stack direction="row" sx={{ml: -1.1, mt: 1}}>
-                    <Checkbox checked={acceptedTerms} onChange={(e, newValue) => {setAcceptedTerms(newValue)}} />
-                    <Typography variant="h6" sx={{mt:1.2, fontSize:"16px"}}> 
-                        Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
-                    </Typography> 
-                </Stack>
+                <DialogContent>
+                    <TextField autoFocus margin="dense" id="displayName" label="Display Name" type="text" fullWidth 
+                        value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                    />
+                    <TextField margin="dense" id="email" label="Email Address" type="email" fullWidth value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                    />
+                    <TextField margin="dense" id="password" label="Password" fullWidth value={password} onChange={handlePasswordChange} 
+                        type={showPassword ? "text" : "password"}
+                        InputProps={{endAdornment: 
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
+                                    { showPassword ? <VisibilityOff /> : <Visibility /> }
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                    />
+                    <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type={showPassword ? "text" : "password"} 
+                        fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} 
+                    />
 
-                {<Collapse in={signupError}>
-                    <Alert severity="error" sx={{ mt: 2 }}
-                        action={
-                            <IconButton color="inherit" size="small"
-                            onClick={() => {
-                                setSignupError(false);
-                            }}
-                            >
-                            <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                    >
-                        {signupErrorText}   
-                    </Alert>
-                </Collapse>}
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Box sx={{ position: 'relative' }}>
-                    <Button onClick={handleSignup} disabled={loading || !acceptedTerms || !validPasswordLength || !validPasswordNumber || !validPasswordSpecial || !validPasswordCapital || !validPasswordMatch || !displayName || !email || !password || !passwordConfirm}>Sign Up</Button>
-                    {loading &&
-                        <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
-                    }
-                </Box>
-            </DialogActions>
-        </Dialog>
+                    <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber} 
+                        validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} 
+                    />
+                    
+                    <Stack direction="row" sx={{ ml: -1.1, mt: 1 }}>
+                        <Checkbox checked={acceptedTerms} onChange={(e, newValue) => setAcceptedTerms(newValue)} />
+                        <Typography variant="h6" sx={{ mt: 1.2, fontSize:"16px" }}> 
+                            Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} 
+                            sx={{ cursor:"pointer", color:"info.main", "&:hover":{ textDecoration:"underline" } }}> Terms & Conditions </Box>
+                        </Typography> 
+                    </Stack>
 
-        <TermsAndConditions open={showTerms} onClose={() => {setShowTerms(false)}} />
-        </>
+                    <Collapse in={signupError}>
+                        <Alert severity="error" sx={{ mt: 2 }}
+                            action={
+                                <IconButton color="inherit" size="small" onClick={() => setSignupError(false)}>
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            {signupErrorText}   
+                        </Alert>
+                    </Collapse>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={handleClose}> Cancel </Button>
+                    <Box sx={{ position: "relative" }}>
+                        <Button onClick={handleSignup} disabled={loading || !acceptedTerms || !validPasswordLength || !validPasswordNumber || 
+                            !validPasswordSpecial || !validPasswordCapital || !validPasswordMatch || !displayName || !email || !password || !passwordConfirm}
+                        >
+                            Sign Up
+                        </Button>
+                        { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
+                    </Box>
+                </DialogActions>
+            </Dialog>
+
+            <TermsAndConditions open={showTerms} onClose={() => setShowTerms(false)} />
+        </Box>
     );
 }
 

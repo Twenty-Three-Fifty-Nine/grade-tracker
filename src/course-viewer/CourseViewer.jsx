@@ -58,7 +58,7 @@ const CourseViewer = (props) => {
         userDetails, 
         setSessionData, 
         sessionData, 
-        setCourseList 
+        setCourseList, 
     } = props;
 
     const [validChanges, setValidChanges] = React.useState(false);
@@ -107,7 +107,7 @@ const CourseViewer = (props) => {
 
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
-        if(isMobile){
+        if (isMobile) {
             document.getElementById("mobileSlidePanel").removeEventListener("transitionend", handleTransitionEnd, false);
             document.getElementById("mobileSlidePanel").removeEventListener("transitionstart", handleTransitionStart, false);
         }
@@ -116,27 +116,27 @@ const CourseViewer = (props) => {
     }, [handleKeyDown, handleTransitionEnd, handleTransitionStart, setViewedCourse]);
 
     const attemptClose = useCallback(() => {
-        if(changesMadeR.current) setConfirmExit(true);
+        if (changesMadeR.current) setConfirmExit(true);
         else exitViewer();
     }, [exitViewer]);
 
     handleKeyDown = useCallback((event) => {
-        if(event.key === "Escape") attemptClose();
+        if (event.key === "Escape") attemptClose();
     }, [attemptClose]);
 
     handleTransitionEnd = useCallback((event) => {
-        if(sliderPosR.current === -270) setDeleteZIndex(1);
+        if (sliderPosR.current === -270) setDeleteZIndex(1);
     }, []);
 
     handleTransitionStart = useCallback((event) => {
-        if(sliderPosR.current === 0) setDeleteZIndex(0);
+        if (sliderPosR.current === 0) setDeleteZIndex(0);
     }, []);
 
     React.useEffect(() => {
-        if(assessments.length > 0) return;
+        if (assessments.length > 0) return;
 
         document.addEventListener("keydown", handleKeyDown, false);
-        if(isMobile){
+        if (isMobile) {
             document.getElementById("mobileSlidePanel").addEventListener("transitionend", handleTransitionEnd, false);
             document.getElementById("mobileSlidePanel").addEventListener("transitionstart", handleTransitionStart, false);
         }
@@ -148,16 +148,16 @@ const CourseViewer = (props) => {
         courseData.assessments.forEach((assessment) => {
             setAssessments(current => [...current, assessment.clone()]);
             setFilteredAssessments(current => [...current, assessment.clone()]);
-        })
+        });
     }, [assessments.length, courseData, handleKeyDown, handleTransitionEnd, handleTransitionStart]);
 
     const sort = useCallback((type = sortType, list = filteredAssessments) => {
-        if(type === "name-a") return sortAlgorithm(true, "name", list);
-        else if(type === "name-d") return sortAlgorithm(false, "name", list);
-        else if(type === "deadline-a") return sortAlgorithm(true, "deadline", list);
-        else if(type === "deadline-d") return sortAlgorithm(false, "deadline", list);
-        else if(type === "weight-a") return sortAlgorithm(false, "weight", list);
-        else if(type === "weight-d") return sortAlgorithm(true, "weight", list);
+        if (type === "name-a") return sortAlgorithm(true, "name", list);
+        else if (type === "name-d") return sortAlgorithm(false, "name", list);
+        else if (type === "deadline-a") return sortAlgorithm(true, "deadline", list);
+        else if (type === "deadline-d") return sortAlgorithm(false, "deadline", list);
+        else if (type === "weight-a") return sortAlgorithm(false, "weight", list);
+        else if (type === "weight-d") return sortAlgorithm(true, "weight", list);
     }, [filteredAssessments, sortType]);
 
     const sortAlgorithm = (isAsc, value, temp) => {
@@ -168,16 +168,16 @@ const CourseViewer = (props) => {
     const filter = useCallback(() => {
         let temp = [];
         assessments.forEach((assessment) => {
-            if(((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) &&
-              ((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter) &&
-              ((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)))
+            if (((finishedFilter && !isNaN(assessment.grade)) || (missingGradeFilter && isNaN(assessment.grade)) || (!finishedFilter && !missingGradeFilter)) &&
+               ((pastDeadlineFilter && (new Date(assessment.deadline) < new Date())) || !pastDeadlineFilter) &&
+               ((testFilter && !assessment.isAss) || (assignmentFilter && assessment.isAss) || (!testFilter && !assignmentFilter)))
                 temp.push(assessment);
         });
         setFilteredAssessments(sort(sortType, temp));
     }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
 
     React.useEffect(() => {
-        if(assessments.length === 0) return;
+        if (assessments.length === 0) return;
         filter();
     }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, filter, assessments.length]);
 
@@ -190,9 +190,9 @@ const CourseViewer = (props) => {
         let changes = false;
         let valid = true;
         assessments.forEach((assessment) => {
-            if(assessment.hasChanged) changes = true;
-            if(!assessment.valid) valid = false;
-        })
+            if (assessment.hasChanged) changes = true;
+            if (!assessment.valid) valid = false;
+        });
         setChangesMade(changes || override);
         setValidChanges(valid);
     };
@@ -201,7 +201,7 @@ const CourseViewer = (props) => {
         setCurrentEdit(null);
 
         courseData.assessments = [];
-        if(synced) courseData.lastSynced = new Date();
+        if (synced) courseData.lastSynced = new Date();
         assessments.forEach((assessment) => {
             courseData.assessments.push(assessment.clone());
         });
@@ -221,7 +221,7 @@ const CourseViewer = (props) => {
             totalGrade: courseData.totalGrade,
             year: courseData.year,
             synced: synced,
-            url: courseData.url,
+            url: courseData.url
         }).then(() => {
             assessments.forEach((assessment) => {
                 assessment.resetStates();
@@ -247,6 +247,7 @@ const CourseViewer = (props) => {
 
     const deleteCourse = async () => {
         setAPILoading(true);
+
         await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
@@ -266,6 +267,7 @@ const CourseViewer = (props) => {
             setIsSuccess(false);
             setErrorText("Removing course failed, try again later");
         });
+
         setAPILoading(false);
     };
 
@@ -273,7 +275,7 @@ const CourseViewer = (props) => {
         assessments.forEach((ass) => {
             ass.duplicateName = false;
             assessments.forEach((comparison) => {
-                if(comparison !== ass && comparison.name === ass.name){
+                if (comparison !== ass && comparison.name === ass.name) {
                     ass.duplicateName = true;
                 }
             })
@@ -289,28 +291,32 @@ const CourseViewer = (props) => {
                 attemptClose={attemptClose} validChanges={validChanges} apiLoading={apiLoading} saveChanges={saveChanges}
             />
 
-            <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5}} />
+            <Divider variant="middle" role="presentation" 
+                sx={{ borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5 }} 
+            />
 
-            <Stack direction="row" sx={{display:"flex", alignItems:"baseline", mb: 5}}>
-                {currentEdit && !isMobile ?  
-                <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
-                    changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
-                /> : <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
+            <Stack direction="row" sx={{ display:"flex", alignItems:"baseline", mb: 5 }}>
+                {   currentEdit && !isMobile ?  
+                    <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                        changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                    /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
+                }
 
-                <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 ? 
-                    <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
-                        {filteredAssessments.map((assessment, index) => (
-                            <Collapse key={index} sx={{mb: 2}}>
-                                <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
-                            </Collapse>
-                        ))} 
-                    </TransitionGroup> : 
-                    <Card>
-                        <CardContent sx={{minWidth: 731}}>
-                            <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
-                        </CardContent>
-                    </Card>} 
+                <Stack spacing={3} sx={{ pl: 2, pr: 2 }}>
+                    {   filteredAssessments.length > 0 ? 
+                        <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
+                            {filteredAssessments.map((assessment, index) => (
+                                <Collapse key={index} sx={{ mb: 2 }}>
+                                    <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
+                                </Collapse>
+                            ))} 
+                        </TransitionGroup> : 
+                        <Card>
+                            <CardContent sx={{ minWidth: 731 }}>
+                                <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
+                            </CardContent>
+                        </Card>
+                    } 
                     
                     <Button variant="contained" 
                         onClick={() => {
@@ -323,58 +329,66 @@ const CourseViewer = (props) => {
                     > Add Assessment </Button>
                 </Stack>
 
-                <Box sx={{flexGrow: 1, flexBasis: 0}}>
-                    {!isMobile && <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
-                        sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
-                        pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
-                        setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
-                    />}
+                <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
+                    {   !isMobile && 
+                        <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
+                            sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
+                            pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
+                            setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                        />
+                    }
                 </Box>  
             </Stack>
             
-            {!isMobile && (<Box>
-                <Tooltip title={<h3>Return to overview</h3>} placement="right" arrow>
-                    <Fab color="primary" onClick={attemptClose} sx={{position: 'fixed', bottom: 32, left: 32}}>
-                        <KeyboardArrowLeftIcon fontSize="large" />
-                    </Fab>
-                </Tooltip>
-                
-                {changesMade && (
-                    <Box>
-                        <Button disabled={!validChanges || apiLoading} sx={{position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium"}} 
-                            variant="contained" onClick={() => {saveChanges()}}> 
-                            Save Changes
-                        </Button>
-                        {apiLoading && <CircularProgress size={36} sx={{ position: 'fixed', bottom: 50, right: 90, mt: '-18px', ml: '-18px', }} />}
-                    </Box>
-                )}
-            </Box>)}
+            {   !isMobile && 
+                <Box>
+                    <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
+                        <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
+                            <KeyboardArrowLeftIcon fontSize="large" />
+                        </Fab>
+                    </Tooltip>
+                    
+                    {changesMade && (
+                        <Box>
+                            <Button disabled={!validChanges || apiLoading} sx={{ position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium" }} 
+                                variant="contained" onClick={() => {saveChanges()}}> 
+                                Save Changes
+                            </Button>
+                            {apiLoading && <CircularProgress size={36} sx={{ position: "fixed", bottom: 50, right: 90, mt: "-18px", ml: "-18px" }} />}
+                        </Box>
+                    )}
+                </Box>
+            }
 
-            {isMobile && <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
-                changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges} mb={2}
-            />}
-
-            {isMobile && <Box id="mobileSlidePanel"> 
-                <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
-                    handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter} pastDeadlineFilter={pastDeadlineFilter} 
-                    testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
-                    setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+            {   isMobile && 
+                <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
+                    changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges} mb={2}
                 />
-            </Box>}
+            }
+
+            {   isMobile && 
+                <Box id="mobileSlidePanel"> 
+                    <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
+                        handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter} pastDeadlineFilter={pastDeadlineFilter} 
+                        testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
+                        setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                    />
+                </Box>
+            }
             
             <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
                 changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
             />
 
-            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
+            <ConfirmDialog open={confirmDelete} handleClose={() => setConfirmDelete(false)} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
                 subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
             />
 
-            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} 
+            <ConfirmDialog open={confirmExit} handleClose={() => setConfirmExit(false)} buttonText={"Exit"} message={"Exit course viewer?"} 
                 subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
             />
 
-            <ConfirmDialog open={syncSuggestion} handleClose={() => {setSyncSuggestion(false)}} buttonText={"Sync"} message={"Would you like to sync?"} 
+            <ConfirmDialog open={syncSuggestion} handleClose={() => setSyncSuggestion(false)} buttonText={"Sync"} message={"Would you like to sync?"} 
                 subMessage={"You have updated the template but not your instance. Sync to update your course instance."} 
                 confirmAction={() => {
                     setSyncMenuOpen(true); 
@@ -382,26 +396,26 @@ const CourseViewer = (props) => {
                 }} 
             />
 
-            <NewCourseDialog open={editTemplate} activeTri={{year: courseData.year, tri: courseData.tri}} editCode={courseData.code} 
+            <NewCourseDialog open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
                 templateData={templateData} setTemplateData={setTemplateData} 
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
-                    if(didUpdate){
+                    if (didUpdate) {
                         courseData.lastUpdated = new Date();
-                        if(!changesMade && !isMobile) setSyncSuggestion(true);
+                        if (!changesMade && !isMobile) setSyncSuggestion(true);
                     }
                 }}
             />
 
-            <SyncDialog open={syncMenuOpen} onClose={() => {setSyncMenuOpen(false)}} courseData={courseData} templateData={templateData} 
+            <SyncDialog open={syncMenuOpen} onClose={() => setSyncMenuOpen(false)} courseData={courseData} templateData={templateData} 
                 setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} 
             />
 
-            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => {setSnackbar("none")}}
+            <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
                 anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }}
             >
-                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%'}}>
-                    {isSuccess ? successText : errorText}
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%" }}>
+                    { isSuccess ? successText : errorText }
                 </Alert>
             </Snackbar>
         </Box>

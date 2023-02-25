@@ -20,7 +20,7 @@ import React from "react";
 import {
     Box,
     Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -36,13 +36,27 @@ const PasswordValidation = (props) => {
     
     return (
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 0.5 }}>
-            <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordLength ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must be at least 8 characters long</Typography>
-            <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordNumber ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one number</Typography>
-            <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordCapital ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one capital letter</Typography>
-            <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordSpecial ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must contain at least one special character</Typography>
-            <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center"}}>{validPasswordMatch ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> }Password must match</Typography>
+            <Check check={validPasswordLength} text={"Password must be at least 8 characters long"} />
+            <Check check={validPasswordNumber} text={"Password must contain at least one number"} />
+            <Check check={validPasswordCapital} text={"Password must contain at least one capital letter"} />
+            <Check check={validPasswordSpecial} text={"Password must contain at least one special character"} />
+            <Check check={validPasswordMatch} text={"Password must match"} />
         </Box>
     );
-}
+};
+
+const Check = (props) => {
+    const {
+        check,
+        text,
+    } = props;
+
+    return (
+        <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center" }}> 
+            { check ? <CheckCircleIcon sx={{ color: "passing.main" }} /> : <CancelIcon sx={{ color: "error.main" }} /> } 
+            {text} 
+        </Typography>
+    );
+};
 
 export default PasswordValidation;

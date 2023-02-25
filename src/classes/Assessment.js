@@ -53,7 +53,7 @@ class Assessment {
         this.checkIfChanged();
     }
 
-    setWeight(weight){
+    setWeight(weight) {
         this.weight = weight;
         this.checkValid();
         this.checkIfChanged();

@@ -16,14 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useCallback } from 'react';
+import React from "react";
 import {
+    Box,
     Button,
     Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import LoginDialog from './LoginDialog';
-import SignupDialog from './SignupDialog';
+import LoginDialog from "./LoginDialog";
+import SignupDialog from "./SignupDialog";
 
 const Login = (props) => {
     const {
@@ -36,34 +37,24 @@ const Login = (props) => {
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 
-    const handleOpenLogin = useCallback(() => {
-        setLoginOpen(true);
-    }, []);
-
-    const handleCloseLogin = useCallback(() => {
-        setLoginOpen(false);
-    }, []);
-
-    const handleOpenLSignup = useCallback(() => {
-        setSignupOpen(true);
-    }, []);
-
-    const handleCloseSignup = useCallback(() => {
-        setSignupOpen(false);
-    }, []);
-
     return (
-        <>
-        <Button onClick={handleOpenLogin} variant="text" color="inherit">
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Login</Typography>
-        </Button>
-        <Button onClick={handleOpenLSignup} variant="text" color="inherit">
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Sign Up</Typography>
-        </Button>
-        <LoginDialog open={loginOpen} onClose={handleCloseLogin} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} />
-        <SignupDialog open={signupOpen} onClose={handleCloseSignup} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} setEmailSent={setEmailSent} />
-        </>
-    )
+        <Box>
+            <Button onClick={() => setLoginOpen(true)} variant="text" color="inherit">
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Login</Typography>
+            </Button>
+            <Button onClick={() => setSignupOpen(true)} variant="text" color="inherit">
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>Sign Up</Typography>
+            </Button>
+
+            <LoginDialog open={loginOpen} onClose={() => setLoginOpen(false)} setIsLoggedIn={setIsLoggedIn} 
+                setUserDetails={setUserDetails} activeTri={activeTri} 
+            />
+
+            <SignupDialog open={signupOpen} onClose={() => setSignupOpen(false)} setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} 
+                activeTri={activeTri} setEmailSent={setEmailSent} 
+            />
+        </Box>
+    );
 };
 
 export default Login;

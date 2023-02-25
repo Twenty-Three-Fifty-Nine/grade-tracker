@@ -48,10 +48,10 @@ import logoDark from "./images/2359LogoDark.svg";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    const [userDetails, setUserDetails] = React.useState({});
     const [lightMode, setLightMode] = React.useState(true);
-    const [viewedCourse, setViewedCourse] = React.useState(null);
 
+    const [userDetails, setUserDetails] = React.useState({});
+    const [viewedCourse, setViewedCourse] = React.useState(null);
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
 
@@ -67,6 +67,7 @@ const App = () => {
 
     const verifyUser = async (email, token) => {
         setVerifying(true);
+
         await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
             token: token,
         }).then((response) => {
@@ -78,7 +79,8 @@ const App = () => {
                 });
                 setUserDetails(response.data);
             }
-        })
+        });
+
         setVerifying(false);
     };
 
@@ -112,17 +114,9 @@ const App = () => {
             <CssBaseline />
             <AppBar position="fixed" component="nav">
                 <Toolbar>
-                    <Stack
-                        direction={"row"}
-                        sx={{ position: isMobile ? "relative" : "fixed" }}
-                    >
-                        <Box
-                            component="img"
-                            src={!lightMode ? logoLight : logoDark}
-                            sx={{
-                                width: isMobile ? 40 : 50,
-                                height: isMobile ? 40 : 50,
-                            }}
+                    <Stack direction={"row"} sx={{ position: isMobile ? "relative" : "fixed" }}>
+                        <Box component="img" src={!lightMode ? logoLight : logoDark}
+                            sx={{ width: isMobile ? 40 : 50, height: isMobile ? 40 : 50 }}
                         />
 
                         <Box sx={{ ml: 2, mt: 1 }}>
@@ -134,12 +128,8 @@ const App = () => {
                         </Box>
                     </Stack>
 
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ textAlign: "center", m: isMobile ? 0 : "auto" }}
-                    >
-                        {isLoggedIn && !verifying
+                    <Typography variant="h6" component="div" sx={{ textAlign: "center", m: isMobile ? 0 : "auto" }}>
+                        {   isLoggedIn && !verifying
                             ? isMobile && viewedCourse
                                 ? viewedCourse.code
                                 : userDetails.displayName +
@@ -156,11 +146,8 @@ const App = () => {
                             : ""}
                     </Typography>
 
-                    <Stack
-                        direction={"row"}
-                        sx={{ position: "fixed", right: isMobile ? 10 : 0 }}
-                    >
-                        {isLoggedIn ? (
+                    <Stack direction={"row"} sx={{ position: "fixed", right: isMobile ? 10 : 0 }}>
+                        {   isLoggedIn ? (
                             <AccountMenu
                                 setIsLoggedIn={setIsLoggedIn}
                                 userDetails={userDetails}
@@ -176,15 +163,8 @@ const App = () => {
                         ) : (
                             <FormControlLabel
                                 control={
-                                    <ThemeSwitch
-                                        sx={{
-                                            ml: isMobile ? 1 : 4,
-                                            mr: isMobile ? -3 : 0,
-                                        }}
-                                        checked={lightMode}
-                                        onChange={() =>
-                                            setLightMode(!lightMode)
-                                        }
+                                    <ThemeSwitch sx={{ ml: isMobile ? 1 : 4, mr: isMobile ? -3 : 0 }}
+                                        checked={lightMode} onChange={() => setLightMode(!lightMode)}
                                     />
                                 }
                             />
@@ -224,17 +204,22 @@ const App = () => {
                     />
                 ) : null}
             </Box>
+
             <PasswordResetDialog resetData={resetData} onClose={() => setResetData(null)} setIsLoggedIn={setIsLoggedIn}
-                        setUserDetails={setUserDetails}
-                activeTri={activeTri} />
+                setUserDetails={setUserDetails} activeTri={activeTri} 
+            />
             
-            <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}>
-                <Alert onClose={() => setEmailSent(false)} severity="success"  sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+            <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)} 
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+            >
+                <Alert onClose={() => setEmailSent(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Signup successful. Please check your email to verify your account.
                 </Alert>
             </Snackbar>
-            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}>
-                <Alert onClose={() => setEmailVerified(false)} severity="success"  sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)} 
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+            >
+                <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Email verified!
                 </Alert>
             </Snackbar>
