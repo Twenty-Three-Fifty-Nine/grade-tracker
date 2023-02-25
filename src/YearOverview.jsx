@@ -22,6 +22,7 @@ import {
     Stack,
 } from '@mui/material';
 
+import { getLetterGrade } from './Course';
 import { isMobile } from "react-device-detect";
 import { SessionContext } from './GradesOverview';
 import TrimesterOverview from './TrimesterOverview';
@@ -68,17 +69,7 @@ const YearOverview = (props) => {
         })
         let gpa = (totalGrade / totalCourses);
         if(totalCourses === 0) return "N/A";
-        else if(gpa >= 90) return "A+";
-        else if(gpa >= 85) return "A";
-        else if(gpa >= 80) return "A-";
-        else if(gpa >= 75) return "B+";
-        else if(gpa >= 70) return "B";
-        else if(gpa >= 65) return "B-";
-        else if(gpa >= 60) return "C+";
-        else if(gpa >= 55) return "C";
-        else if(gpa >= 50) return "C-";
-        else if(gpa >= 40) return "D";
-        return "E";
+        else return getLetterGrade(gpa);
     }
 
     return (
