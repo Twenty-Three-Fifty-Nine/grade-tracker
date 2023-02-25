@@ -112,7 +112,7 @@ const LoginDialog = (props) => {
     return (
         <Box>
             <Dialog open={open} onClose={() => loginState ? handleClose() : setLoginState(true)} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
-                <DialogTitle> {loginState ? "Login" : "Reset Passowrd"} </DialogTitle>
+                <DialogTitle> { loginState ? "Login" : "Reset Passowrd" } </DialogTitle>
                 
                 <DialogContent>
                     <TextField autoFocus margin="dense" id="email" label="Email Address" type="email" fullWidth value={email}
@@ -121,7 +121,7 @@ const LoginDialog = (props) => {
 
                     {   loginState && (
                         <Box>
-                            <TextField margin="dense" id="password" label="Password" type={showPassword ? 'text' : 'password'}
+                            <TextField margin="dense" id="password" label="Password" type={ showPassword ? "text" : "password" }
                                 fullWidth value={password} onChange={(e) => setPassword(e.target.value)}
                                 InputProps={{ endAdornment: 
                                     <InputAdornment position="end">
@@ -158,17 +158,17 @@ const LoginDialog = (props) => {
                     {   loginState ? (
                         <Stack direction="row">
                             <Button onClick={handleClose}>Cancel</Button>
-                            <Box sx={{ position: 'relative' }}>
+                            <Box sx={{ position: "relative" }}>
                                 <Button onClick={handleLogin} disabled={loading} fullWidth> Login </Button>
-                                {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
+                                {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} />}
                             </Box>
                         </Stack>
                     ) : (
                     <Box>
                         <Button onClick={() => setLoginState(true)}> Cancel </Button>
-                        <Box sx={{ position: 'relative' }}>
+                        <Box sx={{ position: "relative" }}>
                             <Button onClick={handlePasswordReset} disabled={loading}>Reset Password</Button>
-                            {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
+                            {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} />}
                         </Box>
                     </Box>
                     )}

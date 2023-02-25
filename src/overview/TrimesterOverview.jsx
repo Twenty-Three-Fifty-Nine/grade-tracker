@@ -62,7 +62,7 @@ const TrimesterOverview = (props) => {
                                 courses[triInfo.year][triInfo.tri - 1].map((courseInfo) => 
                                 <CourseOverview key={courseInfo.code} courseInfo={courseInfo} setViewedCourse={setViewedCourse} />) :
                                 <Alert severity="warning" sx={{ mt: 1 }}> 
-                                    {triInfo.isFinished ? "No courses were taken this trimester." :
+                                    {   triInfo.isFinished ? "No courses were taken this trimester." :
                                         "No courses added to this trimester yet." }
                                 </Alert> 
                             }

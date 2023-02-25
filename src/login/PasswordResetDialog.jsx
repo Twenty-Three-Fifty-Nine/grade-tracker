@@ -131,17 +131,17 @@ const PasswordResetDialog = (props) => {
                 <DialogTitle> Reset Password </DialogTitle>
 
                 <DialogContent>
-                    <TextField autoFocus id="password" label="Password" type={showPassword ? 'text' : 'password'}
+                    <TextField autoFocus id="password" label="Password" type={ showPassword ? "text" : "password" }
                         fullWidth value={password} onChange={handlePasswordChange} margin="dense"
                         InputProps={{ endAdornment: 
                             <InputAdornment position="end">
                                 <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    { showPassword ? <VisibilityOff /> : <Visibility /> }
                                 </IconButton>
                             </InputAdornment>
                         }}
                     />
-                    <TextField margin="dense" id="confirmPassword" label="Confirm Password" type={showPassword ? 'text' : 'password'}
+                    <TextField margin="dense" id="confirmPassword" label="Confirm Password" type={ showPassword ? "text" : "password" }
                         fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange}
                     />
                     
@@ -167,7 +167,7 @@ const PasswordResetDialog = (props) => {
                 <DialogActions>
                     <Button onClick={handleClose} color="primary"> Cancel </Button>
 
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: "relative" }}>
                         <Button onClick={resetPassword} color="primary"
                             disabled= {
                                 !( validPasswordLength && validPasswordNumber && validPasswordSpecial &&
@@ -176,7 +176,7 @@ const PasswordResetDialog = (props) => {
                         >
                             Reset Password
                         </Button>
-                        { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
+                        { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                     </Box>
                 </DialogActions>
             </Dialog>

@@ -121,21 +121,21 @@ const GradesOverview = (props) => {
 
     return (
         <Box>        
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                {sessionData && sessionData !== "Reloading" ? 
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                {   sessionData && sessionData !== "Reloading" ? 
                     <Tabs value={selectedYear} onChange={handleChangedYear}>
                         {activateTab && Object.entries(sessionData.courses).map(([key, value]) => <Tab key={key} value={parseInt(key)} label={key} />)}
                     </Tabs>
-                : null}
+                : null }
             </Box>
 
             <Box sx={{ mt: 2 }}>
-                <SessionContext.Provider value={sessionData !== null ? sessionData : "Reloading"}>
+                <SessionContext.Provider value={ sessionData !== null ? sessionData : "Reloading" }>
                     <YearOverview setViewedCourse={setViewedCourse} /> 
 
-                    <Tooltip title={isMobile ? "" : <h3> Add a new course </h3>} placement="left" arrow>
-                        <Fab color="primary" size={isMobile ? "large" : "large"} onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
-                            sx={{ position: 'fixed', bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0 }}
+                    <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
+                        <Fab color="primary" size={ isMobile ? "large" : "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
+                            sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0 }}
                         >
                             <Icon>add</Icon>
                         </Fab>

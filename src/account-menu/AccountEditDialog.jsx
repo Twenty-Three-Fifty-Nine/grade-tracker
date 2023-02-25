@@ -175,7 +175,7 @@ const AccountEditDialog = (props) => {
                 <Divider variant="middle" sx={{ my: 0.5, borderWidth: 2 }} />
 
                 <TextField label="Current Password" fullWidth margin="dense" onChange={(event) => setOldPassword(event.target.value)}
-                    type={showPassword ? 'text' : 'password'}
+                    type={ showPassword ? "text" : "password" }
                     InputProps={{ endAdornment: 
                         <InputAdornment position="end">
                             <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
@@ -185,7 +185,7 @@ const AccountEditDialog = (props) => {
                     }}
                 />
                 <TextField label="New Password" fullWidth margin="dense" onChange={handlePasswordChange} error={passwordError !== null} helperText={passwordError} 
-                    type={showNewPassword ? 'text' : 'password'}
+                    type={ showNewPassword ? "text" : "password" }
                     InputProps={{ endAdornment: 
                         <InputAdornment position="end">
                             <IconButton onClick={() => setShowNewPassword(!showNewPassword)} tabIndex={-1}>
@@ -194,7 +194,7 @@ const AccountEditDialog = (props) => {
                         </InputAdornment>
                     }}
                 />
-                <TextField label="Confirm New Password" type={showNewPassword ? 'text' : 'password'} fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
+                <TextField label="Confirm New Password" type={showNewPassword ? "text" : "password"} fullWidth margin="dense" onChange={handlePasswordConfirmChange} />
                 
                 {   oldPassword && (
                     <PasswordValidation validPasswordLength={validPasswordLength} validPasswordNumber={validPasswordNumber}
@@ -216,7 +216,7 @@ const AccountEditDialog = (props) => {
 
             <DialogActions sx={{ px: 2 }}>
                 <Button onClick={onClose}> Close </Button>
-                <Box sx={{ position: 'relative' }}>
+                <Box sx={{ position: "relative" }}>
                     <Button
                         onClick={() => handleUserUpdate()}
                         disabled={ loading || (!newEmail && !newName && !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && 
@@ -225,7 +225,7 @@ const AccountEditDialog = (props) => {
                     >
                         Update
                     </Button>
-                    { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
+                    { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                 </Box>
             </DialogActions>
         </Dialog>

@@ -134,25 +134,27 @@ const AddCourseDialog = (props) => {
                         value={courseCode} onChange={(e, value) => setCourseCode(value)} 
                     />
                     <IconButton onClick={() => getTemplatesList()}>
-                        <RefreshIcon fontSize='large' />
+                        <RefreshIcon fontSize="large" />
                     </IconButton>
                 </Stack>
 
-                <DialogContentText sx={{ m:"auto", maxWidth: 300, textAlign:"center", pt: 1, pb: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
+                <DialogContentText sx={{ m: "auto", maxWidth: 300, textAlign: "center", pt: 1, pb: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
                     If your course is not in this list, you can create an entry for the course offering.
                 </DialogContentText>
 
                 <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ m:"auto", pt: 1, pb: 5 }}>
-                    <Tooltip title={session && session !== "Reloading" && session.userData.verifiedEmail ? "" : 
-                        <h3> Please verify your email address to create a new course. </h3>} 
+                    <Tooltip title={ session && session !== "Reloading" && session.userData.verifiedEmail ? "" : 
+                        <h3> Please verify your email address to create a new course. </h3> } 
                         placement="bottom" arrow
                     >
-                        <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail} >Create New Course</Button>
+                        <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail}> 
+                            Create New Course
+                        </Button>
                     </Tooltip>
 
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: "relative" }}>
                         <Button disabled={!courseCode || loadingAddRequest} onClick={() => handleAddCourse()} variant="contained" fullWidth> Add Course </Button>
-                        { loadingAddRequest && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
+                        { loadingAddRequest && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                     </Box>
                 </Stack>
             </Dialog>
@@ -160,7 +162,7 @@ const AddCourseDialog = (props) => {
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
-                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile ? 9 : 0 }}>
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     {isSuccess ? "Course added successfully." : "Error adding course."}
                 </Alert>
             </Snackbar>

@@ -291,20 +291,20 @@ const NewCourseDialog = (props) => {
                         <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                             { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
                         </Typography>
-                        <Box sx={{ position: 'relative' }}>
+                        <Box sx={{ position: "relative" }}>
                             <Button color="inherit" onClick={editCode !== "" ? updateCourse : createCourse} disabled={loading || !formatValid || 
                                 (editCode !== "" && !(changesMade || changeOverride))}
                             > 
                                 { editCode !== "" ? "Update" : "Create" } </Button>
-                            { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} /> }
+                            { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                         </Box>
                     </Toolbar>
                 </AppBar>
 
                 <Box sx={{ p: 3, m: "auto", mt: 8.5, width: isMobile ? "100%" : 548 }}>
-                    <Stack direction="row" sx={{ display:"flex", alignItems:"center", justifyContent:"baseline" }}>
+                    <Stack direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "baseline" }}>
                         <Box visibility="hidden" sx={{ flexGrow: 1, flexBasis: 0 }} />
-                        <Typography variant="h5" sx={{ textAlign:"center" }}> Basic Info </Typography>
+                        <Typography variant="h5" sx={{ textAlign: "center" }}> Basic Info </Typography>
                         <Box sx={{ flexGrow: 1, flexBasis: 0, ml: 2, mt: 0.5 }}>
                             <HelpRoundedIcon onClick={() => setTemplateInfo(true)} 
                                 sx={{ fontSize: 40, color: "grey", "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }}
@@ -316,20 +316,20 @@ const NewCourseDialog = (props) => {
 
                     <Stack spacing={2}>
                         <TextField value={courseName} disabled={editCode !== "" ? true : false} label="Course Name" fullWidth onChange={handleNameChange} 
-                            error={!nameValid && nameCheckOn} helperText={courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : 
-                            courseName.length > 50 && nameCheckOn ? "This field  is too long" : ""} 
+                            error={!nameValid && nameCheckOn} helperText={ courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : 
+                            courseName.length > 50 && nameCheckOn ? "This field  is too long" : "" } 
                         />
                         <Box sx={{ display: "flex", justifyItems: "center" }}>
                             <TextField value={courseCode} disabled={editCode !== "" ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
-                                error={!codeValid && codeCheckOn} helperText={!codeValid && codeCheckOn ? "Invalid course code" : ""} 
+                                error={!codeValid && codeCheckOn} helperText={ !codeValid && codeCheckOn ? "Invalid course code" : "" } 
                             />
                             <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
-                                error={!urlValid && urlCheckOn} helperText={!urlValid && urlCheckOn ? courseURL.length > 200 ? "URL is too long" : "Invalid URL" : ""}
+                                error={!urlValid && urlCheckOn} helperText={ !urlValid && urlCheckOn ? courseURL.length > 200 ? "URL is too long" : "Invalid URL" : "" }
                             />
                         </Box>
                     </Stack>
 
-                    <Typography variant="h5" sx={{ pt: 5, textAlign:"center" }}> Course Assessments </Typography>
+                    <Typography variant="h5" sx={{ pt: 5, textAlign: "center" }}> Course Assessments </Typography>
                     <Divider sx={{ mb: 3 }} />
                     <Stack spacing={2}>
                         {   assessments.length > 0 ? (
@@ -349,7 +349,7 @@ const NewCourseDialog = (props) => {
                             </Stack>
                         )}
                         {   (assessments.length > 0 || editCode === "") && 
-                            <Button variant="contained" sx={{ width: 200, alignSelf:"center" }} onClick={addAssessment}> 
+                            <Button variant="contained" sx={{ width: 200, alignSelf: "center" }} onClick={addAssessment}> 
                                 Add New Assessment 
                             </Button> 
                         }
@@ -364,12 +364,12 @@ const NewCourseDialog = (props) => {
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
                 anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : editCode === "" ? "left" : "right" }}
             >
-                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && isSuccess && editCode === "" ? 9 : 0 }}>
-                    {isSuccess ? editCode !== "" ? "Course updated successfully" : "Course created successfully" : errorText}
+                <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && isSuccess && editCode === "" ? 9 : 0 }}>
+                    { isSuccess ? editCode !== "" ? "Course updated successfully" : "Course created successfully" : errorText }
                 </Alert>
             </Snackbar>
 
-            <ConfirmDialog open={templateInfo} handleClose={() => setTemplateInfo(false)} buttonText={"Got It"} message={editCode !== "" ? "How Template Updating Works" : "How Template Creation Works"} 
+            <ConfirmDialog open={templateInfo} handleClose={() => setTemplateInfo(false)} buttonText={"Got It"} message={ editCode !== "" ? "How Template Updating Works" : "How Template Creation Works"} 
                 confirmAction={null} subMessage={editCode !== "" ? "When you add a course to your offering in a given trimester, sometimes the information may not be up to date. " + 
                 "This is where the updating system comes in; you can change the assessment information of the template so everyone else can access it. " + 
                 "Note that if the inputted information does not apply to the majority of a class, consider updating your personal copy of the course instead using the course viewer." :

@@ -54,12 +54,12 @@ const DeleteAccountDialog = (props) => {
                 <Typography sx={{ textAlign:"center", maxWidth: 300}}>
                     This action CANNOT be reverted. You will lose all of your data and be unable to retrieve it.
                 </Typography>
-                <TextField margin="dense" id="password" label="Password" type={showDeletePassword ? 'text' : 'password'}
+                <TextField margin="dense" id="password" label="Password" type={showDeletePassword ? "text" : "password"}
                     fullWidth value={deletePassword} onChange={(e) => setDeletePassword(e.target.value)}
                     InputProps={{endAdornment: 
                         <InputAdornment position="end">
                             <IconButton onClick={() => {setShowDeletePassword(!showDeletePassword)}} tabIndex={-1}>
-                                {showDeletePassword ? <VisibilityOff /> : <Visibility />}
+                                { showDeletePassword ? <VisibilityOff /> : <Visibility /> }
                             </IconButton>
                         </InputAdornment>
                     }}
@@ -81,7 +81,7 @@ const DeleteAccountDialog = (props) => {
                     <Button onClick={() => {setConfirmDeleteAccount(false); setDeletePassword(""); setShowDeletePassword(false); }} variant="outlined">
                         Cancel
                     </Button>
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: "relative" }}>
                         <Button onClick={deleteUser} variant="contained"> Delete </Button>
                     </Box>
                 </Stack>

@@ -186,16 +186,16 @@ const SignupDialog = (props) => {
                         onChange={(e) => setEmail(e.target.value)} 
                     />
                     <TextField margin="dense" id="password" label="Password" fullWidth value={password} onChange={handlePasswordChange} 
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         InputProps={{endAdornment: 
                             <InputAdornment position="end">
                                 <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    { showPassword ? <VisibilityOff /> : <Visibility /> }
                                 </IconButton>
                             </InputAdornment>
                         }}
                     />
-                    <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type={showPassword ? 'text' : 'password'} 
+                    <TextField margin="dense" id="passwordConfirm" label="Confirm Password" type={showPassword ? "text" : "password"} 
                         fullWidth value={passwordConfirm} onChange={handlePasswordConfirmChange} 
                     />
 
@@ -207,7 +207,7 @@ const SignupDialog = (props) => {
                         <Checkbox checked={acceptedTerms} onChange={(e, newValue) => setAcceptedTerms(newValue)} />
                         <Typography variant="h6" sx={{ mt: 1.2, fontSize:"16px" }}> 
                             Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} 
-                            sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
+                            sx={{ cursor:"pointer", color:"info.main", "&:hover":{ textDecoration:"underline" } }}> Terms & Conditions </Box>
                         </Typography> 
                     </Stack>
 
@@ -226,13 +226,13 @@ const SignupDialog = (props) => {
 
                 <DialogActions>
                     <Button onClick={handleClose}> Cancel </Button>
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: "relative" }}>
                         <Button onClick={handleSignup} disabled={loading || !acceptedTerms || !validPasswordLength || !validPasswordNumber || 
                             !validPasswordSpecial || !validPasswordCapital || !validPasswordMatch || !displayName || !email || !password || !passwordConfirm}
                         >
                             Sign Up
                         </Button>
-                        { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} /> }
+                        { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                     </Box>
                 </DialogActions>
             </Dialog>

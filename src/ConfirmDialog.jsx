@@ -49,10 +49,10 @@ const ConfirmDialog = (props) => {
                     </Typography>
                     
                     <Stack spacing={2} direction="row" sx={{ margin:"auto", pt: 3, pb: 3 }}>
-                        { confirmAction && <Button onClick={handleClose} variant="outlined">Cancel</Button> }
-                        <Box sx={{ position: 'relative' }}>
+                        { confirmAction && <Button onClick={handleClose} variant="outlined" >Cancel </Button> }
+                        <Box sx={{ position: "relative" }}>
                             <Button onClick={confirmAction ? confirmAction : handleClose} disabled={loading} variant="contained">{buttonText}</Button>
-                            { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} /> }
+                            { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                         </Box>
                     </Stack>
                 </Stack>

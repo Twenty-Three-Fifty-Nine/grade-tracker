@@ -69,11 +69,11 @@ const FeedbackDialog = (props) => {
             <DialogTitle> Send Feedback </DialogTitle>
 
             <DialogContent>
-                <Stack direction={isMobile ? "column" : "row"}>
-                    <TextField label="Subject" sx={ {width: isMobile ? "100%" : "70%" }} margin="normal" value={feedbackSubject ? feedbackSubject : ""} 
+                <Stack direction={ isMobile ? "column" : "row" }>
+                    <TextField label="Subject" sx={{ width: isMobile ? "100%" : "70%" }} margin="normal" value={ feedbackSubject ? feedbackSubject : "" } 
                         onChange={(e) => setFeedbackSubject(e.target.value)} error={feedbackSubject !== null && (feedbackSubject.length === 0 || feedbackSubject.length > 40)} 
-                        helperText={feedbackSubject === null ? "" : feedbackSubject.length === 0 ? "Subject field cannot be empty" : feedbackSubject.length > 40 ? 
-                            "Subject length has to be below 41 characters" : ""}
+                        helperText={ feedbackSubject === null ? "" : feedbackSubject.length === 0 ? "Subject field cannot be empty" : feedbackSubject.length > 40 ? 
+                            "Subject length has to be below 41 characters" : "" }
                     />
                     <FormControl sx={{ width: isMobile ? "100%" : "30%", my: 2, ml: isMobile ? 0 : 2 }}>
                         <InputLabel>Type</InputLabel>
@@ -85,10 +85,10 @@ const FeedbackDialog = (props) => {
                     </FormControl>
                 </Stack>
 
-                <TextField label="Message Content" fullWidth margin="normal" value={feedbackMessage ? feedbackMessage : ""} multiline rows={6}
+                <TextField label="Message Content" fullWidth margin="normal" value={ feedbackMessage ? feedbackMessage : "" } multiline rows={6}
                     onChange={(e) => setFeedbackMessage(e.target.value)}  error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
-                    helperText={feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? 
-                        "Message content has to be below 351 characters" : ""}
+                    helperText={ feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? 
+                        "Message content has to be below 351 characters" : "" }
                 />
                 
                 <Collapse in={apiAlert !== null && !confirmDeleteAccount}>
@@ -106,13 +106,13 @@ const FeedbackDialog = (props) => {
 
             <DialogActions sx={{ px: 2 }}>
                 <Button onClick={() => handleFeedbackDialogClose()}> Close </Button>
-                <Box sx={{ position: 'relative' }}>
+                <Box sx={{ position: "relative" }}>
                     <Button onClick={() => sendFeedback()}
                         disabled={loading || (!feedbackSubject || !feedbackMessage || feedbackSubject.length > 40 || feedbackMessage.length > 350)}
                     >
                         Send
                     </Button>
-                    { loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} /> }
+                    { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
                 </Box>
             </DialogActions>
         </Dialog>

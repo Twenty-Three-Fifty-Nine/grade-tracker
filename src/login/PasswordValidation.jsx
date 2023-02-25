@@ -53,7 +53,7 @@ const Check = (props) => {
 
     return (
         <Typography variant="body2" sx={{ display: "flex", gap: 0.5, alignItems: "center" }}> 
-            { check ? <CheckCircleIcon sx={{color:'passing.main'}} /> : <CancelIcon sx={{color:'error.main'}} /> } 
+            { check ? <CheckCircleIcon sx={{ color: "passing.main" }} /> : <CancelIcon sx={{ color: "error.main" }} /> } 
             {text} 
         </Typography>
     );
