@@ -68,6 +68,10 @@ class Assessment {
         return this.name === template.name && this.deadline === template.deadline && 
             this.isAss === template.isAss && this.weight.toString() === template.weight.toString();
     }
+
+    clone() {
+        return new Assessment(this.name, this.weight, this.grade, this.deadline, this.isAss, this.isNew);
+    }
 } 
 
 export default Assessment;
