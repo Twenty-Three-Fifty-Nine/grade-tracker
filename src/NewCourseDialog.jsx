@@ -43,53 +43,7 @@ import { isMobile } from "react-device-detect";
 import { TransitionGroup } from "react-transition-group";
 
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
-
-class Assessment {
-    constructor(name, weight, deadline, isNew = true, existing = false, isAssignment = true) {
-        this.name = name;
-        this.weight = weight;
-        this.deadline = deadline;
-        this.isAssignment = isAssignment;
-
-        this.isNew = isNew;
-        this.hasChanged = false;
-        this.valid = existing;
-        this.duplicate = false;
-
-        this.initName = name;
-        this.initWeight = weight;
-        this.initDeadline = deadline;
-        this.initIsAss = isAssignment;
-    }
-
-    checkIfChanged() {
-        let nameChanged = this.name !== this.initName;
-        let deadlineChanged = new Date(this.deadline).toString() !== new Date(this.initDeadline).toString();
-        let isAssChanged = this.isAssignment !== this.initIsAss;
-        let weightChanged = this.weight.toString() !== this.initWeight.toString();
-        this.hasChanged = nameChanged || deadlineChanged || isAssChanged || weightChanged;
-    }
-
-    setName(name) {
-        this.name = name;
-        this.checkIfChanged();
-    }
-
-    setWeight(weight) {
-        this.weight = weight;
-        this.checkIfChanged();
-    }
-
-    setDeadline(deadline) {
-        this.deadline = deadline;
-        this.checkIfChanged();
-    }
-
-    setIsAssignment(isAssignment) {
-        this.isAssignment = isAssignment;
-        this.checkIfChanged();
-    }
-} 
+import Assessment from "./Assessment";
 
 const NewCourseDialog = (props) => {
     const { onClose, open, activeTri, editCode, templateData, setTemplateData } = props;
@@ -138,7 +92,7 @@ const NewCourseDialog = (props) => {
             setInitURL(templateData.url);
 
             templateData.assignments.forEach((ass) => {
-                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
+                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)]);    
             })
         }else{
             Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
@@ -150,7 +104,7 @@ const NewCourseDialog = (props) => {
                 setInitURL(data.url);
 
                 data.assignments.forEach((ass) => {
-                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), ass.dueDate, false, true, ass.isAssignment)]);    
+                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)]);    
                 })
             })
         }
@@ -199,7 +153,7 @@ const NewCourseDialog = (props) => {
     const addAssessment = () => {
         const date = new Date();
         date.setSeconds(0);
-        setAssessments(oldArray => [...oldArray, new Assessment("", 0, date)]);
+        setAssessments(oldArray => [...oldArray, new Assessment("", 0, 0, date, true, true)]);
     }
 
     const removeAssessment = (index) => {
@@ -225,7 +179,7 @@ const NewCourseDialog = (props) => {
                     weight: a.weight,
                     dueDate: a.deadline,
                     grade: -1,
-                    isAssignment: a.isAssignment
+                    isAssignment: a.isAss
                 }
             })
         }).then((e) => {
@@ -267,7 +221,7 @@ const NewCourseDialog = (props) => {
                     weight: a.weight,
                     dueDate: a.deadline,
                     grade: -1,
-                    isAssignment: a.isAssignment
+                    isAssignment: a.isAss
                 }
             })
         }).then((e) => {
