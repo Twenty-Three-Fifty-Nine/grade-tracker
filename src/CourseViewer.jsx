@@ -23,19 +23,11 @@ import {
     Button,
     Card,
     CardContent,
-    Checkbox,
-    Chip,
     CircularProgress,
     Collapse,
     Dialog,
     Divider,
     Fab,
-    FormControl,
-    FormControlLabel,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
     Snackbar,
     Stack,
     TextField,
@@ -46,7 +38,6 @@ import {
 } from "@mui/material";
 
 import {
-    DesktopDatePicker,
     MobileDatePicker,
     LocalizationProvider,
 } from "@mui/x-date-pickers";
@@ -62,15 +53,12 @@ import NewCourseDialog from "./NewCourseDialog";
 import SyncDialog from "./SyncDialog";
 import { TransitionGroup } from "react-transition-group";
 
-import ClearIcon from "@mui/icons-material/Clear";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import CourseViewerHeader from "./CourseViewerHeader";
 import CourseViewerEditor from "./CourseViewerEditorDesktop";
 import CourseViewerFilterDesktop from "./CourseViewerFilterDesktop";
+import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
+import CourseViewerFilterMobile from "./CourseViewerFilterMobile";
 
 const CourseViewer = (props) => {
     const { 
@@ -129,8 +117,8 @@ const CourseViewer = (props) => {
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
         if(isMobile){
-            document.getElementById("slidePanelButton").removeEventListener("transitionend", handleTransitionEnd, false);
-            document.getElementById("slidePanelButton").removeEventListener("transitionstart", handleTransitionStart, false);
+            document.getElementById("mobileSlidePanel").removeEventListener("transitionend", handleTransitionEnd, false);
+            document.getElementById("mobileSlidePanel").removeEventListener("transitionstart", handleTransitionStart, false);
         }
         setViewedCourse(null);
         setTemplateData(null);
@@ -158,8 +146,8 @@ const CourseViewer = (props) => {
 
         document.addEventListener("keydown", handleKeyDown, false);
         if(isMobile){
-            document.getElementById("slidePanelButton").addEventListener("transitionend", handleTransitionEnd, false);
-            document.getElementById("slidePanelButton").addEventListener("transitionstart", handleTransitionStart, false);
+            document.getElementById("mobileSlidePanel").addEventListener("transitionend", handleTransitionEnd, false);
+            document.getElementById("mobileSlidePanel").addEventListener("transitionstart", handleTransitionStart, false);
         }
         window.scrollTo(0, 0);
 
@@ -344,81 +332,34 @@ const CourseViewer = (props) => {
 
                 <Box sx={{flexGrow: 1, flexBasis: 0}}>
                     {!isMobile && <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
-                    sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
-                    pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
-                    setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                        sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
+                        pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
+                        setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
                     />}
                 </Box>  
             </Stack>
 
             
-            {isMobile && (<>
-                <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: 3, ml: 3, mt: 2, mb : 2}} />
-                <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: 2}}>
-                    <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
-                    <Box sx={{ position: 'relative' }}>
-                        <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>
-                        {apiLoading &&
-                            <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />
-                        }
-                    </Box>
-                </Stack>
-            </>)}
+            {isMobile && <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
+                changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges}
+            />}
 
-            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} />
-            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} subMessage={"You have unsaved changes."} confirmAction={exitViewer} />
+            <ConfirmDialog open={confirmDelete} handleClose={() => {setConfirmDelete(false)}} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
+                subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
+            />
 
-            {isMobile && (
-                <Box sx={{ position:"fixed", top: 90, right: sliderPos, transition: "all 0.3s linear"}}>
-                    <Stack direction="row"> 
-                    {/* //sx={{zIndex: sliderPos === 0 ? 3 : 1}} */}
-                        <Stack>
-                            <Box sx={{backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25}}>
-                                <IconButton id="slidePanelButton" onClick={() => {setSliderPos(sliderPos === -270 ? 0 : -270)}} sx={{transition: "all 0.3s linear", transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)"}}>
-                                    <KeyboardArrowLeftIcon />
-                                </IconButton>
-                            </Box>
-                            <Box sx={{visibility: "hidden"}} />
-                        </Stack>
+            <ConfirmDialog open={confirmExit} handleClose={() => {setConfirmExit(false)}} buttonText={"Exit"} message={"Exit course viewer?"} 
+                subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
+            />
 
-                        <Card sx={{width: 270, borderTopLeftRadius: 0, mt: "-1px", backgroundColor:"filterPanel.main"}}>
-                            <CardContent>
-                                <Stack spacing={0.5}>
-                                    <FormControl size="small" sx={{width:200, mb: 1, mt: 1}}>
-                                        <InputLabel> Sort By </InputLabel>
-                                        <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
-                                            <MenuItem value={"name-a"}>Name (Ascending)</MenuItem>
-                                            <MenuItem value={"name-d"}>Name (Descending)</MenuItem>
-                                            <MenuItem value={"deadline-a"}>Due Date (Closest)</MenuItem>
-                                            <MenuItem value={"deadline-d"}>Due Date (Furthest)</MenuItem>
-                                            <MenuItem value={"weight-a"}>Weight (Highest)</MenuItem>
-                                            <MenuItem value={"weight-d"}>Weight (Lowest)</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <Typography variant="body1" sx={{ml: 1.3 }}> Assessment Filters </Typography>
-                                    
-                                    <Divider />
-                                    
-                                    <Box sx={{alignSelf:"self-start", display:"flex", flexDirection:"column"}}>
-                                        <FormControlLabel control={<Checkbox checked={finishedFilter}
-                                            onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
-                                        <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
-                                            onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
-                                        <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
-                                            onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
-                                        <FormControlLabel control={<Checkbox checked={testFilter} 
-                                            onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
-                                        <FormControlLabel control={<Checkbox checked={assignmentFilter} 
-                                            onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
-                                    </Box>
-
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Stack>
-                </Box>
-            )}
-
+            {isMobile && <Box id="mobileSlidePanel"> 
+                <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
+                    handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter} pastDeadlineFilter={pastDeadlineFilter} 
+                    testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
+                    setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                />
+            </Box>}
+            
 
             <Dialog open={currentEdit !== null && isMobile} onClose={() => {setCurrentEdit(null)}}>
                 <Stack sx={{display:"flex", alignItems:"center", mx: 3, my: 2}}>
