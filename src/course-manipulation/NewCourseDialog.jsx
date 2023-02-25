@@ -195,16 +195,7 @@ const NewCourseDialog = (props) => {
             setIsSuccess(true);
             onClose(courseCode.toUpperCase(), true);
 
-            setAssessments([]);
-            setCourseName("");
-            setCourseCode("");
-            setCourseURL("");
-            setNameValid(false);
-            setCodeValid(false);
-            setURLValid(true);
-            setNameCheckOn(false);
-            setCodeCheckOn(false);
-            setURLCheckOn(false);
+            resetStates();
         }).catch((e) => {
             if (e.response && e.response.status === 409) setErrorText("There is already a template with this course code");
             else setErrorText("There was an error creating a course");
@@ -238,16 +229,7 @@ const NewCourseDialog = (props) => {
             setIsSuccess(true);
             onClose(true);
 
-            setAssessments([]);
-            setCourseName("");
-            setCourseCode("");
-            setCourseURL("");
-            setNameValid(false);
-            setCodeValid(false);
-            setURLValid(true);
-            setNameCheckOn(false);
-            setCodeCheckOn(false);
-            setURLCheckOn(false);
+            resetStates();
             setTemplateData(null);
         }).catch((e) => {
             setErrorText("There was an error updating the template")
@@ -266,6 +248,11 @@ const NewCourseDialog = (props) => {
     };
 
     const stopCreating = () => {
+        resetStates();
+        onClose();
+    };
+
+    const resetStates = () => {
         setAssessments([]);
         setCourseName("");
         setCourseCode("");
@@ -277,8 +264,7 @@ const NewCourseDialog = (props) => {
         setCodeCheckOn(false);
         setURLCheckOn(false);
         setCloseDialog(false);
-        onClose();
-    };
+    }
 
     return (
         <Box>

@@ -144,9 +144,7 @@ const SignupDialog = (props) => {
             if (e.response.status === 409) {
                 setSignupErrorText("Email already in use");
             } else {
-                setSignupErrorText(
-                    "There was an error signing up. Please try again later or contact support."
-                );
+                setSignupErrorText("There was an error signing up. Please try again later or contact support.");
             }
             setSignupError(true);
         });
