@@ -36,7 +36,7 @@ const CourseViewerFilterMobile = (props) => {
                 <Stack>
                     <Box sx={{ backgroundColor: "filterPanel.main", borderRadius: 0, borderBottomLeftRadius: 5, borderTopLeftRadius: 5, mr: -0.25 }}>
                         <IconButton onClick={() => setSliderPos(sliderPos === -270 ? 0 : -270)} sx={{ transition: "all 0.3s linear", 
-                            transform: sliderPos === -135 ? "rotate(180deg)" : sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)" }}
+                            transform: sliderPos === -270 ? "rotate(0deg)" : "rotate(180deg)" }}
                         >
                             <KeyboardArrowLeftIcon />
                         </IconButton>
