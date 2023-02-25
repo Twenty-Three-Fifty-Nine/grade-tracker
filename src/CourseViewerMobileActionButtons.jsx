@@ -33,6 +33,6 @@ const CourseViewerMobileActionButtons = (props) => {
             </Stack>
         </Box>
     );
-}
+};
 
 export default CourseViewerMobileActionButtons;

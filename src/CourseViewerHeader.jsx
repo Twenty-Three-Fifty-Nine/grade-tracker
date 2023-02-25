@@ -57,47 +57,19 @@ const CourseViewerHeader = (props) => {
 
                 {isMobile && <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", my: 2, mx: 3}} /> }
 
-                <Stack direction={isMobile ? "column-reverse" : "column"}>
-                    <Stack spacing={isMobile ? 0 : 2}>
-                        <Typography variant="h4" component="div" sx={{textAlign:"center"}}> 
-                            Currently Achieved:
-                        </Typography>
-                        <Stack direction="row" spacing={isMobile ? 5 : 10} sx={{alignItems:"center", justifyContent:"center"}}>
-                            <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
-                            <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
-                        </Stack>
-                    </Stack>
+                {isMobile ? 
+                <TemplateRelatedDisplay courseData={courseData} sessionData={sessionData} changesMade={changesMade} deleteZIndex={deleteZIndex} 
+                    setEditTemplate={setEditTemplate} setSyncMenuOpen={setSyncMenuOpen} setConfirmDelete={setConfirmDelete} 
+                /> : 
+                <CurrentlyAchievedDisplay courseData={courseData} courseLetter={courseLetter} />}
+                
+                {isMobile && <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", my: 2, mx: 3}} /> }
 
-                    {isMobile && <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", my: 2, mx: 3}} /> }
-
-                    <Stack sx={{flexGrow: 1, flexBasis: 0}}>
-                        <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
-                        </Typography>
-                        <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
-                            Last synced to template: {new dayjs(courseData.lastSynced).format("DD/MM/YYYY")}
-                        </Typography>
-                        <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
-                            <Box sx={{alignSelf:"center"}}>
-                                <Tooltip title={sessionData && sessionData !== "Reloading" && sessionData.userData.verifiedEmail ? "" : <h3>Please verify your email address to update a template.</h3>} placement="bottom" arrow>
-                                    <Box>
-                                        <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}} disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}> Update Template </Button>
-                                    </Box>
-                                </Tooltip>
-                            </Box>
-                            <Box sx={{alignSelf:"center"}}>
-                                <Button variant="contained" disabled={changesMade || isMobile} sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
-                            </Box>
-                            <Box sx={{alignSelf:"center"}}>
-                                <Tooltip title={isMobile ? "" : <h3>Remove Course</h3>} placement="bottom" arrow>
-                                    <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}} sx={{zIndex: deleteZIndex}}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                        </Stack>
-                    </Stack>
-                </Stack>
+                {isMobile ? 
+                <CurrentlyAchievedDisplay courseData={courseData} courseLetter={courseLetter} /> :
+                <TemplateRelatedDisplay courseData={courseData} sessionData={sessionData} changesMade={changesMade} deleteZIndex={deleteZIndex} 
+                    setEditTemplate={setEditTemplate} setSyncMenuOpen={setSyncMenuOpen} setConfirmDelete={setConfirmDelete} 
+                />}
             </Stack>
 
             {isMobile && <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
@@ -105,6 +77,67 @@ const CourseViewerHeader = (props) => {
             />}
         </Box>
     );
-}
+};
+
+const CurrentlyAchievedDisplay = (props) => {
+    const { 
+        courseData,
+        courseLetter
+    } = props;
+
+    return (
+        <Stack spacing={isMobile ? 0 : 2}>
+            <Typography variant="h4" component="div" sx={{textAlign:"center"}}> 
+                Currently Achieved:
+            </Typography>
+            <Stack direction="row" spacing={isMobile ? 5 : 10} sx={{alignItems:"center", justifyContent:"center"}}>
+                <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+                <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1}} />
+            </Stack>
+        </Stack>
+    );
+};
+
+const TemplateRelatedDisplay = (props) => {
+    const { 
+        courseData, 
+        sessionData, 
+        changesMade, 
+        deleteZIndex,
+        setEditTemplate, 
+        setSyncMenuOpen, 
+        setConfirmDelete,
+    } = props;
+
+    return (
+        <Stack sx={{flexGrow: 1, flexBasis: 0}}>
+            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                Template last updated: {new dayjs(courseData.lastUpdated).format("DD/MM/YYYY")}
+            </Typography>
+            <Typography variant="h6" component="div" sx={{textAlign:"center"}}> 
+                Last synced to template: {new dayjs(courseData.lastSynced).format("DD/MM/YYYY")}
+            </Typography>
+            <Stack spacing={2} direction="row" sx={{display:"flex", justifyContent:"center", mt: 1.2}}>
+                <Box sx={{alignSelf:"center"}}>
+                    <Tooltip title={sessionData && sessionData !== "Reloading" && sessionData.userData.verifiedEmail ? "" : <h3>Please verify your email address to update a template.</h3>} placement="bottom" arrow>
+                        <Box>
+                            <Button variant="contained" sx={{fontSize:"large"}} onClick={() => {setEditTemplate(true)}} disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}> Update Template </Button>
+                        </Box>
+                    </Tooltip>
+                </Box>
+                <Box sx={{alignSelf:"center"}}>
+                    <Button variant="contained" disabled={changesMade || isMobile} sx={{fontSize:"large"}} onClick={() => {setSyncMenuOpen(true)}}> Sync </Button>
+                </Box>
+                <Box sx={{alignSelf:"center"}}>
+                    <Tooltip title={isMobile ? "" : <h3>Remove Course</h3>} placement="bottom" arrow>
+                        <IconButton color="error" size="medium" onClick={() => {setConfirmDelete(true)}} sx={{zIndex: deleteZIndex}}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            </Stack>
+        </Stack>      
+    );
+};
 
 export default CourseViewerHeader; 
