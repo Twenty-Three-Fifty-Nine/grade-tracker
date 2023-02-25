@@ -63,21 +63,24 @@ const AccountEditDialog = (props) => {
     const handleDialogClose = useCallback(() => {
         setNewName(null);
         setNewEmail(null);
-        setEmailError(null);
-        setPasswordError(null);
         setOldPassword(null);
         setNewPassword(null);
         setNewPasswordConfirm(null);
+        setApiAlert(null);
+        setLoading(false);
+        setEmailError(null);
+        setPasswordError(null);
+        setShowPassword(false);
+        setShowNewPassword(false);
         setValidPasswordLength(false);
         setValidPasswordNumber(false);
         setValidPasswordSpecial(false);
         setValidPasswordCapital(false);
         setValidPasswordMatch(false);
-        setApiAlert(null);
-        setShowPassword(false);
-        setShowNewPassword(false);
+        setConfirmDeleteAccount(false);
+
         onClose();
-    }, [onClose, setApiAlert]);
+    }, [onClose, setConfirmDeleteAccount]);
 
     const handleUserUpdate = useCallback(() => {
         const data = {
