@@ -15,14 +15,15 @@ const CourseViewerMobileActionButtons = (props) => {
         validChanges,
         changesMade,
         apiLoading,
-        saveChanges
+        saveChanges,
+        mb = 0
     } = props;
 
     return (
         <Box>
             <Divider variant="middle" role="presentation" sx={{borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mt: 2, mb : 2}} />
 
-            <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center"}}>
+            <Stack direction="row" spacing={5} sx={{alignItems:"center", justifyContent:"center", mb: mb}}>
                 <Button sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={attemptClose}> Return</Button>
                 <Box sx={{ position: 'relative' }}>
                     <Button disabled={!validChanges || !changesMade || apiLoading} sx={{width: 150, fontSize:"medium"}} variant="contained" onClick={() => {saveChanges()}}> Save</Button>

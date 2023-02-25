@@ -351,7 +351,7 @@ const CourseViewer = (props) => {
             </Box>)}
 
             {isMobile && <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
-                changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges}
+                changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges} mb={2}
             />}
 
             {isMobile && <Box id="mobileSlidePanel"> 
