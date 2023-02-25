@@ -20,7 +20,7 @@ class Course {
     }
 
     getCourseLetter() {
-        if(isNaN(this.totalGrade)) return "N/A";
+        if(this.getCourseCompletion() === 0) return "N/A";
         else if(this.totalGrade >= 90) return "A+";
         else if(this.totalGrade >= 85) return "A";
         else if(this.totalGrade >= 80) return "A-";
@@ -38,9 +38,9 @@ class Course {
         let temp = 0;
         this.assessments.forEach((ass) => {
             let num = isNaN(ass.grade) ? 0 : ass.grade;
-            temp += (num * ass.grade.weight * 0.01);
+            temp += (num * ass.weight * 0.01);
         });
-        this.totalGrade = temp.toFixed(2);
+        this.totalGrade = temp === 0 ? temp : temp.toFixed(2);
     }
 }
 
