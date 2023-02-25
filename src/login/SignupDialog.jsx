@@ -203,9 +203,9 @@ const SignupDialog = (props) => {
                         validPasswordSpecial={validPasswordSpecial} validPasswordCapital={validPasswordCapital} validPasswordMatch={validPasswordMatch} 
                     />
                     
-                    <Stack direction="row" sx={{ml: -1.1, mt: 1}}>
+                    <Stack direction="row" sx={{ ml: -1.1, mt: 1 }}>
                         <Checkbox checked={acceptedTerms} onChange={(e, newValue) => setAcceptedTerms(newValue)} />
-                        <Typography variant="h6" sx={{mt:1.2, fontSize:"16px"}}> 
+                        <Typography variant="h6" sx={{ mt: 1.2, fontSize:"16px" }}> 
                             Accept <Box display="inline-block" onClick={() => {setShowTerms(true)}} 
                             sx={{cursor:"pointer", color:"info.main", "&:hover":{textDecoration:"underline"}}}> Terms & Conditions </Box>
                         </Typography> 
@@ -232,7 +232,7 @@ const SignupDialog = (props) => {
                         >
                             Sign Up
                         </Button>
-                        {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />}
+                        {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
                     </Box>
                 </DialogActions>
             </Dialog>

@@ -128,14 +128,14 @@ const PasswordResetDialog = (props) => {
     return (
         <Box>
             <Dialog open={resetData !== null} onClose={handleClose} onKeyDown={handleKeyDown}>
-                <DialogTitle>Reset Password</DialogTitle>
+                <DialogTitle> Reset Password </DialogTitle>
 
                 <DialogContent>
                     <TextField autoFocus id="password" label="Password" type={showPassword ? 'text' : 'password'}
                         fullWidth value={password} onChange={handlePasswordChange} margin="dense"
-                        InputProps={{endAdornment: 
+                        InputProps={{ endAdornment: 
                             <InputAdornment position="end">
-                                <IconButton onClick={() => {setShowPassword(!showPassword)}} tabIndex={-1}>
+                                <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>

@@ -44,11 +44,8 @@ const WelcomePage = (props) => {
                 </Typography>
 
                 <Box display="flex" flexDirection="row" sx={{ flexGrow: 1, marginTop: 15, marginBottom: 20 }} color="primary.main">
-                    <Login
-                        setIsLoggedIn={setIsLoggedIn}
-                        setUserDetails={setUserDetails}
-                        activeTri={activeTri}
-                        setEmailSent={setEmailSent}
+                    <Login setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails}
+                        activeTri={activeTri} setEmailSent={setEmailSent}
                     />
                 </Box>
             </Box>

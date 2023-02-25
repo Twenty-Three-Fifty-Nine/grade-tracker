@@ -90,10 +90,6 @@ const LoginDialog = (props) => {
         setLoading(false);
     }, [email, password, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
-    const handleForgotPassword = useCallback(() => {
-        setLoginState(false);
-    }, []);
-
     const handlePasswordReset = useCallback(() => {
         setLoading(true);
 
@@ -116,7 +112,7 @@ const LoginDialog = (props) => {
     return (
         <Box>
             <Dialog open={open} onClose={() => loginState ? handleClose() : setLoginState(true)} onKeyDown={handleKeyDown} fullWidth maxWidth="xs">
-                <DialogTitle>{loginState ? "Login" : "Reset Passowrd"}</DialogTitle>
+                <DialogTitle> {loginState ? "Login" : "Reset Passowrd"} </DialogTitle>
                 
                 <DialogContent>
                     <TextField autoFocus margin="dense" id="email" label="Email Address" type="email" fullWidth value={email}
@@ -138,7 +134,7 @@ const LoginDialog = (props) => {
 
                             <Typography variant="caption" color="text.secondary"
                                 sx={{ cursor: "pointer", "&:hover": { color: "primary.main" } }}
-                                onClick={handleForgotPassword}
+                                onClick={() => setLoginState(false)}
                             >
                                 Forgot Password?
                             </Typography>
@@ -146,7 +142,7 @@ const LoginDialog = (props) => {
                     )}
                     
                     <Collapse in={loginError !== null}>
-                        <Alert severity="error" sx={{ mt: 2}}
+                        <Alert severity="error" sx={{ mt: 2 }}
                             action= {
                                 <IconButton color="inherit" size="small" onClick={() => setLoginError(null)}>
                                     <CloseIcon fontSize="inherit" />
@@ -164,15 +160,15 @@ const LoginDialog = (props) => {
                             <Button onClick={handleClose}>Cancel</Button>
                             <Box sx={{ position: 'relative' }}>
                                 <Button onClick={handleLogin} disabled={loading} fullWidth> Login </Button>
-                                {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />}
+                                {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
                             </Box>
                         </Stack>
                     ) : (
                     <Box>
-                        <Button onClick={() => setLoginState(true)}>Cancel</Button>
+                        <Button onClick={() => setLoginState(true)}> Cancel </Button>
                         <Box sx={{ position: 'relative' }}>
                             <Button onClick={handlePasswordReset} disabled={loading}>Reset Password</Button>
-                            {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px', }} />}
+                            {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', mt: '-12px', ml: '-12px' }} />}
                         </Box>
                     </Box>
                     )}
