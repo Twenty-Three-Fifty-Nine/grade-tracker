@@ -57,6 +57,7 @@ const lightTheme = createTheme({
             main: "#49a527",
         }
     },
+
     components: {
         MuiAlert: {
             styleOverrides: {
@@ -71,15 +72,15 @@ const lightTheme = createTheme({
                 standardWarning: {
                     backgroundColor: "rgba(234, 71, 42, 0.2)",
                     color: "#000000",
-                },
-            },
+                }
+            }
         },
         MuiAccordion: {
             styleOverrides: {
                 root: {
                     backgroundColor: "#c4c389",
-                },
-            },
+                }
+            }
         },
         MuiChip: {
             styleOverrides: {
@@ -90,10 +91,10 @@ const lightTheme = createTheme({
                 colorSuccess: {
                     backgroundColor: "rgba(43, 131, 175, .8)",
                     color: "#ffffff",
-                },
-            },
-        },
-    },
+                }
+            }
+        }
+    }
 });
 
 export default lightTheme;

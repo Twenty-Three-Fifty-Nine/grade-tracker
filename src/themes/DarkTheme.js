@@ -70,15 +70,15 @@ const darkTheme = createTheme({
                 standardWarning: {
                     backgroundColor: "rgba(126, 127, 52, .8)",
                     color: "#ffffff",
-                },
-            },
+                }
+            }
         },
         MuiAccordion: {
             styleOverrides: {
                 root: {
                     backgroundColor: "#32382c",
                 },
-            },
+            }
         },
         MuiChip: {
             styleOverrides: {
@@ -90,16 +90,16 @@ const darkTheme = createTheme({
                     backgroundColor: "rgba(36, 112, 150, .8)",
                     color: "#ffffff",
                 }
-            },
+            }
         },
         MuiAppBar: {
             styleOverrides: {
                 root: {
                     backgroundColor: "#2c382c",
-                },
-            },
-        },
-    },
+                }
+            }
+        }
+    }
 });
 
 export default darkTheme;
