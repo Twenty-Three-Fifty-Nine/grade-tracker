@@ -72,22 +72,26 @@ import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
 const CourseViewer = (props) => {
     const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
-    const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
     const [changeOverride, setChangeOverride] = React.useState(false);
     const changesMadeR = React.useRef();
     changesMadeR.current = changesMade;
+
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
+
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
+
     const [sliderPos, setSliderPos] = React.useState(-270);
     const sliderPosR = React.useRef();
     sliderPosR.current = sliderPos;
     const [deleteZIndex, setDeleteZIndex] = React.useState(1);
+    
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
@@ -96,6 +100,7 @@ const CourseViewer = (props) => {
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
 
+    const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
     const [missingGradeFilter, setMissingGradeFilter] = React.useState(false);
