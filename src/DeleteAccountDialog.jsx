@@ -20,7 +20,13 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const DeleteAccountDialog = (props) => {
-    const { confirmDeleteAccount, setConfirmDeleteAccount, userDetails, sessionData, handleLogout } = props;
+    const {
+        confirmDeleteAccount,
+        handleLogout,
+        sessionData,
+        setConfirmDeleteAccount,
+        userDetails,
+    } = props;
 
     const [deletePassword, setDeletePassword] = React.useState("");
     const [showDeletePassword, setShowDeletePassword] = React.useState(false);

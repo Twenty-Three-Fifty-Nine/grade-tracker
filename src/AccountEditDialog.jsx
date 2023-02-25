@@ -27,15 +27,15 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const AccountEditDialog = (props) => {
     const {
+        confirmDeleteAccount,
         open,
         onClose,
-        userDetails,
-        setUserDetails,
-        setSessionData,
         sessionData,
-        setSnackbarMessage,
-        confirmDeleteAccount,
         setConfirmDeleteAccount,
+        setSessionData,
+        setSnackbarMessage,
+        setUserDetails,
+        userDetails,
     } = props;
 
     const [loading, setLoading] = React.useState(false);

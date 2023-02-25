@@ -43,7 +43,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
 
 const AccountMenu = (props) => {
-    const { setIsLoggedIn, userDetails, setUserDetails, sessionData, setSessionData, setCourseList, setViewedCourse, toggleTheme, lightMode, inCourseViewer } = props;
+    const {
+        inCourseViewer,
+        lightMode,
+        sessionData,
+        setCourseList,
+        setIsLoggedIn,
+        setSessionData,
+        setUserDetails,
+        setViewedCourse,
+        toggleTheme,
+        userDetails,
+    } = props;
 
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);

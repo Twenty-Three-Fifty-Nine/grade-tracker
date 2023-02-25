@@ -24,7 +24,13 @@ import { isMobile } from "react-device-detect";
 import CloseIcon from "@mui/icons-material/Close";
 
 const FeedbackDialog = (props) => {
-    const { feedbackDialogOpen, setFeedbackDialogOpen, userDetails, setSnackbarMessage, confirmDeleteAccount } = props;
+    const {
+        confirmDeleteAccount,
+        feedbackDialogOpen,
+        setFeedbackDialogOpen,
+        setSnackbarMessage,
+        userDetails,
+    } = props;
 
     const [feedbackSubject, setFeedbackSubject] = React.useState(null);
     const [feedbackMessage, setFeedbackMessage] = React.useState(null);
