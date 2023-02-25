@@ -70,9 +70,17 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import CourseViewerHeader from "./CourseViewerHeader";
 import CourseViewerEditor from "./CourseViewerEditorDesktop";
+import CourseViewerFilterDesktop from "./CourseViewerFilterDesktop";
 
 const CourseViewer = (props) => {
-    const { courseData, setViewedCourse, userDetails, setSessionData, sessionData, setCourseList } = props;
+    const { 
+        courseData, 
+        setViewedCourse, 
+        userDetails, 
+        setSessionData, 
+        sessionData, 
+        setCourseList 
+    } = props;
 
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
@@ -309,7 +317,8 @@ const CourseViewer = (props) => {
                 /> : <Box sx={{visibility: "hidden", flexGrow: 1, flexBasis: 0}} />}
 
                 <Stack spacing={3} sx={{pl: 2, pr: 2}}>
-                    {filteredAssessments.length > 0 ? <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
+                    {filteredAssessments.length > 0 ? 
+                    <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                         {filteredAssessments.map((assessment, index) => (
                             <Collapse key={index} sx={{mb: 2}}>
                                 <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
@@ -318,11 +327,10 @@ const CourseViewer = (props) => {
                     </TransitionGroup> : 
                     <Card>
                         <CardContent sx={{minWidth: 731}}>
-                            <Typography variant="h5" component="div" sx={{textAlign:"center"}}>
-                                No Assessments Match Filter
-                            </Typography>
+                            <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
                         </CardContent>
                     </Card>} 
+                    
                     <Button variant="contained" 
                         onClick={() => {
                             let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true);
@@ -335,62 +343,11 @@ const CourseViewer = (props) => {
                 </Stack>
 
                 <Box sx={{flexGrow: 1, flexBasis: 0}}>
-                    {!isMobile && <Stack spacing={2}>
-                        <Stack spacing={2} direction={"row"}>
-                            <Tooltip title={<h3>Filter assessments</h3>} placement="top" arrow>
-                                <IconButton onClick={() => {setFilterPanelOpen(!filterPanelOpen)}}>
-                                    <FilterListIcon fontSize="large"/>
-                                </IconButton>
-                            </Tooltip>
-                            <FormControl sx={{width:200}}>
-                                <InputLabel> Sort By </InputLabel>
-                                <Select value={sortType} label="Sort By" onChange={handleChangeSort}>
-                                    <MenuItem value={"name-a"}>Name (Ascending)</MenuItem>
-                                    <MenuItem value={"name-d"}>Name (Descending)</MenuItem>
-                                    <MenuItem value={"deadline-a"}>Due Date (Closest)</MenuItem>
-                                    <MenuItem value={"deadline-d"}>Due Date (Furthest)</MenuItem>
-                                    <MenuItem value={"weight-a"}>Weight (Highest)</MenuItem>
-                                    <MenuItem value={"weight-d"}>Weight (Lowest)</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Stack>
-                        <Collapse in={filterPanelOpen}>
-                            <Card sx={{width: 300}}>
-                                <CardContent>
-                                    <Stack spacing={0.5}>
-                                        <Typography variant="h5" sx={{ml: 1.3 }}> Assessment Filters </Typography>
-                                        <Divider />
-                                        <FormControlLabel control={<Checkbox checked={finishedFilter} 
-                                            onChange={() => {setFinishedFilter(!finishedFilter)}} />} label="Finished" />
-                                        <FormControlLabel control={<Checkbox checked={missingGradeFilter} 
-                                            onChange={() => {setMissingGradeFilter(!missingGradeFilter)}} />} label="Missing Grade" />
-                                        <FormControlLabel control={<Checkbox checked={pastDeadlineFilter} 
-                                            onChange={() => {setPastDeadlineFilter(!pastDeadlineFilter)}} />} label="Past Deadline" />
-                                        <FormControlLabel control={<Checkbox checked={testFilter} 
-                                            onChange={() => {setTestFilter(!testFilter)}} />} label="Test" />
-                                        <FormControlLabel control={<Checkbox checked={assignmentFilter} 
-                                            onChange={() => {setAssignmentFilter(!assignmentFilter)}} />} label="Assignment" />
-                                    </Stack>
-                                </CardContent>
-                            </Card>
-                        </Collapse>
-                        <Box sx={{display:"flex", flexWrap:"wrap", gap: 1.5, width:300}}>
-                            {finishedFilter && <Chip label="Finished" deleteIcon={<ClearIcon />} onDelete={() => {setFinishedFilter(false)}} sx={{width: 100}} />}
-                            {missingGradeFilter && <Chip label="Missing Grade" deleteIcon={<ClearIcon />} onDelete={() => {setMissingGradeFilter(false)}} sx={{width: 130}} />}
-                            {pastDeadlineFilter && <Chip label="Past Deadline" deleteIcon={<ClearIcon />} onDelete={() => {setPastDeadlineFilter(false)}} sx={{width: 130}} />}
-                            {testFilter && <Chip label="Test" deleteIcon={<ClearIcon />} onDelete={() => {setTestFilter(false)}} sx={{width: 75}} />}
-                            {assignmentFilter && <Chip label="Assignment" deleteIcon={<ClearIcon />} onDelete={() => {setAssignmentFilter(false)}} sx={{width: 120}} />}
-                            {(finishedFilter || missingGradeFilter || pastDeadlineFilter || testFilter || assignmentFilter) && 
-                                <Chip color="secondary" label="Clear Filters" onClick={() => {
-                                    setFinishedFilter(false);
-                                    setMissingGradeFilter(false);
-                                    setPastDeadlineFilter(false);
-                                    setTestFilter(false);
-                                    setAssignmentFilter(false);
-                                }
-                            } sx={{width: 100}} />}
-                        </Box>
-                    </Stack>}
+                    {!isMobile && <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
+                    sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
+                    pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
+                    setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                    />}
                 </Box>  
             </Stack>
 
