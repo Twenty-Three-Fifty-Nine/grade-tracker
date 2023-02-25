@@ -56,24 +56,15 @@ const AccountMenu = (props) => {
         userDetails,
     } = props;
 
-    const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
+    const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
+    const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
     const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
-    const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
-
-    const handleMenuClose = useCallback(() => {
-        setAnchorEl(null);
-    }, [setAnchorEl]);
-
-    const handleProfileDialogClose = useCallback(() => {
-        setProfileDialogOpen(false);
-    }, []);
-
     const handleLogout = useCallback(() => {
-        handleProfileDialogClose();
+        setProfileDialogOpen(false);
         setIsLoggedIn(false);
         setUserDetails(null);
         setSessionData(null);
@@ -82,77 +73,66 @@ const AccountMenu = (props) => {
         setConfirmDeleteAccount(false);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
-    }, [handleProfileDialogClose, setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
+    }, [setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse]);
 
     return (
         <Box sx={{ mr: 2 }}>
             <IconButton color="inherit" onClick={(event) => setAnchorEl(event.target)}>
                 <AccountCircleRoundedIcon color="inherit" fontSize="large"/>
             </IconButton>
-            <Menu open={menuOpen} anchorEl={anchorEl} onClose={handleMenuClose} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-                
-                <MenuItem onClick={() => {setProfileDialogOpen(true);handleMenuClose()}}>
+            
+            <Menu open={menuOpen} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} 
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                <MenuItem onClick={() => { setProfileDialogOpen(true); setAnchorEl(null); }}>
                     <ListItemIcon>
                         <TagFacesRoundedIcon fontSize="small"/>
                     </ListItemIcon>
-                    Profile
+                    <Typography variant="body1"> Profile </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => {setFeedbackDialogOpen(true); handleMenuClose();}}>
+                <MenuItem onClick={() => { setFeedbackDialogOpen(true); setAnchorEl(null); }}>
                     <ListItemIcon>
                         <FeedbackIcon fontSize="small"/>
                     </ListItemIcon>
-                    <Typography variant="body1">Feedback</Typography>
+                    <Typography variant="body1"> Feedback </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => {handleMenuClose();handleLogout()}}>
+                <MenuItem onClick={() => {setAnchorEl(null); handleLogout()}}>
                     <ListItemIcon>
                         <LogoutIcon fontSize="small"/>
                     </ListItemIcon>
-                    <Typography variant="body1">Logout</Typography>
+                    <Typography variant="body1"> Logout </Typography>
                 </MenuItem>
+
                 <Divider variant="middle" />
+
                 <MenuItem>
-                <FormControlLabel
-                            control={
-                                <ThemeSwitch
-                                    sx={{ ml: 4 }}
-                                    checked={lightMode}
-                                    onChange={toggleTheme}
-                                />
-                            }
-                        />
+                    <FormControlLabel
+                        control= {
+                            <ThemeSwitch sx={{ ml: 4 }}
+                                checked={lightMode} onChange={toggleTheme}
+                            />
+                        }
+                    />
                 </MenuItem>
             </Menu>
 
-            <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}>
+            <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} 
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}
+            >
                 <Alert severity="success" sx={{ width: isMobile ? '75%' : '100%', mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
 
-            <AccountEditDialog
-                open={profileDialogOpen}
-                onClose={handleProfileDialogClose}
-                userDetails={userDetails}
-                setUserDetails={setUserDetails}
-                setSessionData={setSessionData}
-                sessionData={sessionData}
-                setSnackbarMessage={setSnackbarMessage}
-                setConfirmDeleteAccount={setConfirmDeleteAccount}
-                confirmDeleteAccount={confirmDeleteAccount}
+            <AccountEditDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)} userDetails={userDetails}
+                setUserDetails={setUserDetails} setSessionData={setSessionData} sessionData={sessionData} setSnackbarMessage={setSnackbarMessage}
+                setConfirmDeleteAccount={setConfirmDeleteAccount} confirmDeleteAccount={confirmDeleteAccount}
             />
 
-            <DeleteAccountDialog
-                userDetails={userDetails}
-                sessionData={sessionData}
-                handleLogout={handleLogout}
-                confirmDeleteAccount={confirmDeleteAccount}
-                setConfirmDeleteAccount={setConfirmDeleteAccount}
+            <DeleteAccountDialog userDetails={userDetails} sessionData={sessionData} handleLogout={handleLogout}
+                confirmDeleteAccount={confirmDeleteAccount} setConfirmDeleteAccount={setConfirmDeleteAccount}
             />
 
-            <FeedbackDialog
-                feedbackDialogOpen={feedbackDialogOpen}
-                setFeedbackDialogOpen={setFeedbackDialogOpen}
-                userDetails={userDetails}
-                confirmDeleteAccount={confirmDeleteAccount}
-                setSnackbarMessage={setSnackbarMessage}
+            <FeedbackDialog feedbackDialogOpen={feedbackDialogOpen} setFeedbackDialogOpen={setFeedbackDialogOpen} userDetails={userDetails}
+                confirmDeleteAccount={confirmDeleteAccount} setSnackbarMessage={setSnackbarMessage}
             />
         </Box>
     );
