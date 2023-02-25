@@ -223,7 +223,9 @@ const CourseViewer = (props) => {
             synced: synced,
             url: courseData.url,
         }).then(() => {
-            assessments.forEach((assessment) => assessment.resetStates);
+            assessments.forEach((assessment) => {
+                assessment.resetStates();
+            });
             setChangeOverride(false);
             checkChanges(false);
 

@@ -41,7 +41,7 @@ const AssessmentViewerCard = (props) => {
     const [updater, setUpdater] = React.useState(false);
 
     const getCourseLetter = () => {
-        if(isNaN(assData.grade) || !assData.gradeValid) return "-";
+        if(isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
         else if(assData.grade >= 90) return "A+";
         else if(assData.grade >= 85) return "A";
         else if(assData.grade >= 80) return "A-";
@@ -100,7 +100,7 @@ const AssessmentViewerCard = (props) => {
                     </Typography>
                     <Stack direction="row">
                         <TextField InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
-                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: 180}} 
+                            value={isNaN(assData.grade) || parseInt(assData.grade) === -1 ? "" : assData.grade} sx={{ fontSize:"large", width: 180}} 
                             error={!assData.gradeValid}
                             onChange={handleGradeChange}
                         />
@@ -120,11 +120,11 @@ const AssessmentViewerCard = (props) => {
                     <Stack direction="row">
                         <TextField 
                         InputProps={{ inputProps: { min: 0 }, style: {fontSize: 35}}} 
-                            value={isNaN(assData.grade) ? "" : assData.grade} sx={{ fontSize:"large", width: isMobile ? 50 : 150}} 
+                            value={isNaN(assData.grade) || parseInt(assData.grade) === -1 ? "" : assData.grade} sx={{ fontSize:"large", width: isMobile ? 50 : 150}} 
                             error={!assData.gradeValid}
                             onChange={handleGradeChange}
                         />
-                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
+                        <Box sx={{mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: isNaN(assData.grade) || parseInt(assData.grade) === -1 ? "grey" : assData.gradeValid ? "primary.main" : "error.main"}}>
                             <Typography variant={"h3"} component="div" sx={{textAlign:"center"}}>
                                 {getCourseLetter()}
                             </Typography>
