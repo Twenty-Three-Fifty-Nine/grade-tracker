@@ -165,11 +165,13 @@ const LoginDialog = (props) => {
                         </Stack>
                     ) : (
                     <Box>
-                        <Button onClick={() => setLoginState(true)}> Cancel </Button>
-                        <Box sx={{ position: "relative" }}>
-                            <Button onClick={handlePasswordReset} disabled={loading}>Reset Password</Button>
-                            {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} />}
-                        </Box>
+                        <Stack direction="row">
+                            <Button onClick={() => setLoginState(true)}> Cancel </Button>
+                            <Box sx={{ position: "relative" }}>
+                                <Button onClick={handlePasswordReset} disabled={loading} fullWidth>Reset Password</Button>
+                                {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} />}
+                            </Box>
+                        </Stack>
                     </Box>
                     )}
                 </DialogActions>
