@@ -108,24 +108,26 @@ const App = () => {
      * password based on the path.
      */
     React.useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        const email = query.get("email");
+        const token = query.get("token");
+        const type = query.get("type");
+        query.delete("email");
+        query.delete("token");
+        query.delete("type");
+        window.history.replaceState({}, "", `/`);
+
         const cookies = new Cookies();
         const detailsCookie = cookies.get("userDetails");
         if (detailsCookie) {
-            if (location.pathname !== "/verify") setUserDetails(detailsCookie);
+            if (type !== "verify") setUserDetails(detailsCookie);
             setIsLoggedIn(true);
         }
 
-        const query = new URLSearchParams(location.search);
-        const path = location.pathname;
-        const email = query.get("email");
-        const token = query.get("token");
-        query.delete("email");
-        query.delete("token");
-        window.history.replaceState({}, "", `/`);
         if (token && email) {
-            if (path === "/reset-password") {
+            if (type === "password") {
                 setResetData({ email, token });
-            } else if (path === "/verify") {
+            } else if (type === "verify") {
                 verifyUser(email, token);
             }
         }
