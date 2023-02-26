@@ -54,6 +54,9 @@ const App = () => {
     // Tracks whether or not the user is logged in.
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
+    // Tracks whether or not the user just logged out
+    const [newLogout, setNewLogout] = React.useState(false);
+
     // Tracks whether or not the user is in light mode.
     const [lightMode, setLightMode] = React.useState(true);
 
@@ -187,6 +190,7 @@ const App = () => {
                         {   isLoggedIn ? (
                             <AccountMenu
                                 setIsLoggedIn={setIsLoggedIn}
+                                setNewLogout={setNewLogout}
                                 userDetails={userDetails}
                                 setUserDetails={setUserDetails}
                                 sessionData={sessionData}
@@ -218,18 +222,25 @@ const App = () => {
                 setUserDetails={setUserDetails} activeTri={activeTri} 
             />
             
-            <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)} 
+            <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)}
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
                 <Alert onClose={() => setEmailSent(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Signup successful. Please check your email to verify your account.
                 </Alert>
             </Snackbar>
-            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)} 
+            <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)}
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
                 <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Email verified!
+                </Alert>
+            </Snackbar>
+            <Snackbar open={newLogout} autoHideDuration={4000} onClose={() => setNewLogout(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+            >
+                <Alert security="success" onClose={() => setNewLogout(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%" }}>
+                    Logged out successfully.
                 </Alert>
             </Snackbar>
         </ThemeProvider>
