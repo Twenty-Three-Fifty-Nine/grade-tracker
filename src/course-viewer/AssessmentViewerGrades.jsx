@@ -30,7 +30,7 @@ const AssessmentViewerGrades = (props) => {
 
             <Stack spacing={1} sx={{ pr: 0, minWidth: isMobile ? 0 : 290, mt: isMobile ? 1 : 0 }}>
                 <Typography variant={"h5"} component="div" sx={{ flex: 1 }}>
-                    { isMobile ? "Grade:" : "Grade" }
+                    Grade (%)
                 </Typography>
 
                 <Stack direction="row">
