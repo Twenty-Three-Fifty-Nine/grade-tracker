@@ -33,6 +33,11 @@ import Course from "../classes/Course";
 import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
 
+/**
+ * One of the 3 main pages of the application. This displays an overview 
+ * of the users years, trimesters, and the courses that they are taking. Through this menu
+ * they can add or create new courses, as well as manage their account. 
+ */
 const GradesOverview = (props) => {
     const {
         activeTri,
@@ -46,14 +51,24 @@ const GradesOverview = (props) => {
         verifiedEmail,
     } = props
 
+    // States related to the year select tabs.
     const [selectedYear, setYear] = React.useState(activeTri.year);
-    const [addCourseOpen, setAddCourseOpen] = React.useState(false);
     const [activateTab, setActivateTab] = React.useState(false);
 
+    // Whether or not the course adder dialog is open.
+    const [addCourseOpen, setAddCourseOpen] = React.useState(false);
+
+    /** Stops the year tab value from being loaded before the tabs exist. */
     setTimeout(() => {
         setActivateTab(true)
     }, 500);
 
+    /**
+     * Makes an API request to get the users courses and then converts
+     * them to a data structure that can be read by the rest of the components. 
+     * 
+     * @param request - The request to be made to the server.
+     */
     const parseCourseData = useCallback(async (request) => {
         return Axios.get(request).then(async (result) => {
             const ret = {};
@@ -94,6 +109,11 @@ const GradesOverview = (props) => {
         });
     }, []);
 
+    /**
+     * Calls parse course data and then creates an object with additional information,
+     * 
+     * @param year - The currently selected year. 
+     */
     const getSessionData = useCallback(async (year) => {
         await setSessionData("Reloading");
         return parseCourseData("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userEmail + "/courses").then((courseData) => {
@@ -105,14 +125,25 @@ const GradesOverview = (props) => {
         });
     }, [activeTri, parseCourseData, setSessionData, userEmail, userName, verifiedEmail]);
 
+    /** 
+     * Calls the session data getter then sets the session data state to the object 
+     * so it can be sent to other objects as a context. 
+     */
     const handleLoadData = useCallback(async () => {
         getSessionData(selectedYear).then((data) => setSessionData(data));
     }, [getSessionData, selectedYear, setSessionData]);
 
+    /** Loads session data if the value of it is null when this component is mounted. */
     React.useEffect(() => {
         if (!sessionData) handleLoadData();
     }, [handleLoadData, sessionData]);
 
+    /**
+     * Changes the selected year value.
+     * 
+     * @param event The change event. 
+     * @param newValue The new value (year). 
+     */
     const handleChangedYear = async (event, newValue) => {
         setYear(newValue);
         const tempData = sessionData;

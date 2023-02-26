@@ -28,26 +28,39 @@ import { isMobile } from "react-device-detect";
 import { SessionContext } from "./GradesOverview";
 import TrimesterOverview from "./TrimesterOverview";
 
+/** Provides a basic overview of how the users year is going. */
 const YearOverview = (props) => {
     const {
         setViewedCourse,
     } = props;
     
+    // Uses the session data object.
     const session = React.useContext(SessionContext);
 
+    // Tracks which trimester accordions are open.
     const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
 
+    /** Resets accordion states when the session data is loading. */
     useEffect(() => {
         if (session && session !== "Reloading") setAccordionsOpen([getTriInfo(1).isActive, getTriInfo(2).isActive, getTriInfo(3).isActive]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session])
 
+    /**
+     * Toggles a given accordion.
+     * 
+     * @param tri - The trimester which determines which accordion to toggle.
+     */
     const toggleAccordion = (tri) => {
         const tempOpen = [...accordionsOpen];
         tempOpen[tri - 1] = !tempOpen[tri - 1];
         setAccordionsOpen([...tempOpen]);
     }
 
+    /**
+     * @param tri - The trimester to get information about. 
+     * @returns An object with information about the trimester.
+     */
     const getTriInfo = (tri) => {
         const timeInfo = session && session !== "Reloading" ? session.timeInfo : null;
         if (!timeInfo) return null;
@@ -59,6 +72,7 @@ const YearOverview = (props) => {
         };
     }
 
+    /** Gets the GPA for a year based on the courses in the year. */
     const getGPA = () => {
         const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if (!trimesters) return null;

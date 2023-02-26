@@ -34,12 +34,17 @@ import { SessionContext } from "./GradesOverview";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+/**
+ * @param triInfo The current trimester information. 
+ * @returns A chip based on the activity of the current trimester. 
+ */
 const getActiveChip = (triInfo) => {
     if (triInfo.isFinished) return <Chip label="Finished" color="secondary" sx={{ ml: 1 }} />;
     if (triInfo.isActive) return <Chip label="Current" color="success" sx={{ ml: 1 }} />;
     return <Chip label="Inactive" color="primary" sx={{ ml: 1 }} />;
 };
 
+/** An accordion which provides basic information on courses taken in a trimester. */
 const TrimesterOverview = (props) => {
     const {
         open,
@@ -48,6 +53,7 @@ const TrimesterOverview = (props) => {
         triInfo,
     } = props;
 
+    // Uses the session data object.
     const courses = React.useContext(SessionContext).courses;
     
     return (
