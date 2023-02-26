@@ -68,7 +68,8 @@ const GradesOverview = (props) => {
                             assessment.grade, 
                             assessment.dueDate, 
                             assessment.isAssignment,
-                            false
+                            false,
+                            true
                         )
                     );
 
