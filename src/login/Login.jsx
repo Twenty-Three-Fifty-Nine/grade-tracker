@@ -26,6 +26,10 @@ import {
 import LoginDialog from "./LoginDialog";
 import SignupDialog from "./SignupDialog";
 
+/**
+ * Contains the buttons to open both the
+ * login and sign up dialogs.
+ */
 const Login = (props) => {
     const {
         activeTri,
@@ -34,6 +38,7 @@ const Login = (props) => {
         setUserDetails,
     } = props;
 
+    // Tracks whether either dialog is open.
     const [loginOpen, setLoginOpen] = React.useState(false);
     const [signupOpen, setSignupOpen] = React.useState(false);
 

@@ -27,6 +27,13 @@ import {
     Typography,
 } from "@mui/material";
 
+
+/**
+ * A multi-use componment which displays text and has the ability to 
+ * perform an action on confirmation, or closing the dialog. Optionally
+ * the component can be passed a loading flag which allows a spinner to
+ * be displayed while the action is being performed. 
+ */
 const ConfirmDialog = (props) => {
     const {
         buttonText,

@@ -42,6 +42,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+/**
+ * This dialog allows the user to log into their account
+ * and access the rest of the website. It also allows the user to
+ * request a password reset.
+ */
 const LoginDialog = (props) => {
     const {
         activeTri,
@@ -51,16 +56,20 @@ const LoginDialog = (props) => {
         setUserDetails,
     } = props;
 
+    // Tracks whether the user is logging in or requesting a password reset.
     const [loginState, setLoginState] = React.useState(true);
 
+    // Stores user details from the login form.
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+
+    // States for visual feedback when the form is being used.
     const [loginError, setLoginError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
-
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
 
+    /** Closes the login dialog. */
     const handleClose = useCallback(() => {
         onClose();
         setLoginError(null);
@@ -70,6 +79,10 @@ const LoginDialog = (props) => {
         setShowPassword(false);
     }, [onClose]);
 
+    /**
+     * Attempts to log the user in and displays a snackbar if 
+     * the authentication request fails.
+     */
     const handleLogin = useCallback(async () => {
         setLoading(true);
 
@@ -90,6 +103,10 @@ const LoginDialog = (props) => {
         setLoading(false);
     }, [email, password, activeTri, setIsLoggedIn, setUserDetails, handleClose]);
 
+    /**
+     * Attempts to send an email with a password reset link to the user. 
+     * A snackbar is then displayed.
+     */
     const handlePasswordReset = useCallback(() => {
         setLoading(true);
 
@@ -105,6 +122,7 @@ const LoginDialog = (props) => {
         });
     }, [email, handleClose]);
 
+    /** An alternative to pressing the login button . */
     const handleKeyDown = useCallback((event) => {
         if (event.key === "Enter") handleLogin();
     }, [handleLogin]);

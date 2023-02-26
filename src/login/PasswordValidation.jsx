@@ -25,6 +25,7 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+/** Displays whether a given password is valid or not. */
 const PasswordValidation = (props) => {
     const {
         validPasswordCapital,
@@ -45,6 +46,7 @@ const PasswordValidation = (props) => {
     );
 };
 
+/** Used by the password validation component to display each condition. */
 const Check = (props) => {
     const {
         check,

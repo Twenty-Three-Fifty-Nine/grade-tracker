@@ -29,6 +29,7 @@ import {
 
 import { isMobile } from "react-device-detect";
 
+/** Displays the terms and conditions of the website. */
 const TermsAndConditions = (props) => {
     const {
         onClose,

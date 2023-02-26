@@ -44,6 +44,10 @@ import TermsAndConditions from "../TermsAndConditions";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+/**
+ * This dialog allows the user to create a new account, then logs
+ * them in and gives them access the rest of the website. 
+ */
 const SignupDialog = (props) => {
     const {
         activeTri,
@@ -54,24 +58,28 @@ const SignupDialog = (props) => {
         setUserDetails,
     } = props;
 
+    // Stores user details from the login form.
     const [displayName, setDisplayName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
     const [acceptedTerms, setAcceptedTerms] = React.useState(false);
 
+    // Stores the validity of the inputted password.
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
     const [validPasswordSpecial, setValidPasswordSpecial] = React.useState(false);
     const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
 
+    // States for visual feedback when the form is being used.
     const [signupError, setSignupError] = React.useState(false);
     const [signupErrorText, setSignupErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showTerms, setShowTerms] = React.useState(false);
 
+    /** Closes the sign up dialog. */
     const handleClose = useCallback(() => {
         onClose();
         setSignupErrorText("");
@@ -84,6 +92,11 @@ const SignupDialog = (props) => {
         setAcceptedTerms(false);
     }, [onClose]);
 
+    /** 
+     * Checks if the inputted information is valid and then 
+     * attempts to create a new user account. A snackbar is displayed
+     * and a verification email is sent if creation is successfuly.
+     */
     const handleSignup = useCallback(async () => {
         setSignupErrorText("");
         let error = false;
@@ -152,10 +165,15 @@ const SignupDialog = (props) => {
         setLoading(false);
     }, [displayName, email, password, validPasswordLength, validPasswordNumber, validPasswordSpecial, validPasswordCapital, validPasswordMatch, acceptedTerms, activeTri, setIsLoggedIn, setEmailSent, setUserDetails, handleClose]);
 
+    /** An alternative to pressing the sign up button. */
     const handleKeyDown = useCallback((event) => {
         if (event.key === "Enter") handleSignup();
     }, [handleSignup]);
 
+    /**
+     * Called when the user changes the password field
+     * and updates the validity states for the password.
+     */
     const handlePasswordChange = useCallback((e) => {
         setPassword(e.target.value);
         setValidPasswordLength(e.target.value.length >= 8);
@@ -165,6 +183,10 @@ const SignupDialog = (props) => {
         setValidPasswordMatch(e.target.value === passwordConfirm && e.target.value !== "");
     }, [passwordConfirm]);
 
+    /**
+     * Called when the user changes the password confirmation
+     * field and updates whether or not is matches the password.
+     */
     const handlePasswordConfirmChange = useCallback((e) => {
         setPasswordConfirm(e.target.value);
         setValidPasswordMatch(e.target.value === password && e.target.value !== "");
