@@ -18,7 +18,7 @@
 
 const VerificationEmailTemplate = (props) => {
     const { email, displayName, token, newSignUp } = props;
-    const link = `https://twentythreefiftynine.com/verify?token=${token}&email=${email}`;
+    const link = `https://twentythreefiftynine.com?token=${token}&email=${email}&type=verify`;
     return `
 <html lang="en">
     <head>
