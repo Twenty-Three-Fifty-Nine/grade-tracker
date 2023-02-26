@@ -46,6 +46,10 @@ import { TransitionGroup } from "react-transition-group";
 
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
+/**
+ * Allows the user to create a new course template that
+ * can be used by others.
+ */
 const NewCourseDialog = (props) => {
     const {
         activeTri,
@@ -56,19 +60,25 @@ const NewCourseDialog = (props) => {
         editCode = "",
     } = props;
 
+    // Stores info about the new course.
     const [templateInfo, setTemplateInfo] = React.useState(false);
     const [assessments, setAssessments] = React.useState([]);
     const [courseName, setCourseName] = React.useState("");
     const [courseCode, setCourseCode] = React.useState("");
     const [courseURL, setCourseURL] = React.useState("");
 
+    // States for visual feedback when the form is being used.
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [errorText, setErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
+    const [closeDialog, setCloseDialog] = React.useState(false);
 
+
+    // Used to update components when details are updated. 
     const [updater, setUpdater] = React.useState(false);
 
+    // Tracks whether the inputted information is valid to send to the server.
     const [nameValid, setNameValid] = React.useState(false);
     const [codeValid, setCodeValid] = React.useState(false);
     const [urlValid, setURLValid] = React.useState(true);
@@ -77,11 +87,12 @@ const NewCourseDialog = (props) => {
     const [urlCheckOn, setURLCheckOn] = React.useState(false);
     const [formatValid, setFormatValid] = React.useState(false);
     
+    // Tracks whether changes were made in the current form session.
     const [initURL, setInitURL] = React.useState(null);
     const [changesMade, setChangesMade] = React.useState(false);
     const [changeOverride, setChangeOverride] = React.useState(false);
-    const [closeDialog, setCloseDialog] = React.useState(false);
 
+    /** Loads template data if a template is being edited. */
     useEffect(() => {
         if (editCode === "" || !open) return;
 
@@ -119,6 +130,7 @@ const NewCourseDialog = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
+    /** Checks if the current course details are valid to send. */
     const checkFormat = useCallback(() => {
         let valid = nameValid && codeValid && assessments.length > 0 && urlValid;
         let changed = courseURL !== initURL;
@@ -131,16 +143,19 @@ const NewCourseDialog = (props) => {
         setChangesMade(changed);
     }, [nameValid, codeValid, assessments, urlValid, courseURL, initURL]);
     
+    /** Checks the validity of the course when basic info fields are changed. */
     useEffect(() => {
         checkFormat();
     }, [nameValid, codeValid, urlValid, assessments, checkFormat]);
 
+    /** Updates name of course and checks if it is valid. */
     const handleNameChange = (e) => {
         setCourseName(e.target.value);
         setNameValid(e.target.value.length > 0 && e.target.value.length < 51);
         setNameCheckOn(true);
     };
 
+    /** Updates course code and checks if it is valid. */
     const handleCodeChange = (e) => {
         setCourseCode(e.target.value);
         const exp = /[a-zA-Z]{4}\d{3}/;
@@ -149,6 +164,7 @@ const NewCourseDialog = (props) => {
         setCodeCheckOn(true);
     };
 
+    /** Updates course URL and checks if it valid. */
     const handleURLChange = (e) => {
         const stripped = e.target.value.replace(/\s/g, "");
         setCourseURL(stripped);
@@ -158,21 +174,36 @@ const NewCourseDialog = (props) => {
         setURLCheckOn(true);
     };
 
+    /** Adds a new assessment to the current assessment list. */
     const addAssessment = () => {
         const date = new Date();
         date.setSeconds(0);
         setAssessments(oldArray => [...oldArray, new Assessment("", 0, 0, date, true, true, false)]);
     };
 
+    /**
+     * Removes an assessment using a given index.
+     * 
+     * @param index - The index of the assessment to remove.
+     */
     const removeAssessment = (index) => {
         if (!assessments[index].isNew) setChangeOverride(true);
         setAssessments(assessments.filter((a, i) => i !== index));
     };
 
+    /**
+     * @param str - String to convert. 
+     * @returns The provided string converted to title case.
+     */
     const toTitleCase = (str) => {
         return str.replace(/\w\S*/g, function(str){ return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase(); });
     };
 
+    /**
+     * Attempts to create a course template using the provided information,
+     * then displays a snackbar and adds the newly added course to the user
+     * if the template was created successfully. 
+     */
     const createCourse = async () => {
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
 
@@ -207,6 +238,10 @@ const NewCourseDialog = (props) => {
         setLoading(false);
     };
 
+    /**
+     * Attempts to update the template details if the dialog is open
+     * in edit mode, then displays a snackbar.
+     */
     const updateCourse = async () => {
         const codeYearTri = courseCode.toUpperCase() + "|" + activeTri.year + "|" + activeTri.tri;
         
@@ -241,6 +276,11 @@ const NewCourseDialog = (props) => {
         setLoading(false);
     };
 
+    /** 
+     * Closes the dialog unless changes have been made in the 
+     * current dialog session, in which case a confirmation dialog
+     * is shown to the user.
+     */
     const attemptClose = () => {
         if ((editCode === "" || changesMade || changeOverride) && 
            (assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "")) 
@@ -248,11 +288,13 @@ const NewCourseDialog = (props) => {
         else stopCreating();
     };
 
+    /** Closes the creator dialog. */
     const stopCreating = () => {
         resetStates();
         onClose();
     };
 
+    /** Resets the dialog states and fields. */
     const resetStates = () => {
         setAssessments([]);
         setCourseName("");
@@ -267,6 +309,7 @@ const NewCourseDialog = (props) => {
         setCloseDialog(false);
     }
 
+    /** @returns Helper text for the course name. */
     const getCourseNameHelperText = () => {
         if (!nameCheckOn) return "";
         if (courseName.length === 0) return "Course name cannot be empty";
@@ -274,6 +317,7 @@ const NewCourseDialog = (props) => {
         return "";
     };
 
+    /** @returns Helper text for the course URL. */
     const getURLHelperText = () => {
         if (!urlCheckOn) return "";
         if (courseURL.length > 200) return "URL cannot be longer than 200 characters";
@@ -281,6 +325,7 @@ const NewCourseDialog = (props) => {
         return "";
     };
 
+    /** @returns Helper text for the snackbar. */
     const getAlertText = () => {
         if (!isSuccess) return errorText;
         if (editCode) return "Course updated successfully";

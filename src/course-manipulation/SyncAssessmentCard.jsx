@@ -29,6 +29,7 @@ import dayjs from "dayjs";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
+/** A basic visual to display information in the sync cards. */
 const Field = (props) => {
     const {
         text
@@ -41,6 +42,7 @@ const Field = (props) => {
     );
 };
 
+/** Shows assessment information so the user can compare old/new assessment versions. */
 const SyncAssessmentCard = (props) => {
     const {
         assessment

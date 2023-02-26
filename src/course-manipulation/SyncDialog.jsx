@@ -44,6 +44,10 @@ import SyncAssessmentCard from "./SyncAssessmentCard";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
+/** 
+ * This dialog allows the user to sync their current course
+ * instance to the up-to-date version of the course template.
+ */
 const SyncDialog = (props) => {
     const {
         assessments,
@@ -56,17 +60,24 @@ const SyncDialog = (props) => {
         templateData,
     } = props;
 
+    // Stores a list of the assessments to be displayed for syncing.
     const [changedAssessments, setChangedAssessments] = React.useState([]);
     const [unchangedAssessments, setUnchangedAssessments] = React.useState([]);
     const [newAssessments, setNewAssessments] = React.useState([]);
     const [equalAssessments, setEqualAssessments] = React.useState([]);
 
+    // Used to control sync selection.
     const [newAssessmentPreference, setNewAssessmentPreference] = React.useState(true);
     const [keepNewURL, setKeepNewURL] = React.useState(true);
+
+    // Tracks whether syncing will actually change any information.
     const [validSync, setValidSync] = React.useState(false);
+
+    // Used to open confirmation and information dialogs.
     const [confirmSync, setConfirmSync] = React.useState(false);
     const [syncInfo, setSyncInfo] = React.useState(false);
 
+    /** Checks if syncing will actually change any information. */
     const checkValidSync = () => {
         let changesAvailable = changedAssessments.length + newAssessments.length > 0 || templateData.url !== courseData.url;
 
@@ -83,6 +94,11 @@ const SyncDialog = (props) => {
         setValidSync(changesAvailable && (foundChangeSelection || foundNewSelection));
     };
 
+    /**
+     * Loads the assessment pairs that will be displayed to the user.
+     * 
+     * @param data - The course template to load.
+     */
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
         for (const assignment of data.assignments) {
@@ -146,6 +162,7 @@ const SyncDialog = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseData.deadlines, courseData.isAssList, courseData.names, courseData.weights, templateData]);
 
+    /** Resets states and loads template when this dialog opens. */
     useEffect(() => {
         if (!open) return;
         
@@ -166,6 +183,7 @@ const SyncDialog = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
+    /** Saves changes to complete sync. */
     useEffect(() => {
         if (!open) return;
         if (keepNewURL) courseData.url = templateData.url;
@@ -175,6 +193,7 @@ const SyncDialog = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assessments]);
 
+    /** Syncs local course data to then be saved on the cloud in a later function. */
     const sync = () => {
         let syncList = equalAssessments.map((assessment) => assessment.user);
         let existingAssessments = assessments.map((assessment) => assessment.name);

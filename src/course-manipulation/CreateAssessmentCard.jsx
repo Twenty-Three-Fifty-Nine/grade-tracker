@@ -43,6 +43,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 
+/** A card that displays editable assessment information */
 const CreateAssessmentCard = (props) => {
     const {
         assessments,
@@ -54,10 +55,17 @@ const CreateAssessmentCard = (props) => {
         setParentUpdater,
     } = props;
 
+    // Used to update components when details are updated. 
     const [updater, setUpdater] = React.useState(false);
+    
+    // Tracks whether errors should appear for an invalid field.
     const [nameCheckOn, setNameCheckOn] = React.useState(false);
     const [weightCheckOn, setWeightCheckOn] = React.useState(false);
 
+    /**
+     * Updates the assessment object when the name field
+     * is changed, then checks if it is valid.
+     */
     const handleNameChange = (e) => {
         let oldName = details.name;
         details.setName(e.target.value);
@@ -66,6 +74,10 @@ const CreateAssessmentCard = (props) => {
         setNameCheckOn(true);
     };
 
+    /**
+     * Updates the assessment object when the weight field
+     * is changed, then checks if it is valid.
+     */
     const handleWeightChange = (e) => {
         if (!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) details.setWeight(e.target.value);
         setUpdater(!updater);
@@ -73,6 +85,10 @@ const CreateAssessmentCard = (props) => {
         setWeightCheckOn(true);
     };
 
+    /** 
+     * Checks if an assessments details are valid, and
+     * if an assessment already exists with the same name.
+     */
     const updateValidity = (oldName) => {
         details.valid = details.name.length > 0 && details.name.length < 31 && details.weight > 0 && details.weight <= 100;
         let matches = 0;
