@@ -1,3 +1,21 @@
+/**
+ * Twenty Three Fifty Nine - Grade tracking tool
+ * Copyright (C) 2023  Abdulrahman Asfari and Christopher E Sa
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+*/
+
 import React, { useCallback } from "react";
 import {
     Alert,
@@ -25,6 +43,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+/** Allows the user to edit their information. */
 const AccountEditDialog = (props) => {
     const {
         confirmDeleteAccount,
@@ -38,28 +57,29 @@ const AccountEditDialog = (props) => {
         userDetails,
     } = props;
 
+    // States for visual feedback when the form is being used.
     const [loading, setLoading] = React.useState(false);
     const [apiAlert, setApiAlert] = React.useState(null);
-
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showNewPassword, setShowNewPassword] = React.useState(false);
+    
+    // Stores the new values.
     const [newName, setNewName] = React.useState(null);
     const [newEmail, setNewEmail] = React.useState(null);
-
-    const [emailError, setEmailError] = React.useState(null);
-    const [passwordError, setPasswordError] = React.useState(null);
-
     const [oldPassword, setOldPassword] = React.useState(null);
     const [newPassword, setNewPassword] = React.useState(null);
     const [newPasswordConfirm, setNewPasswordConfirm] = React.useState(null);
-    
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showNewPassword, setShowNewPassword] = React.useState(false);
 
+    // Tracks if the inputted information is valid.
+    const [emailError, setEmailError] = React.useState(null);
+    const [passwordError, setPasswordError] = React.useState(null);
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
     const [validPasswordSpecial, setValidPasswordSpecial] = React.useState(false);
     const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
 
+    /** Closes the account edit dailog. */ 
     const handleDialogClose = useCallback(() => {
         setNewName(null);
         setNewEmail(null);
@@ -82,6 +102,7 @@ const AccountEditDialog = (props) => {
         onClose();
     }, [onClose, setConfirmDeleteAccount]);
 
+    /** Attempts to update the users data then displays a snackbar. */
     const handleUserUpdate = useCallback(async () => {
         const data = {
             newEmail: !newEmail ? null : newEmail.replace(/\s/g, "").toLowerCase(),
@@ -115,6 +136,7 @@ const AccountEditDialog = (props) => {
         setLoading(false);
     }, [newEmail, newName, oldPassword, newPassword, setLoading, userDetails.email, handleDialogClose, setUserDetails, setSessionData, sessionData, setSnackbarMessage, setApiAlert]);
 
+    /** An alternative to clicking the update details button. */
     const handleKeyDown = useCallback((event) => {
         if (event.key === "Enter" && !loading) {
             if (open && !(!newEmail && !newName && !(oldPassword && newPassword && newPasswordConfirm && validPasswordLength && validPasswordNumber && 
@@ -123,6 +145,7 @@ const AccountEditDialog = (props) => {
         }
     }, [handleUserUpdate, loading, newEmail, newName, newPassword, newPasswordConfirm, oldPassword, open, validPasswordCapital, validPasswordLength, validPasswordMatch, validPasswordNumber, validPasswordSpecial]);
 
+    /** Updates the email state and checks if it is valid. */
     const handleEmailChange = useCallback((event) => {
         const email = event.target.value;
         if (email === userDetails.email) {
@@ -136,6 +159,7 @@ const AccountEditDialog = (props) => {
         }
     }, [userDetails.email]);
 
+    /** Updates the password state and checks if it is valid. */
     const handlePasswordChange = useCallback((event) => {
         const password = event.target.value;
         setValidPasswordLength(password.length >= 8);
@@ -147,6 +171,7 @@ const AccountEditDialog = (props) => {
         setNewPassword(password);
     }, [newPasswordConfirm, oldPassword]);
 
+    /** Updates the confirm password state and checks if it matches. */
     const handlePasswordConfirmChange = useCallback((event) => {
         const password = event.target.value;
         setValidPasswordMatch(password === newPassword);

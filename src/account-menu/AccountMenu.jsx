@@ -43,6 +43,7 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
 
+/** A dropdown menu that opens other account-related dialogs. */
 const AccountMenu = (props) => {
     const {
         inCourseViewer,
@@ -57,13 +58,19 @@ const AccountMenu = (props) => {
         userDetails,
     } = props;
 
+    // Menu related states.
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuOpen = Boolean(anchorEl);
+
+    // Dialog related states.
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
     const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
+
+    // State for visual feedback when the form is being used.
     const [snackbarMessage, setSnackbarMessage] = React.useState(null);
 
+    /** Logs the user out. */
     const handleLogout = useCallback(() => {
         setProfileDialogOpen(false);
         setIsLoggedIn(false);
