@@ -19,6 +19,7 @@
 import { styled } from "@mui/material/styles";
 import { Switch } from "@mui/material";
 
+/** A custom styled switch used to toggle the light/dark mode. */
 const ThemeSwitch = styled(Switch)(({ theme }) => ({
     width: 62,
     height: 34,

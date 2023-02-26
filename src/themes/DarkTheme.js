@@ -18,6 +18,7 @@
 
 import { createTheme } from "@mui/material";
 
+/** The dark theme for the website. */
 const darkTheme = createTheme({
     palette: {
         mode: "dark",

@@ -18,6 +18,7 @@
 
 import { createTheme } from "@mui/material";
 
+/** The light theme for the website. */
 const lightTheme = createTheme({
     palette: {
         type: "light",
