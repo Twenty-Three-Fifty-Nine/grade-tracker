@@ -31,11 +31,13 @@ import {
     InputAdornment,
     Stack,
     TextField,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
 import Axios from "axios";
 import Cookies from "universal-cookie";
+import { isMobile } from "react-device-detect";
 import PasswordValidation from "../login/PasswordValidation";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -182,11 +184,13 @@ const AccountEditDialog = (props) => {
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth onKeyDown={handleKeyDown}>
             <Stack direction="row">
                 <Typography variant="h6" sx={{ flexGrow: 1, ml: 3, mt: 2 }}> Update Information </Typography>
-                <IconButton onClick={() => setConfirmDeleteAccount(true) } 
-                    sx={{ "&:hover": { color: "error.main", backgroundColor: "transparent" }, mr: 1.5, mt: 1.5 }}
-                >
-                    <DeleteIcon />
-                </IconButton>
+                <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
+                    <IconButton onClick={() => setConfirmDeleteAccount(true) } 
+                        sx={{ "&:hover": { color: "error.main", backgroundColor: "transparent" }, mr: 1.5, mt: 1.5 }}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </Tooltip>
             </Stack>
             
             <DialogContent>
