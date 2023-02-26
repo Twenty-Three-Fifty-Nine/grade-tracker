@@ -161,11 +161,14 @@ const TemplateRelatedDisplay = (props) => {
                     <Tooltip title={ sessionData && sessionData !== "Reloading" && sessionData.userData.verifiedEmail ? "" : 
                         <h3> Please verify your email address to update a template. </h3> } placement="bottom" arrow
                     >
-                        <Button variant="contained" sx={{ fontSize:"large" }} onClick={() => setEditTemplate(true)} 
-                            disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}
-                        > 
-                            Update Template 
-                        </Button>
+                        <Box>
+                            <Button variant="contained" sx={{ fontSize:"large" }} onClick={() => setEditTemplate(true)} 
+                                disabled={sessionData && sessionData !== "Reloading" && !sessionData.userData.verifiedEmail}
+                            > 
+                            
+                                Update Template 
+                            </Button>
+                        </Box>
                     </Tooltip>
                 </Box>
                 <Box sx={{ alignSelf:"center" }}>
