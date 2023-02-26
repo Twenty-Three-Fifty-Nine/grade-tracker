@@ -99,7 +99,7 @@ const NewCourseDialog = (props) => {
             setInitURL(templateData.url);
 
             templateData.assignments.forEach((ass) => 
-                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)])    
+                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)])    
             );
         } else {
             Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
@@ -111,7 +111,7 @@ const NewCourseDialog = (props) => {
                 setInitURL(data.url);
 
                 data.assignments.forEach((ass) => 
-                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false)]) 
+                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)]) 
                 );
             });
         }
@@ -126,6 +126,7 @@ const NewCourseDialog = (props) => {
             if (assessment.hasChanged || assessment.isNew) changed = true;
         }
         
+        console.log(valid);
         setFormatValid(valid);
         setChangesMade(changed);
     }, [nameValid, codeValid, assessments, urlValid, courseURL, initURL]);
@@ -160,7 +161,7 @@ const NewCourseDialog = (props) => {
     const addAssessment = () => {
         const date = new Date();
         date.setSeconds(0);
-        setAssessments(oldArray => [...oldArray, new Assessment("", 0, 0, date, true, true)]);
+        setAssessments(oldArray => [...oldArray, new Assessment("", 0, 0, date, true, true, false)]);
     };
 
     const removeAssessment = (index) => {

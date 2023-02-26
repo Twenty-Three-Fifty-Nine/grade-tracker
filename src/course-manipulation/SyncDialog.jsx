@@ -86,18 +86,18 @@ const SyncDialog = (props) => {
     const loadAssesmentList = React.useCallback((data = templateData) => {
         let assignments = [];
         for (const assignment of data.assignments) {
-            let assessment = new Assessment(assignment.name, Number(assignment.weight), -1, assignment.dueDate, assignment.isAssignment, false);
+            let assessment = new Assessment(assignment.name, Number(assignment.weight), -1, assignment.dueDate, assignment.isAssignment, false, true);
             assessment.isUserAss = false;
             assignments.push(assessment);
         }    
 
         courseData.assessments.forEach(assessment => {
-            let newAss = new Assessment(assessment.name, assessment.weight, -1, assessment.deadline, assessment.isAss, false);
+            let newAss = new Assessment(assessment.name, assessment.weight, -1, assessment.deadline, assessment.isAss, false, true);
             newAss.isUserAss = true;
             assignments.push(newAss);  
         });
 
-        const blankAssessment = new Assessment("", 0, -1, "", null, false);
+        const blankAssessment = new Assessment("", 0, -1, "", null, false, false);
 
         const groupedAssignments = assignments.map((assignment) => {
             let found = assignments.filter((ass) => ass.name === assignment.name);

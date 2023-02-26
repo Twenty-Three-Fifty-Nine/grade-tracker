@@ -1,12 +1,12 @@
 class Assessment {
-    constructor(name, weight, grade, deadline, isAss, isNew) {
+    constructor(name, weight, grade, deadline, isAss, isNew, valid = true) {
         this.name = name;
         this.weight = weight;
         this.grade = grade === -1 ? NaN : grade;
         this.deadline = deadline;
 
         this.gradeValid = true;
-        this.valid = true;
+        this.valid = valid;
         this.isNew = isNew;
 
         this.duplicateName = false;
@@ -79,7 +79,7 @@ class Assessment {
     }
 
     clone() {
-        return new Assessment(this.name, this.weight, this.grade, this.deadline, this.isAss, this.isNew);
+        return new Assessment(this.name, this.weight, this.grade, this.deadline, this.isAss, this.isNew, this.valid);
     }
 } 
 

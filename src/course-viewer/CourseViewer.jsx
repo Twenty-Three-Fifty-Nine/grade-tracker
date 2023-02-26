@@ -320,7 +320,7 @@ const CourseViewer = (props) => {
                     
                     <Button variant="contained" 
                         onClick={() => {
-                            let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true);
+                            let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true, false);
                             setAssessments((current) => [...current, newAss]);
                             setCurrentEdit(newAss);
                             setChangesMade(true);
