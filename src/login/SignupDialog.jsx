@@ -142,7 +142,7 @@ const SignupDialog = (props) => {
 
         setLoading(true);
 
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/signup", {
+        await Axios.post("https://api.twentythreefiftynine.com/users/signup", {
             displayName: displayName,
             email: email.toLowerCase(),
             password: password,

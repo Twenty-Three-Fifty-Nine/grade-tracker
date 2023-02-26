@@ -18,7 +18,7 @@
 
 const VerificationEmailTemplate = (props) => {
     const { email, displayName, token, newSignUp } = props;
-    const link = `http://localhost:3000/verify?token=${token}&email=${email}`;
+    const link = `https://twentythreefiftynine.com/verify?token=${token}&email=${email}`;
     return `
 <html lang="en">
     <head>
@@ -71,7 +71,7 @@ const VerificationEmailTemplate = (props) => {
             <p>
                 ${newSignUp ? "Thank you for signing up to" : "You recently changed your email address for"}
                 <a href="https://twentythreefiftynine.com" target="_blank" referrerpolicy="no-referrer">23:59</a>
-                Please click the button below to verify your email address.
+                . Please click the button below to verify your email address.
             </p>
             <a href="${link}" target="_blank" rel="noopener">
             <button type="button" >

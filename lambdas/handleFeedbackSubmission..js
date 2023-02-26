@@ -20,7 +20,7 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import FeedbackEmailTemplate from "./FeedbackEmailTemplate.mjs";
 
 const sesClient = new SESClient({ region: "ap-southeast-2" });
-const fromEmail = "2359gradetracker@gmail.com";
+const source = `2359 Admin <no-reply@twentythreefiftynine.com>`;
 const bugEmail = "2359gradetracker+bugs@gmail.com";
 const suggestionEmail = "2359gradetracker+suggestions@gmail.com";
 const supportEmail = "2359gradetracker+support@gmail.com";
@@ -56,7 +56,7 @@ export const handler = async(event) => {
                 Data: subject,
             },
         },
-        Source: fromEmail,
+        Source: source,
     };
 
     const command = new SendEmailCommand(params);

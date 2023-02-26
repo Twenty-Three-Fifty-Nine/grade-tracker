@@ -56,7 +56,7 @@ const DeleteAccountDialog = (props) => {
 
     /** Deletes the user from the database and logs them out. */
     const deleteUser = useCallback(async () => {
-        await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, 
+        await Axios.delete("https://api.twentythreefiftynine.com/users/" + userDetails.email, 
             { data: {
                 password: deletePassword, 
                 email: userDetails.email.toLowerCase(),

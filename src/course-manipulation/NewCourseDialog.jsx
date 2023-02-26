@@ -114,7 +114,7 @@ const NewCourseDialog = (props) => {
                 setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)])    
             );
         } else {
-            Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
+            Axios.get("https://api.twentythreefiftynine.com/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
                 let data = response.data;    
                 setTemplateData(data);
 
@@ -209,7 +209,7 @@ const NewCourseDialog = (props) => {
 
         setLoading(true);
         
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses", {
+        await Axios.post("https://api.twentythreefiftynine.com/courses", {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
             url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,
@@ -247,7 +247,7 @@ const NewCourseDialog = (props) => {
         
         setLoading(true);
 
-        await Axios.put("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses/" + editCode, {
+        await Axios.put("https://api.twentythreefiftynine.com/courses/" + editCode, {
             codeYearTri: codeYearTri,
             name: toTitleCase(courseName),
             url: courseURL.startsWith("https://") || courseURL === "" ? courseURL : "https://" + courseURL,

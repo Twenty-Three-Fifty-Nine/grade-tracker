@@ -113,7 +113,7 @@ const AccountEditDialog = (props) => {
 
         setLoading(true);
 
-        await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, data).then((response) => {
+        await Axios.patch("https://api.twentythreefiftynine.com/users/" + userDetails.email, data).then((response) => {
             if (response.status === 200) {
                 handleDialogClose();
                 setUserDetails(response.data);

@@ -31,7 +31,7 @@ const dbClient = new DynamoDBClient({ region: "ap-southeast-2" });
 const userTable = "users";
 
 const sesClient = new SESClient({ region: "ap-southeast-2" });
-const fromEmail = "2359gradetracker@gmail.com";
+const source = `2359 Admin <no-reply@twentythreefiftynine.com>`;
 
 export const handler = async (event) => {
     if (
@@ -136,7 +136,7 @@ async function sendEmail(email, displayName, token) {
                 Data: "Password Reset",
             },
         },
-        Source: fromEmail,
+        Source: source,
     };
 
     const command = new SendEmailCommand(params);

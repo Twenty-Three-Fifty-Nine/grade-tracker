@@ -31,7 +31,7 @@ const client = new DynamoDBClient({ region: "ap-southeast-2" });
 const userTable = "users";
 
 const sesClient = new SESClient({ region: "ap-southeast-2" });
-const fromEmail = "2359gradetracker@gmail.com";
+const source = `2359 Admin <no-reply@twentythreefiftynine.com>`;
 
 export const handler = async (event) => {
     if (event.requestContext.http.method !== "POST" && event.requestContext.http.method !== "PATCH" && event.requestContext.http.method !== "DELETE") {
@@ -419,7 +419,7 @@ async function sendVerificationEmail(email, token, displayName, newSignUp) {
                 Data: "Verify your email",
             },
         },
-        Source: fromEmail,
+        Source: source,
     };
 
     await sesClient.send(new SendEmailCommand(params));

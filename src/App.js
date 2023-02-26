@@ -86,7 +86,7 @@ const App = () => {
     const verifyUser = async (email, token) => {
         setVerifying(true);
 
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + email + "/verify", {
+        await Axios.post("https://api.twentythreefiftynine.com/users/" + email + "/verify", {
             token: token,
         }).then((response) => {
             if (response.status === 200) {

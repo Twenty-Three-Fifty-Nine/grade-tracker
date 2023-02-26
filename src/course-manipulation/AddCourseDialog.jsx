@@ -83,7 +83,7 @@ const AddCourseDialog = (props) => {
     const handleAddCourse = async (code = courseCode, isNewTemplate = false) => {
         setLoadingAddRequest(true);
 
-        await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + session.userData.email + "/courses", {
+        await Axios.patch("https://api.twentythreefiftynine.com/users/" + session.userData.email + "/courses", {
             courseCode: code,
             year: activeTri.year,
             trimester: activeTri.tri
@@ -123,7 +123,7 @@ const AddCourseDialog = (props) => {
         setLoading(true);
 
         let tempList = [];
-        await Axios.get("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
+        await Axios.get("https://api.twentythreefiftynine.com/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
             courses.data.forEach((course) => {
                 let courseAdded = false;
                 const courseCode = course.codeYearTri.split("|")[0];
