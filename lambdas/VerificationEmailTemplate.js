@@ -53,7 +53,7 @@ const VerificationEmailTemplate = (props) => {
             <p>
                 ${newSignUp ? "Thank you for signing up to" : "You recently changed your email address for"}
                 <a href="https://twentythreefiftynine.com" target="_blank" referrerpolicy="no-referrer">23:59</a>
-                Please click the button below to verify your email address.
+                . Please click the button below to verify your email address.
             </p>
             <a href="${link}" target="_blank" rel="noopener">
             <button type="button" >
