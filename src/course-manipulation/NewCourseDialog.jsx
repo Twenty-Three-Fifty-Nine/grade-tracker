@@ -111,7 +111,7 @@ const NewCourseDialog = (props) => {
             setInitURL(templateData.url);
 
             templateData.assignments.forEach((ass) => 
-                setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)])    
+                setAssessments((prev) => [...prev, new Assessment(ass.name, parseFloat(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)])    
             );
         } else {
             Axios.get("https://api.twentythreefiftynine.com/courses/" + editCode + "?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((response) => {
@@ -123,7 +123,7 @@ const NewCourseDialog = (props) => {
                 setInitURL(data.url);
 
                 data.assignments.forEach((ass) => 
-                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseInt(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)]) 
+                    setAssessments((prev) => [...prev, new Assessment(ass.name, parseFloat(ass.weight), 0, ass.dueDate, ass.isAssignment, false, true)]) 
                 );
             });
         }

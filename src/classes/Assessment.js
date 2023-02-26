@@ -92,7 +92,7 @@ class Assessment {
     resetStates() {
         this.hasChanged = false;
         this.isNew = false;
-        this.initGrade = parseInt(this.grade);
+        this.initGrade = parseFloat(this.grade);
         this.initName = this.name;
         this.initAss = this.isAss;
         this.initDeadline = this.deadline; 
