@@ -144,6 +144,22 @@ const App = () => {
         return viewedCourse ? name + " " + viewedCourse.code : name + " Overview";
     };
 
+    /** @returns The current page to display */
+    const getPage = () => {
+        if (!isLoggedIn)
+            return <WelcomePage setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} setEmailSent={setEmailSent}/>;
+
+        if (viewedCourse)
+            return <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails}
+                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
+
+        if (!verifying)
+            return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} setViewedCourse={setViewedCourse}
+                        sessionData={sessionData} setSessionData={setSessionData} courseList={courseList} setCourseList={setCourseList} activeTri={activeTri}/>;
+
+        return null;
+    }
+
     return (
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
@@ -195,35 +211,7 @@ const App = () => {
             </AppBar>
 
             <Box sx={{ mt: isMobile && !isLoggedIn ? 0 : 8.5 }}>
-                {!isLoggedIn ? (
-                    <WelcomePage
-                        setIsLoggedIn={setIsLoggedIn}
-                        setUserDetails={setUserDetails}
-                        activeTri={activeTri}
-                        setEmailSent={setEmailSent}
-                    />
-                ) : viewedCourse ? (
-                    <CourseViewer
-                        courseData={viewedCourse}
-                        setViewedCourse={setViewedCourse}
-                        userDetails={userDetails}
-                        setSessionData={setSessionData}
-                        sessionData={sessionData}
-                        setCourseList={setCourseList}
-                    />
-                ) : !verifying ? (
-                    <GradesOverview
-                        userEmail={userDetails.email}
-                        userName={userDetails.name}
-                        verifiedEmail={userDetails.verifiedEmail}
-                        setViewedCourse={setViewedCourse}
-                        sessionData={sessionData}
-                        setSessionData={setSessionData}
-                        courseList={courseList}
-                        setCourseList={setCourseList}
-                        activeTri={activeTri}
-                    />
-                ) : null}
+                { getPage() }
             </Box>
 
             <PasswordResetDialog resetData={resetData} onClose={() => setResetData(null)} setIsLoggedIn={setIsLoggedIn}
