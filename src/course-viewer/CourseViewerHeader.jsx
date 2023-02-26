@@ -79,8 +79,7 @@ const CourseViewerHeader = (props) => {
                     <Box sx={{ alignSelf:"center" }}>
                         <Button disabled={courseData.url === ""} variant="contained" href={courseData.url} target="_blank" 
                             sx={{ fontSize:"large", pt: 1, mt: 1 }}
-                        > {courseData.code} 
-                            Course Page <LaunchIcon sx={{ ml: 1, mt: -0.2 }} /> 
+                        > {courseData.code} Course Page <LaunchIcon sx={{ ml: 1, mt: -0.2 }} /> 
                         </Button>
                     </Box>
                 </Stack>
