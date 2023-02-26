@@ -97,6 +97,21 @@ const CreateAssessmentCard = (props) => {
         checkFormat();
     };
 
+    const getNameHelperText = () => {
+        if (!nameCheckOn) return "";
+        if (details.name.length === 0) return "The name cannot be empty";
+        if (details.name.length > 30) return "The name cannot be longer than 30 characters";
+        if (details.duplicate) return "Another assessment has the same name";
+        return "";
+    };
+
+    const getWeightHelperText = () => {
+        if (!weightCheckOn) return "";
+        if (details.weight <= 0) return "The weight must be greater than 0";
+        if (details.weight > 100) return "The weight must be less than or equal to 100";
+        return "";
+    };
+
     return (
         <Card sx={{ maxWidth: 500 }}>
             <CardContent>
@@ -104,8 +119,7 @@ const CreateAssessmentCard = (props) => {
                     <Box sx={{ display: "flex" }}>
                         <TextField label="Assessment Name" fullWidth value={details.name} onChange={handleNameChange} 
                             error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
-                            helperText={ details.name.length === 0 && nameCheckOn ? "This field cannot be empty" : details.name.length > 30 && nameCheckOn ? 
-                                "This field  is too long" : details.duplicate && nameCheckOn ? "Another assessment has the same name" : "" } 
+                            helperText={ getNameHelperText() } 
                         />
                         <Stack sx={{ ml: 2 }}>
                             <ToggleButtonGroup exclusive size="small" value={details.isAss ? "ass" : "test"}
@@ -157,8 +171,7 @@ const CreateAssessmentCard = (props) => {
 
                         <TextField label="Grade Weight (%)" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
                             sx={{ ml: 2 }} error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
-                            helperText={ details.weight <= 0 && weightCheckOn ? "The value must be above 0" : details.weight > 100 && weightCheckOn ? 
-                                "The value cannot be above 100" : "" } 
+                            helperText={ getWeightHelperText() }
                         />
                     </Box>
                 </Stack>
