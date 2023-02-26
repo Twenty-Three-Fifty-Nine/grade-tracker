@@ -162,13 +162,15 @@ const AddCourseDialog = (props) => {
                 </DialogContentText>
 
                 <Stack spacing={2} direction={isMobile ? "column" : "row"} sx={{ m:"auto", pt: 1, pb: 5 }}>
-                    <Tooltip title={ session && session !== "Reloading" && session.userData.verifiedEmail ? "" : 
+                    <Tooltip title={ session && session !== "Reloading" && session.userData.verifiedEmail ? "pp" : 
                         <h3> Please verify your email address to create a new course. </h3> } 
                         placement="bottom" arrow
                     >
-                        <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail}> 
-                            Create New Course
-                        </Button>
+                        <Box>
+                            <Button onClick={handleNewCourse} variant="outlined" disabled={session && session !== "Reloading" && !session.userData.verifiedEmail}> 
+                                Create New Course
+                            </Button>
+                        </Box>
                     </Tooltip>
 
                     <Box sx={{ position: "relative" }}>
