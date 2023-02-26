@@ -91,7 +91,7 @@ const CreateAssessmentCard = (props) => {
             if (oldMatches === 1) {
                 assessments.forEach((ass) => {
                     if (ass.name === oldName) ass.duplicate = false;
-                })
+                });
             }
         }
         setParentUpdater(!parentUpdater)
@@ -109,7 +109,12 @@ const CreateAssessmentCard = (props) => {
                         />
                         <Stack sx={{ ml: 2 }}>
                             <ToggleButtonGroup exclusive size="small" value={details.isAss ? "ass" : "test"}
-                                onChange={(e, newValue) => { details.setIsAss(newValue === "ass"); setUpdater(!updater); }}
+                                onChange={(e, newValue) => { 
+                                    if(!newValue) return; 
+                                    details.setIsAss(newValue === "ass"); 
+                                    checkFormat();
+                                    setUpdater(!updater); 
+                                }}
                             >
                                 <ToggleButton value="ass">
                                     <MenuBookRoundedIcon />

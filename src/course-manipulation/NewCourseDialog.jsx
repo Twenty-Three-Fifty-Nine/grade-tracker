@@ -127,7 +127,6 @@ const NewCourseDialog = (props) => {
             if (assessment.hasChanged || assessment.isNew) changed = true;
         }
         
-        console.log(valid);
         setFormatValid(valid);
         setChangesMade(changed);
     }, [nameValid, codeValid, assessments, urlValid, courseURL, initURL]);
