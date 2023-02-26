@@ -309,7 +309,7 @@ const SyncDialog = (props) => {
                     }
 
                     {   changedAssessments.length > 0 && (
-                        <Box>
+                        <>
                             <Typography variant="h5" textAlign="center"> Changed Assessments </Typography>
                             <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
@@ -327,11 +327,11 @@ const SyncDialog = (props) => {
                                 )
                             })}
                             <Box visibility="hidden" sx={{ mb: 4 }} />
-                        </Box>
+                        </>
                     )}
 
                     {   newAssessments.length > 0 && (
-                        <Box>
+                        <>
                             <Typography variant="h5" textAlign="center"> New Assessments </Typography>
                             <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
@@ -347,12 +347,12 @@ const SyncDialog = (props) => {
                                 )
                             })}
                             <Box visibility="hidden" sx={{ mb: 4 }} />
-                        </Box>
+                        </>
                     )}
 
                     
                     {   unchangedAssessments.length > 0 && (
-                        <Box>
+                        <>
                             <Typography variant="h5" textAlign="center"> Your Assessments </Typography>
                             <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
@@ -368,11 +368,11 @@ const SyncDialog = (props) => {
                                 )
                             })}
                             <Box visibility="hidden" sx={{ mb: 4 }} />
-                        </Box>
+                        </>
                     )} 
 
                     {equalAssessments.length > 0 && (
-                        <Box>
+                        <>
                             <Typography variant="h5" textAlign="center"> Equal Assessments </Typography>
                             <Divider sx={{ width: "50%", borderWidth: 2 }} />
 
@@ -390,7 +390,7 @@ const SyncDialog = (props) => {
                                 )
                             })}
                             <Box visibility="hidden" sx={{ mb: 4 }} />
-                        </Box>
+                        </>
                     )}
                 </Stack>
             </Box>
