@@ -73,7 +73,7 @@ const LoginDialog = (props) => {
     const handleLogin = useCallback(async () => {
         setLoading(true);
 
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/authorise", {
+        await Axios.post("https://api.twentythreefiftynine.com/users/authorise", {
             email: email.toLowerCase(),
             password: password,
             activeTri: activeTri,
@@ -93,7 +93,7 @@ const LoginDialog = (props) => {
     const handlePasswordReset = useCallback(() => {
         setLoading(true);
 
-        Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/forgot", {
+        Axios.post("https://api.twentythreefiftynine.com/users/password/forgot", {
             email: email.toLowerCase(),
         }).then((response) => {
             setLoading(false);

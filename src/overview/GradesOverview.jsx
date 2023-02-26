@@ -96,7 +96,7 @@ const GradesOverview = (props) => {
 
     const getSessionData = useCallback(async (year) => {
         await setSessionData("Reloading");
-        return parseCourseData("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userEmail + "/courses").then((courseData) => {
+        return parseCourseData("https://api.twentythreefiftynine.com/users/" + userEmail + "/courses").then((courseData) => {
             return {
                 userData: { email: userEmail, displayName: userName, verifiedEmail },
                 timeInfo: { activeTri, selectedYear: year },

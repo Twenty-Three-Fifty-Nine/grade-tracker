@@ -50,7 +50,7 @@ const FeedbackDialog = (props) => {
     const sendFeedback = useCallback(async () => {
         setLoading(true);
 
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/feedback", {
+        await Axios.post("https://api.twentythreefiftynine.com/feedback", {
             subject: feedbackSubject,
             message: feedbackMessage,
             feedbackType,

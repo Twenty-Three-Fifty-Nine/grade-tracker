@@ -94,7 +94,7 @@ const PasswordResetDialog = (props) => {
     const resetPassword = useCallback(async () => {
         setLoading(true);
 
-        await Axios.post("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/password/reset", {
+        await Axios.post("https://api.twentythreefiftynine.com/users/password/reset", {
             email: resetData.email.toLowerCase(),
             token: resetData.token,
             password,

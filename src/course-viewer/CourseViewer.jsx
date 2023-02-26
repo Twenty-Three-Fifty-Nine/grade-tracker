@@ -216,7 +216,7 @@ const CourseViewer = (props) => {
 
         setAPILoading(true);
 
-        await Axios.patch("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code, {
+        await Axios.patch("https://api.twentythreefiftynine.com/users/" + userDetails.email + "/courses/" + courseData.code, {
             assignments: assessments,
             totalGrade: courseData.totalGrade,
             year: courseData.year,
@@ -248,7 +248,7 @@ const CourseViewer = (props) => {
     const deleteCourse = async () => {
         setAPILoading(true);
 
-        await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
+        await Axios.delete("https://api.twentythreefiftynine.com/users/" + userDetails.email + "/courses/" + courseData.code + "/" + courseData.year).then((response) => {
             setCourseList(current => [...current, courseData.code].sort());
 
             let temp = sessionData;
