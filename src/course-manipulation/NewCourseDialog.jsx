@@ -40,6 +40,7 @@ import Assessment from "../classes/Assessment";
 import Axios from "axios";
 import ConfirmDialog from "../ConfirmDialog";
 import CreateAssessmentCard from "./CreateAssessmentCard";
+import { getSnackbarXPosition } from "../utils/GetSnackbarPosition";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from "react-transition-group";
 
@@ -348,7 +349,7 @@ const NewCourseDialog = (props) => {
             />
             
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
-                anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : editCode === "" ? "left" : "right" }}
+                anchorOrigin={{ vertical:"bottom", horizontal: getSnackbarXPosition(editCode !== "") }}
             >
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && isSuccess && editCode === "" ? 9 : 0 }}>
                     { isSuccess ? editCode !== "" ? "Course updated successfully" : "Course created successfully" : errorText }
