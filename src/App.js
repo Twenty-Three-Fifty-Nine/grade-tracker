@@ -134,6 +134,32 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
+    /** @returns The string to display in the app bar */
+    const getPageHeader = () => {
+        if (!isLoggedIn || verifying) return "";
+
+        if (isMobile) return viewedCourse ? viewedCourse.code : userDetails.displayName;
+
+        const name = userDetails.displayName + (userDetails.displayName[userDetails.displayName.length - 1] === "s" ? "'" : "'s")
+        return viewedCourse ? name + " " + viewedCourse.code : name + " Overview";
+    };
+
+    /** @returns The current page to display */
+    const getPage = () => {
+        if (!isLoggedIn)
+            return <WelcomePage setIsLoggedIn={setIsLoggedIn} setUserDetails={setUserDetails} activeTri={activeTri} setEmailSent={setEmailSent}/>;
+
+        if (viewedCourse)
+            return <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails}
+                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
+
+        if (!verifying)
+            return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} setViewedCourse={setViewedCourse}
+                        sessionData={sessionData} setSessionData={setSessionData} courseList={courseList} setCourseList={setCourseList} activeTri={activeTri}/>;
+
+        return null;
+    }
+
     return (
         <ThemeProvider theme={!lightMode ? lightTheme : darkTheme}>
             <CssBaseline />
@@ -154,21 +180,7 @@ const App = () => {
                     </Stack>
 
                     <Typography variant="h6" component="div" sx={{ textAlign: "center", m: isMobile ? 0 : "auto" }}>
-                        {   isLoggedIn && !verifying
-                            ? isMobile && viewedCourse
-                                ? viewedCourse.code
-                                : userDetails.displayName +
-                                  (isMobile
-                                      ? ""
-                                      : (userDetails.displayName[
-                                            userDetails.displayName.length - 1
-                                        ] === "s"
-                                            ? "' "
-                                            : "'s ") +
-                                        (viewedCourse
-                                            ? viewedCourse.code
-                                            : "Overview"))
-                            : ""}
+                        { getPageHeader() }
                     </Typography>
 
                     <Stack direction={"row"} sx={{ position: "fixed", right: isMobile ? 10 : 0 }}>
@@ -199,35 +211,7 @@ const App = () => {
             </AppBar>
 
             <Box sx={{ mt: isMobile && !isLoggedIn ? 0 : 8.5 }}>
-                {!isLoggedIn ? (
-                    <WelcomePage
-                        setIsLoggedIn={setIsLoggedIn}
-                        setUserDetails={setUserDetails}
-                        activeTri={activeTri}
-                        setEmailSent={setEmailSent}
-                    />
-                ) : viewedCourse ? (
-                    <CourseViewer
-                        courseData={viewedCourse}
-                        setViewedCourse={setViewedCourse}
-                        userDetails={userDetails}
-                        setSessionData={setSessionData}
-                        sessionData={sessionData}
-                        setCourseList={setCourseList}
-                    />
-                ) : !verifying ? (
-                    <GradesOverview
-                        userEmail={userDetails.email}
-                        userName={userDetails.name}
-                        verifiedEmail={userDetails.verifiedEmail}
-                        setViewedCourse={setViewedCourse}
-                        sessionData={sessionData}
-                        setSessionData={setSessionData}
-                        courseList={courseList}
-                        setCourseList={setCourseList}
-                        activeTri={activeTri}
-                    />
-                ) : null}
+                { getPage() }
             </Box>
 
             <PasswordResetDialog resetData={resetData} onClose={() => setResetData(null)} setIsLoggedIn={setIsLoggedIn}
