@@ -64,6 +64,13 @@ const FeedbackDialog = (props) => {
         setLoading(false);
     }, [feedbackMessage, feedbackSubject, feedbackType, handleFeedbackDialogClose, setApiAlert, setLoading, setSnackbarMessage, userDetails.displayName, userDetails.email]);
 
+    const getHelperText = (field, content, length) => {
+        if (content === null) return "";
+        if (content.length === 0) return `${field} field cannot be empty`;
+        if (content.length > length) return `${field} length has to be below ${length + 1} characters`;
+        return "";
+    };
+
     return (
         <Dialog open={feedbackDialogOpen} onClose={() => handleFeedbackDialogClose()} maxWidth="sm" fullWidth>
             <DialogTitle> Send Feedback </DialogTitle>
@@ -72,8 +79,7 @@ const FeedbackDialog = (props) => {
                 <Stack direction={ isMobile ? "column" : "row" }>
                     <TextField label="Subject" sx={{ width: isMobile ? "100%" : "70%" }} margin="normal" value={ feedbackSubject ? feedbackSubject : "" } 
                         onChange={(e) => setFeedbackSubject(e.target.value)} error={feedbackSubject !== null && (feedbackSubject.length === 0 || feedbackSubject.length > 40)} 
-                        helperText={ feedbackSubject === null ? "" : feedbackSubject.length === 0 ? "Subject field cannot be empty" : feedbackSubject.length > 40 ? 
-                            "Subject length has to be below 41 characters" : "" }
+                        helperText={ getHelperText("Subject", feedbackSubject, 40) }
                     />
                     <FormControl sx={{ width: isMobile ? "100%" : "30%", my: 2, ml: isMobile ? 0 : 2 }}>
                         <InputLabel>Type</InputLabel>
@@ -87,8 +93,7 @@ const FeedbackDialog = (props) => {
 
                 <TextField label="Message Content" fullWidth margin="normal" value={ feedbackMessage ? feedbackMessage : "" } multiline rows={6}
                     onChange={(e) => setFeedbackMessage(e.target.value)}  error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
-                    helperText={ feedbackMessage === null ? "" : feedbackMessage.length === 0 ? "Content field cannot be empty" : feedbackMessage.length > 350 ? 
-                        "Message content has to be below 351 characters" : "" }
+                    helperText={ getHelperText("Message", feedbackMessage, 350) }
                 />
                 
                 <Collapse in={apiAlert !== null && !confirmDeleteAccount}>

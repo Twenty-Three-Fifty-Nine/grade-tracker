@@ -5,6 +5,8 @@ import {
     ToggleButton,
 } from "@mui/material";
 
+import { getNameHelperText, getWeightHelperText } from "../utils/GetHelperText";
+
 const IsAssignmentToggle = (props) => {
     const {
         currentEdit,
@@ -50,8 +52,7 @@ const AssessmentNameField = (props) =>{
                 checkChanges();
             }} 
             error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
-            helperText={ !currentEdit ? "" : currentEdit.name.length === 0 ? "This field cannot be empty" : currentEdit.name.length > 30 ? 
-                "This field  is too long" : currentEdit.duplicateName ? "Another assessment has the same name" : "" } 
+            helperText={ getNameHelperText(currentEdit) }
         />
     );
 };
@@ -71,7 +72,7 @@ const AssessmentWeightField = (props) => {
                 checkChanges();
             }} 
             error={currentEdit && (currentEdit.weight <= 0 || currentEdit.weight > 100)} 
-            helperText={ currentEdit && currentEdit.weight <= 0 ? "The value must be above 0" : currentEdit && currentEdit.weight > 100 ? "The value cannot be above 100" : "" } 
+            helperText={ getWeightHelperText(currentEdit) } 
         />
     );
 };

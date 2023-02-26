@@ -34,6 +34,12 @@ import { SessionContext } from "./GradesOverview";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+const getActiveChip = (triInfo) => {
+    if (triInfo.isFinished) return <Chip label="Finished" color="secondary" sx={{ ml: 1 }} />;
+    if (triInfo.isActive) return <Chip label="Current" color="success" sx={{ ml: 1 }} />;
+    return <Chip label="Inactive" color="primary" sx={{ ml: 1 }} />;
+};
+
 const TrimesterOverview = (props) => {
     const {
         open,
@@ -50,10 +56,7 @@ const TrimesterOverview = (props) => {
                 <Accordion expanded={open} onChange={() => toggleAccordion(triInfo.tri)} key={triInfo.tri}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ pt: 0.5 }}> Trimester {triInfo.tri} </Typography>
-                        {   triInfo.isActive ? <Chip label="Current" color="success" sx={{ ml: 1 }} /> :
-                            triInfo.isFinished ? <Chip label="Finished" color="secondary" sx={{ ml: 1 }} /> :
-                            <Chip label="Inactive" color="primary" sx={{ ml: 1 }} /> 
-                        } 
+                        { getActiveChip(triInfo) } 
                     </AccordionSummary>
 
                     <AccordionDetails>

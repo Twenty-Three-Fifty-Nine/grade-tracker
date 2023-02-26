@@ -161,7 +161,7 @@ const CourseViewer = (props) => {
     }, [filteredAssessments, sortType]);
 
     const sortAlgorithm = (isAsc, value, temp) => {
-        temp.sort((a, b) => a[value] > b[value] ? (isAsc ? 1 : -1) : (isAsc ? -1 : 1));
+        temp.sort((a, b) => isAsc ? a[value] > b[value] : a[value] < b[value]);
         return temp;
     };
 

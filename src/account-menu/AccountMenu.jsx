@@ -34,6 +34,7 @@ import AccountEditDialog from "./AccountEditDialog";
 import Cookies from "universal-cookie";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 import FeedbackDialog from "./FeedbackDialog";
+import { getSnackbarXPosition } from "../utils/GetSnackbarPosition";
 import { isMobile } from "react-device-detect";
 import ThemeSwitch from "../themes/ThemeSwitch";
 
@@ -117,7 +118,7 @@ const AccountMenu = (props) => {
             </Menu>
 
             <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} 
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : inCourseViewer ? "right" : "left" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: getSnackbarXPosition(inCourseViewer) }}
             >
                 <Alert severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
             </Snackbar>
