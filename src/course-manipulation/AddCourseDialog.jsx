@@ -39,6 +39,11 @@ import NewCourseDialog from "./NewCourseDialog";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { SessionContext } from "../overview/GradesOverview";
 
+/** 
+ * A dialog where a user can either add a course
+ * from a list of existing courses or choose to open
+ * the course template creator.
+ */
 const AddCourseDialog = (props) => {
     const {
         activeTri,
@@ -49,21 +54,32 @@ const AddCourseDialog = (props) => {
         updateData,
     } = props;
 
+    // Uses the session data object.
     const session = React.useContext(SessionContext);
 
+    // Tracks what course the user intends to add, if any.
     const [courseCode, setCourseCode] = React.useState(null);
     const [courseCreator, setCourseCreator] = React.useState(false);
+
+    // States for visual feedback.
     const [loading, setLoading] = React.useState(false);
     const [loadingAddRequest, setLoadingAddRequest] = React.useState(false);
-
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
   
+    /** Closes the dialog. */
     const handleClose = () => {
         setCourseCode(null);
         onClose();
     };
 
+    /**
+     * Attempts to add a course to the users course list.
+     * A snackbar is then displayed.
+     * 
+     * @param code - The course code.
+     * @param isNewTemplate - Whether this is an existing course or a new one.
+     */
     const handleAddCourse = async (code = courseCode, isNewTemplate = false) => {
         setLoadingAddRequest(true);
 
@@ -87,16 +103,19 @@ const AddCourseDialog = (props) => {
         setLoadingAddRequest(false);
     };
 
+    /** Opens the course creator. */
     const handleNewCourse = () => {
         handleClose();
         setCourseCreator(true);
     };
 
+    /** Cancels course creation and adds the course if it was created. */
     const handleCancelCreation = async (newCourse, isNewTemplate) => {
         if (newCourse) handleAddCourse(newCourse, isNewTemplate);
         setCourseCreator(false);
     };
 
+    /** Loads a list of templates that can be added to the users account. */
     const getTemplatesList = async () => {
         const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
         if(!trimesters || loading) return null;

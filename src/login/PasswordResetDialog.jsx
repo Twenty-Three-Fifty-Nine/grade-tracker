@@ -41,6 +41,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+/** Allows the user to choose a new password. */
 const PasswordResetDialog = (props) => {
     const {
         onClose,
@@ -49,20 +50,27 @@ const PasswordResetDialog = (props) => {
         setUserDetails,
     } = props;
 
+    // Stores user details from the reset form.
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
 
+    // Stores the validity of the inputted password.
     const [validPasswordLength, setValidPasswordLength] = React.useState(false);
     const [validPasswordNumber, setValidPasswordNumber] = React.useState(false);
     const [validPasswordSpecial, setValidPasswordSpecial] = React.useState(false);
     const [validPasswordCapital, setValidPasswordCapital] = React.useState(false);
     const [validPasswordMatch, setValidPasswordMatch] = React.useState(false);
 
+    // States for visual feedback when the form is being used.
     const [resetPasswordSuccess, setResetPasswordSuccess] = React.useState(false);
     const [resetPasswordError, setResetPasswordError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
 
+    /**
+     * Called when the user changes the password field
+     * and updates the validity states for the password.
+     */
     const handlePasswordChange = useCallback((e) => {
         setPassword(e.target.value);
         setValidPasswordLength(e.target.value.length >= 8);
@@ -72,11 +80,16 @@ const PasswordResetDialog = (props) => {
         setValidPasswordMatch(e.target.value === passwordConfirm && e.target.value !== "");
     }, [passwordConfirm]);
 
+    /**
+     * Called when the user changes the password confirmation
+     * field and updates whether or not is matches the password.
+     */
     const handlePasswordConfirmChange = useCallback((e) => {
         setPasswordConfirm(e.target.value);
         setValidPasswordMatch(e.target.value === password && e.target.value !== "");
     }, [password]);
 
+    /** Closes the password reset dialog. */
     const handleClose = useCallback(() => {
         onClose();
         setPassword("");
@@ -91,6 +104,10 @@ const PasswordResetDialog = (props) => {
         setShowPassword(false);
     }, [onClose]);
 
+    /**
+     * Attempts to reset the users password and then
+     * displays a snackbar.
+     */
     const resetPassword = useCallback(async () => {
         setLoading(true);
 
@@ -117,6 +134,7 @@ const PasswordResetDialog = (props) => {
         setLoading(false);
     }, [resetData, password, setIsLoggedIn, setUserDetails, handleClose]);
 
+    /** An alternative to pressing the reset button . */
     const handleKeyDown = useCallback((e) => {
         if (e.key === "Enter") {
             if (validPasswordLength && validPasswordNumber && validPasswordSpecial && 

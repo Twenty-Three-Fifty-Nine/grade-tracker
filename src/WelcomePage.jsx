@@ -24,6 +24,10 @@ import {
 
 import Login from "./login/Login";
 
+/**
+ * This page greets the user and allows them to log in, 
+ * sign up, or toggle between light and dark mode.
+ */
 const WelcomePage = (props) => {
     const {
         activeTri,

@@ -1,3 +1,21 @@
+/**
+ * Twenty Three Fifty Nine - Grade tracking tool
+ * Copyright (C) 2023  Abdulrahman Asfari and Christopher E Sa
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+*/
+
 import React, { useCallback } from "react";
 import {
     Alert,
@@ -19,6 +37,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+/** Allows the user to delete their account. */
 const DeleteAccountDialog = (props) => {
     const {
         confirmDeleteAccount,
@@ -28,11 +47,14 @@ const DeleteAccountDialog = (props) => {
         userDetails,
     } = props;
 
+    // Password related states.
     const [deletePassword, setDeletePassword] = React.useState("");
     const [showDeletePassword, setShowDeletePassword] = React.useState(false);
 
+    // Displays an alert if the value is non-null.
     const [apiAlert, setApiAlert] = React.useState(null);
 
+    /** Deletes the user from the database and logs them out. */
     const deleteUser = useCallback(async () => {
         await Axios.delete("https://x912h9mge6.execute-api.ap-southeast-2.amazonaws.com/test/users/" + userDetails.email, 
             { data: {

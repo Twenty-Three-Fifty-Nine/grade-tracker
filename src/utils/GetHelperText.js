@@ -1,3 +1,10 @@
+/**
+ * Returns helper text for assessment name fields.
+ * 
+ * @param details - The assessment object. 
+ * @param nameCheckOn - Whether or not the name should be checked for validity. 
+ * @returns The helper text
+ */
 const getNameHelperText = (details, nameCheckOn = true) => {
     if (!nameCheckOn) return "";
     if (details.name.length === 0) return "The name cannot be empty";
@@ -6,6 +13,13 @@ const getNameHelperText = (details, nameCheckOn = true) => {
     return "";
 };
 
+/**
+ * Returns helper text for assessment weight fields.
+ * 
+ * @param details - The assessment object. 
+ * @param weightCheckOn - Whether or not the weight should be checked for validity. 
+ * @returns The helper text
+ */
 const getWeightHelperText = (details, weightCheckOn = true) => {
     if (!weightCheckOn) return "";
     if (details.weight <= 0) return "The weight must be greater than 0";

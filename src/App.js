@@ -46,25 +46,43 @@ import WelcomePage from "./WelcomePage";
 import logoLight from "./images/2359LogoLight.svg";
 import logoDark from "./images/2359LogoDark.svg";
 
+/**
+ * This controls what is displayed on the screen based on whether 
+ * theyre logged in, viewing a course.
+ */
 const App = () => {
+    // Tracks whether or not the user is logged in.
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+    // Tracks whether or not the user is in light mode.
     const [lightMode, setLightMode] = React.useState(true);
 
+    // Stores information about the currently logged in user, their courses, and currently available actions.
     const [userDetails, setUserDetails] = React.useState({});
     const [viewedCourse, setViewedCourse] = React.useState(null);
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
 
+    // Email verification/reset related states.
     const location = useLocation();
     const [resetData, setResetData] = React.useState(null);
     const [emailSent, setEmailSent] = React.useState(false);
     const [emailVerified, setEmailVerified] = React.useState(false);
     const [verifying, setVerifying] = React.useState(false);
 
+    // Tells both the client and the API what the currently active trimester is.
     const activeTri = useMemo(() => {
         return { year: 2023, tri: 1 };
     }, []);
 
+
+    /**
+     * Verifies the user email using the verification token
+     * and updates the details state and their login cookie.
+     * 
+     * @param email - User email. 
+     * @param token - User verification token.
+     */
     const verifyUser = async (email, token) => {
         setVerifying(true);
 
@@ -84,6 +102,11 @@ const App = () => {
         setVerifying(false);
     };
 
+    /**
+     * Checks if the user has a login cookie and logs them in
+     * if they do. Additionally verifies their email or resets their 
+     * password based on the path.
+     */
     React.useEffect(() => {
         const cookies = new Cookies();
         const detailsCookie = cookies.get("userDetails");

@@ -28,6 +28,7 @@ import {
 
 import { isMobile } from "react-device-detect";
 
+/** Displays a brief overview of a course including it's code, grade, and completion. */
 const CourseOverview = (props) => {
     const {
         courseInfo,

@@ -1,3 +1,21 @@
+/**
+ * Twenty Three Fifty Nine - Grade tracking tool
+ * Copyright (C) 2023  Abdulrahman Asfari and Christopher E Sa
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+*/
+
 import React, { useCallback } from "react";
 import {
     Alert,
@@ -23,6 +41,7 @@ import { isMobile } from "react-device-detect";
 
 import CloseIcon from "@mui/icons-material/Close";
 
+/** Allows the user to send feedback. */
 const FeedbackDialog = (props) => {
     const {
         confirmDeleteAccount,
@@ -32,13 +51,16 @@ const FeedbackDialog = (props) => {
         userDetails,
     } = props;
 
+    // Feedback information.
     const [feedbackSubject, setFeedbackSubject] = React.useState(null);
     const [feedbackMessage, setFeedbackMessage] = React.useState(null);
     const [feedbackType, setFeedbackType] = React.useState(userDetails.verifiedEmail ? "suggestion" : "support");
     
+    // States for visual feedback when the form is being used.
     const [loading, setLoading] = React.useState(false);
     const [apiAlert, setApiAlert] = React.useState(null);
 
+    /** Closes the feedback dialog. */
     const handleFeedbackDialogClose = useCallback(() => {
         setFeedbackDialogOpen(false);
         setFeedbackSubject(null);
@@ -47,6 +69,7 @@ const FeedbackDialog = (props) => {
         setApiAlert(null);
     }, [setFeedbackDialogOpen, userDetails.verifiedEmail]);
     
+    /** Attempts to send the feedback and then displays a snackbar. */
     const sendFeedback = useCallback(async () => {
         setLoading(true);
 
@@ -64,6 +87,12 @@ const FeedbackDialog = (props) => {
         setLoading(false);
     }, [feedbackMessage, feedbackSubject, feedbackType, handleFeedbackDialogClose, setApiAlert, setLoading, setSnackbarMessage, userDetails.displayName, userDetails.email]);
 
+    /** 
+     * @param field - The field to get helper text for.
+     * @param content - The content of the field to check.
+     * @param length - The maximum length of the content.
+     * @returns Helper text for the given field. 
+     */
     const getHelperText = (field, content, length) => {
         if (content === null) return "";
         if (content.length === 0) return `${field} field cannot be empty`;

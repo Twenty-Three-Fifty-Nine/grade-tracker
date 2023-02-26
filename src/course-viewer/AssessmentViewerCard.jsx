@@ -36,6 +36,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import AssessmentViewerGrades from "./AssessmentViewerGrades";
 
+/** Displays detailed information about an assessment. */
 const AssessmentViewerCard = (props) => {
     const { 
         assData,
@@ -43,13 +44,19 @@ const AssessmentViewerCard = (props) => {
         setCurrentEdit,
     } = props;
     
+    // Used to update components when details are updated. 
     const [updater, setUpdater] = React.useState(false);
 
-    const getCourseLetter = () => {
+    /** Gets the current grade letter for the assessment. */
+    const getAssessmentLetter = () => {
         if (isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
         else return getLetterGrade(parseInt(assData.grade));
     };
 
+    /**
+     * Updates the assessment grade if it is a number, and then checks
+     * if it is a valid number. 
+     */
     const handleGradeChange = (e) => {
         if(e.target.value === "") assData.setGrade(NaN);
         else if(!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) assData.setGrade(e.target.value);
@@ -59,6 +66,7 @@ const AssessmentViewerCard = (props) => {
         setUpdater(!updater);
     };
 
+    /** Stops transitions from being blocked after the updated assessment is mounted. */
     React.useEffect(() => {
         assData.stopTransition = false;
     }, [assData]);
@@ -93,10 +101,10 @@ const AssessmentViewerCard = (props) => {
                         Worth: {assData.weight}%
                     </Typography>
 
-                    { isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
+                    { isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} />}
                 </Stack>
 
-                {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getCourseLetter={getCourseLetter} />}
+                {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} />}
             </CardContent>
         </Card>
     );
