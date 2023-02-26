@@ -281,6 +281,12 @@ const NewCourseDialog = (props) => {
         return "";
     };
 
+    const getAlertText = () => {
+        if (!isSuccess) return errorText;
+        if (editCode) return "Course updated successfully";
+        return "Course created successfully";
+    };
+
     return (
         <Box>
             <Dialog fullScreen open={open} onClose={attemptClose}>
@@ -365,7 +371,7 @@ const NewCourseDialog = (props) => {
                 anchorOrigin={{ vertical:"bottom", horizontal: getSnackbarXPosition(editCode !== "") }}
             >
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && isSuccess && editCode === "" ? 9 : 0 }}>
-                    { isSuccess ? editCode !== "" ? "Course updated successfully" : "Course created successfully" : errorText }
+                    { getAlertText() }
                 </Alert>
             </Snackbar>
 
