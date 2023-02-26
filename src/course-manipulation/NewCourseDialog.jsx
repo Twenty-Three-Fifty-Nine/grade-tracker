@@ -267,6 +267,20 @@ const NewCourseDialog = (props) => {
         setCloseDialog(false);
     }
 
+    const getCourseNameHelperText = () => {
+        if (!nameCheckOn) return "";
+        if (courseName.length === 0) return "Course name cannot be empty";
+        if (courseName.length > 50) return "Course name cannot be longer than 50 characters";
+        return "";
+    };
+
+    const getURLHelperText = () => {
+        if (!urlCheckOn) return "";
+        if (courseURL.length > 200) return "URL cannot be longer than 200 characters";
+        if (!urlValid) return "URL is invalid";
+        return "";
+    };
+
     return (
         <Box>
             <Dialog fullScreen open={open} onClose={attemptClose}>
@@ -303,15 +317,14 @@ const NewCourseDialog = (props) => {
 
                     <Stack spacing={2}>
                         <TextField value={courseName} disabled={editCode !== "" ? true : false} label="Course Name" fullWidth onChange={handleNameChange} 
-                            error={!nameValid && nameCheckOn} helperText={ courseName.length === 0 && nameCheckOn ? "This field cannot be empty" : 
-                            courseName.length > 50 && nameCheckOn ? "This field  is too long" : "" } 
+                            error={!nameValid && nameCheckOn} helperText={ getCourseNameHelperText() }
                         />
                         <Box sx={{ display: "flex", justifyItems: "center" }}>
                             <TextField value={courseCode} disabled={editCode !== "" ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
                                 error={!codeValid && codeCheckOn} helperText={ !codeValid && codeCheckOn ? "Invalid course code" : "" } 
                             />
                             <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
-                                error={!urlValid && urlCheckOn} helperText={ !urlValid && urlCheckOn ? courseURL.length > 200 ? "URL is too long" : "Invalid URL" : "" }
+                                error={!urlValid && urlCheckOn} helperText={ getURLHelperText() }
                             />
                         </Box>
                     </Stack>
