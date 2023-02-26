@@ -51,6 +51,11 @@ import { TransitionGroup } from "react-transition-group";
 
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
+/**
+ * The most vital component of the grade tracker. Here the 
+ * user can view detailed information about a chosen course and can 
+ * edit their grades, the course information, or even the template itself.
+ */
 const CourseViewer = (props) => {
     const { 
         courseData, 
@@ -61,33 +66,40 @@ const CourseViewer = (props) => {
         setCourseList, 
     } = props;
 
+    // Tracks whether the user can perform a valid, non-empty save.
     const [validChanges, setValidChanges] = React.useState(false);
     const [changesMade, setChangesMade] = React.useState(false);
     const [changeOverride, setChangeOverride] = React.useState(false);
     const changesMadeR = React.useRef();
     changesMadeR.current = changesMade;
 
+    // Confirmation dialog open states.
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [confirmExit, setConfirmExit] = React.useState(false);
 
+    // States for visual feedback when the form is being used.
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
     const [successText, setSuccessText] = React.useState("");
     const [errorText, setErrorText] = React.useState("");
+    const [apiLoading, setAPILoading] = React.useState(false);
 
+    // Values used in the mobile filter sliding panel.
     const [sliderPos, setSliderPos] = React.useState(-270);
     const sliderPosR = React.useRef();
     sliderPosR.current = sliderPos;
     const [deleteZIndex, setDeleteZIndex] = React.useState(1);
 
+    // Used to open sub menus.
     const [editTemplate, setEditTemplate] = React.useState(false);
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
-    const [apiLoading, setAPILoading] = React.useState(false);
 
+    // Values saved to display to the user.
     const [courseCompletion, setCourseCompletion] = React.useState(NaN);
     const [courseLetter, setCourseLetter] = React.useState(null);
 
+    // Filter related states.
     const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
     const [sortType, setSortType] = React.useState("deadline-a");
     const [finishedFilter, setFinishedFilter] = React.useState(false);
@@ -96,15 +108,18 @@ const CourseViewer = (props) => {
     const [testFilter, setTestFilter] = React.useState(false);
     const [assignmentFilter, setAssignmentFilter] = React.useState(false);
 
+    // Stores assessment related data.
     const [assessments, setAssessments] = React.useState([]);
     const [filteredAssessments, setFilteredAssessments] = React.useState([]);
     const [currentEdit, setCurrentEdit] = React.useState(null);
     const [templateData, setTemplateData] = React.useState(false);
 
+    // Initial declaration of methods.
     let handleKeyDown = null;
     let handleTransitionEnd = null;
     let handleTransitionStart = null;
 
+    /** Removes any active event listeners before closing the course viewer. */
     const exitViewer = useCallback(() => {
         document.removeEventListener("keydown", handleKeyDown, false);
         if (isMobile) {
@@ -115,23 +130,34 @@ const CourseViewer = (props) => {
         setTemplateData(null);
     }, [handleKeyDown, handleTransitionEnd, handleTransitionStart, setViewedCourse]);
 
+    /** 
+     * Closes the course viewer unless they have unsaved changes, in which 
+     * case there will be a confirmation dialog 
+     */
     const attemptClose = useCallback(() => {
         if (changesMadeR.current) setConfirmExit(true);
         else exitViewer();
     }, [exitViewer]);
 
+    /** Alternative to clicking the return button. */
     handleKeyDown = useCallback((event) => {
         if (event.key === "Escape") attemptClose();
     }, [attemptClose]);
 
+    /** Updates the mobile delete icon's Z index on sliding panel transition end. */
     handleTransitionEnd = useCallback((event) => {
         if (sliderPosR.current === -270) setDeleteZIndex(1);
     }, []);
 
+    /** Updates the mobile delete icon's Z index on sliding panel transition start. */
     handleTransitionStart = useCallback((event) => {
         if (sliderPosR.current === 0) setDeleteZIndex(0);
     }, []);
 
+    /** 
+     * Sets up course viewer. This includes event listeners, scrolling the user 
+     * to the top, and loading relevant data such as display values and assessments.
+     */
     React.useEffect(() => {
         if (assessments.length > 0) return;
 
@@ -151,6 +177,12 @@ const CourseViewer = (props) => {
         });
     }, [assessments.length, courseData, handleKeyDown, handleTransitionEnd, handleTransitionStart]);
 
+    /**
+     * Determines what type of sorting to be used by the algorithm. 
+     * 
+     * @param type - The type of sorting to be used.
+     * @param list - The list of assessments to be sorted.
+     */
     const sort = useCallback((type = sortType, list = filteredAssessments) => {
         if (type === "name-a") return sortAlgorithm(true, "name", list);
         else if (type === "name-d") return sortAlgorithm(false, "name", list);
@@ -160,11 +192,19 @@ const CourseViewer = (props) => {
         else if (type === "weight-d") return sortAlgorithm(true, "weight", list);
     }, [filteredAssessments, sortType]);
 
-    const sortAlgorithm = (isAsc, value, temp) => {
-        temp.sort((a, b) => isAsc ? a[value] > b[value] : a[value] < b[value]);
-        return temp;
+    /** 
+     * Sorts the assessments.
+     * 
+     * @param isAsc - Whether or not the sort is ascending.
+     * @param value - The property of the assessment to use.
+     * @param list - The list of assessments to be sorted.
+     */
+    const sortAlgorithm = (isAsc, value, list) => {
+        list.sort((a, b) => isAsc ? a[value] > b[value] : a[value] < b[value]);
+        return list;
     };
 
+    /** Filters the assessments based on the filter states. */
     const filter = useCallback(() => {
         let temp = [];
         assessments.forEach((assessment) => {
@@ -176,16 +216,24 @@ const CourseViewer = (props) => {
         setFilteredAssessments(sort(sortType, temp));
     }, [assessments, assignmentFilter, finishedFilter, missingGradeFilter, pastDeadlineFilter, sort, sortType, testFilter]);
 
+    /** Calls the filter method when the filter states are changes, or when the assessment list changes. */
     React.useEffect(() => {
         if (assessments.length === 0) return;
         filter();
     }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, filter, assessments.length]);
 
+    /** Changes the active sorting type. */
     const handleChangeSort = (e) => {
         setSortType(e.target.value);
         setFilteredAssessments(sort(e.target.value));
     };
 
+    /** 
+     * Checks if any changes have been made in this viewing session. 
+     * 
+     * @param override - A value used to override the normal checks, 
+     *                   often used when an assessment is deleted.
+     */
     const checkChanges = (override = changeOverride) => {
         let changes = false;
         let valid = true;
@@ -197,6 +245,12 @@ const CourseViewer = (props) => {
         setValidChanges(valid);
     };
 
+    /** 
+     * Attempts to save the changes made to the course, then displays
+     * a snackbar and resets all the assessments' validity/change flags.
+     * 
+     * @param synced - Whether or not this change is for a sync. Updates lastSynced if so.
+     */
     const saveChanges = async (synced = false) => {
         setCurrentEdit(null);
 
@@ -245,6 +299,7 @@ const CourseViewer = (props) => {
         });
     };
 
+    /** Attempts to delete the user's course, displays a snackbar if it fails. */
     const deleteCourse = async () => {
         setAPILoading(true);
 
@@ -271,6 +326,7 @@ const CourseViewer = (props) => {
         setAPILoading(false);
     };
 
+    /** Checks if there are two assessments with the same name. */
     const checkDuplicateName = () => {
         assessments.forEach((ass) => {
             ass.duplicateName = false;

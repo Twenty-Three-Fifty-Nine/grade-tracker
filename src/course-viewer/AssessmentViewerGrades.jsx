@@ -13,7 +13,7 @@ const AssessmentViewerGrades = (props) => {
     const {
         assData,
         handleGradeChange,
-        getCourseLetter,
+        getAssessmentLetter,
     } = props;
 
     const getGradeColor = () => {
@@ -40,7 +40,7 @@ const AssessmentViewerGrades = (props) => {
                     />
                     <Box sx={{ mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, minWidth: 85, color: getGradeColor() }}>
                         <Typography variant={"h3"} component="div" sx={{ textAlign:"center" }}>
-                            {getCourseLetter()}
+                            {getAssessmentLetter()}
                         </Typography>
                     </Box>
                 </Stack>
