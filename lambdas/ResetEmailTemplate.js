@@ -1,6 +1,6 @@
 const EmailTemplate = (props) => {
     const { email, displayName, token } = props;
-    const link = `http://localhost:3000/reset-password?token=${token}&email=${email}`;
+    const link = `https://twentythreefiftynine.com/reset-password?token=${token}&email=${email}`;
     return `
 <html lang="en">
     <head>
