@@ -34,7 +34,7 @@ const FeedbackDialog = (props) => {
 
     const [feedbackSubject, setFeedbackSubject] = React.useState(null);
     const [feedbackMessage, setFeedbackMessage] = React.useState(null);
-    const [feedbackType, setFeedbackType] = React.useState("suggestion");
+    const [feedbackType, setFeedbackType] = React.useState(userDetails.verifiedEmail ? "suggestion" : "support");
     
     const [loading, setLoading] = React.useState(false);
     const [apiAlert, setApiAlert] = React.useState(null);
@@ -43,9 +43,9 @@ const FeedbackDialog = (props) => {
         setFeedbackDialogOpen(false);
         setFeedbackSubject(null);
         setFeedbackMessage(null);
-        setFeedbackType("suggestion");
+        setFeedbackType(userDetails.verifiedEmail ? "suggestion" : "support");
         setApiAlert(null);
-    }, [setApiAlert, setFeedbackDialogOpen]);
+    }, [setFeedbackDialogOpen, userDetails.verifiedEmail]);
     
     const sendFeedback = useCallback(async () => {
         setLoading(true);
@@ -84,8 +84,8 @@ const FeedbackDialog = (props) => {
                     <FormControl sx={{ width: isMobile ? "100%" : "30%", my: 2, ml: isMobile ? 0 : 2 }}>
                         <InputLabel>Type</InputLabel>
                         <Select value={feedbackType} label="Type" onChange={(e) => setFeedbackType(e.target.value)}>
-                            <MenuItem value={"suggestion"}> Suggestion </MenuItem>
-                            <MenuItem value={"bug"}> Bug </MenuItem>
+                            { userDetails.verifiedEmail && <MenuItem value={"suggestion"}> Suggestion </MenuItem> }
+                            { userDetails.verifiedEmail && <MenuItem value={"bug"}> Bug </MenuItem> }
                             <MenuItem value={"support"}> Support</MenuItem>
                         </Select>
                     </FormControl>
