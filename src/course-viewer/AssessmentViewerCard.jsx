@@ -50,7 +50,7 @@ const AssessmentViewerCard = (props) => {
     /** Gets the current grade letter for the assessment. */
     const getAssessmentLetter = () => {
         if (isNaN(assData.grade) || !assData.gradeValid || parseInt(assData.grade) === -1) return "-";
-        else return getLetterGrade(parseInt(assData.grade));
+        else return getLetterGrade(parseFloat(assData.grade));
     };
 
     /**
