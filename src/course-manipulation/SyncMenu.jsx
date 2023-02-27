@@ -79,6 +79,9 @@ const SyncMenu = (props) => {
     const openR = React.useRef();
     openR.current = open;
 
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
+
     /** Adds event listeners so user can use keyboard to exit editor. */
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
@@ -282,6 +285,7 @@ const SyncMenu = (props) => {
                                                         assessment.newSelected = !newAssessmentPreference;
                                                     });
                                                     checkValidSync();
+                                                    setUpdater(!updater);
                                                 }}
                                             > 
                                                 <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: newAssessmentPreference ? "rotate(0deg)" : "rotate(-180deg)"}} />
@@ -296,6 +300,7 @@ const SyncMenu = (props) => {
                                                     assessment.selected = newValue;
                                                 });
                                                 checkValidSync();
+                                                setUpdater(!updater);
                                             }} 
                                         />
 
@@ -305,6 +310,7 @@ const SyncMenu = (props) => {
                                                 unchangedAssessments.forEach((assessment) => {
                                                     assessment.selected = newValue;
                                                 });
+                                                setUpdater(!updater);
                                             }} 
                                         />
                                         
@@ -314,6 +320,7 @@ const SyncMenu = (props) => {
                                                     label={ <Typography variant="h6"> Keep New Course URL </Typography> } labelPlacement="start" 
                                                     onChange={(e, newValue) => {
                                                         setKeepNewURL(newValue);
+                                                        setUpdater(!updater);
                                                     }} 
                                                 />
 
@@ -341,7 +348,7 @@ const SyncMenu = (props) => {
                                         return (
                                             <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                                 <SyncAssessmentCard assessment={assignment.user} />
-                                                <IconButton onClick={() => { assignment.newSelected = !assignment.newSelected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                                <IconButton onClick={() => { assignment.newSelected = !assignment.newSelected; checkValidSync(); setUpdater(!updater); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
                                                     <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)" }} />
                                                 </IconButton>
                                                 <SyncAssessmentCard assessment={assignment.template} />
@@ -361,7 +368,7 @@ const SyncMenu = (props) => {
                                         return (
                                             <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                                 <SyncAssessmentCard assessment={assignment.user}/>
-                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; checkValidSync(); setUpdater(!updater); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
                                                     <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.selected ? "rotate(0deg)" : "rotate(-180deg)" }} />
                                                 </IconButton>
                                                 <SyncAssessmentCard assessment={assignment.template} />
@@ -382,7 +389,7 @@ const SyncMenu = (props) => {
                                         return (
                                             <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                                 <SyncAssessmentCard assessment={assignment.user}/>
-                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; setUpdater(!updater); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
                                                     <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: !assignment.selected ? "rotate(0deg)" : "rotate(-180deg)" }} />
                                                 </IconButton>
                                                 <SyncAssessmentCard assessment={assignment.template} />
