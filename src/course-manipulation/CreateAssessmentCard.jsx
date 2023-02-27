@@ -54,6 +54,7 @@ const CreateAssessmentCard = (props) => {
         parentUpdater,
         removeAssessment,
         setParentUpdater,
+        editCode,
     } = props;
 
     // Used to update components when details are updated. 
@@ -120,7 +121,7 @@ const CreateAssessmentCard = (props) => {
     };
 
     const getDeleteTooltipTitle = () => {
-        if (assessments.length === 1) return <h3> Cannot delete assessment </h3>;
+        if (assessments.length === 1 && editCode !== "") return <h3> Cannot delete assessment </h3>;
         if (!isMobile) return <h3> Delete Assessment </h3>;
         return "";
     }
@@ -155,7 +156,7 @@ const CreateAssessmentCard = (props) => {
                         <Tooltip title={ getDeleteTooltipTitle() } placement="bottom" arrow sx={{ ml: 2 }}>
                             <Box>
                                 <IconButton sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: "relative", 
-                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0 }} disabled={assessments.length === 1}
+                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0 }} disabled={assessments.length === 1 && editCode !== ""}
                                     onClick={() => {
                                         removeAssessment(index); 
                                         let oldName = details.name;

@@ -35,7 +35,7 @@ import {
 
 import Axios from "axios";
 import { isMobile } from "react-device-detect";
-import NewCourseDialog from "./NewCourseDialog";
+import NewCourseDialog from "./TemplateEditor";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { SessionContext } from "../overview/GradesOverview";
 
@@ -52,6 +52,8 @@ const AddCourseDialog = (props) => {
         open,
         setCourseList,
         updateData,
+        courseCreator,
+        setCourseCreator,
     } = props;
 
     // Uses the session data object.
@@ -59,7 +61,6 @@ const AddCourseDialog = (props) => {
 
     // Tracks what course the user intends to add, if any.
     const [courseCode, setCourseCode] = React.useState(null);
-    const [courseCreator, setCourseCreator] = React.useState(false);
 
     // States for visual feedback.
     const [loadingList, setLoadingList] = React.useState(false);

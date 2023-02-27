@@ -24,7 +24,6 @@ import {
     Button,
     CircularProgress,
     Collapse,
-    Dialog,
     Divider,
     IconButton,
     Icon,
@@ -50,7 +49,7 @@ import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
  * Allows the user to create a new course template that
  * can be used by others.
  */
-const NewCourseDialog = (props) => {
+const TemplateEditor = (props) => {
     const {
         activeTri,
         onClose,
@@ -73,6 +72,8 @@ const NewCourseDialog = (props) => {
     const [errorText, setErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [closeDialog, setCloseDialog] = React.useState(false);
+    const openR = React.useRef();
+    openR.current = open;
 
 
     // Used to update components when details are updated. 
@@ -147,6 +148,16 @@ const NewCourseDialog = (props) => {
     useEffect(() => {
         checkFormat();
     }, [nameValid, codeValid, urlValid, assessments, checkFormat]);
+
+    /** Adds event listeners so user can use keyboard to exit editor. */
+    useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown, false);
+
+        return function cleanup() {
+            document.removeEventListener('keydown', handleKeyDown, false);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     /** Updates name of course and checks if it is valid. */
     const handleNameChange = (e) => {
@@ -239,7 +250,7 @@ const NewCourseDialog = (props) => {
     };
 
     /**
-     * Attempts to update the template details if the dialog is open
+     * Attempts to update the template details if the editor is open
      * in edit mode, then displays a snackbar.
      */
     const updateCourse = async () => {
@@ -276,23 +287,28 @@ const NewCourseDialog = (props) => {
         setLoading(false);
     };
 
+    /** Closes the creator dialog. */
+    const stopCreating = useCallback(() => {
+        resetStates();
+        onClose();
+    }, [onClose]);
+
     /** 
-     * Closes the dialog unless changes have been made in the 
-     * current dialog session, in which case a confirmation dialog
+     * Closes the editor unless changes have been made in the 
+     * current editor session, in which case a confirmation dialog
      * is shown to the user.
      */
-    const attemptClose = () => {
+    const attemptClose = useCallback(() => {
         if ((editCode === "" || changesMade || changeOverride) && 
            (assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "")) 
             setCloseDialog(true);
         else stopCreating();
-    };
+    }, [assessments.length, changeOverride, changesMade, courseCode, courseName, courseURL, editCode, stopCreating]);
 
-    /** Closes the creator dialog. */
-    const stopCreating = () => {
-        resetStates();
-        onClose();
-    };
+    /** Alternative to clicking the return button. */
+    const handleKeyDown = useCallback((event) => {
+        if (event.key === "Escape" && openR.current) attemptClose();
+    }, [attemptClose]);
 
     /** Resets the dialog states and fields. */
     const resetStates = () => {
@@ -334,79 +350,81 @@ const NewCourseDialog = (props) => {
 
     return (
         <Box>
-            <Dialog fullScreen open={open} onClose={attemptClose}>
-                <AppBar position="fixed" component="nav">
-                    <Toolbar>
-                        <IconButton color="inherit" onClick={attemptClose}>
-                            <Icon>close</Icon>
-                        </IconButton>
-                        <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
-                            { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
-                        </Typography>
-                        <Box sx={{ position: "relative" }}>
-                            <Button color="inherit" onClick={editCode !== "" ? updateCourse : createCourse} disabled={loading || !formatValid || 
-                                (editCode !== "" && !(changesMade || changeOverride))}
-                            > 
-                                { editCode !== "" ? "Update" : "Create" } </Button>
-                            { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
-                        </Box>
-                    </Toolbar>
-                </AppBar>
+            {   open &&
+                <Box onKeyDown={() => {console.log("Hi")}}>
+                    <AppBar position="fixed" component="nav">
+                        <Toolbar>
+                            <IconButton color="inherit" onClick={attemptClose}>
+                                <Icon>close</Icon>
+                            </IconButton>
+                            <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
+                                { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
+                            </Typography>
+                            <Box sx={{ position: "relative" }}>
+                                <Button color="inherit" onClick={editCode !== "" ? updateCourse : createCourse} disabled={loading || !formatValid || 
+                                    (editCode !== "" && !(changesMade || changeOverride))}
+                                > 
+                                    { editCode !== "" ? "Update" : "Create" } </Button>
+                                { loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} /> }
+                            </Box>
+                        </Toolbar>
+                    </AppBar>
 
-                <Box sx={{ p: 3, m: "auto", mt: 8.5, width: isMobile ? "100%" : 548 }}>
-                    <Stack direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "baseline" }}>
-                        <Box visibility="hidden" sx={{ flexGrow: 1, flexBasis: 0 }} />
-                        <Typography variant="h5" sx={{ textAlign: "center" }}> Basic Info </Typography>
-                        <Box sx={{ flexGrow: 1, flexBasis: 0, ml: 2, mt: 0.5 }}>
-                            <HelpRoundedIcon onClick={() => setTemplateInfo(true)} 
-                                sx={{ fontSize: 40, color: "grey", "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }}
-                            />
-                        </Box>
-                    </Stack>
-                    
-                    <Divider sx={{ mb: 3 }} />
+                    <Box sx={{ p: 3, m: "auto", mt: 8.5, width: isMobile ? "100%" : 548 }}>
+                        <Stack direction="row" sx={{ display: "flex", alignItems: "center", justifyContent: "baseline" }}>
+                            <Box visibility="hidden" sx={{ flexGrow: 1, flexBasis: 0 }} />
+                            <Typography variant="h5" sx={{ textAlign: "center" }}> Basic Info </Typography>
+                            <Box sx={{ flexGrow: 1, flexBasis: 0, ml: 2, mt: 0.5 }}>
+                                <HelpRoundedIcon onClick={() => setTemplateInfo(true)} 
+                                    sx={{ fontSize: 40, color: "grey", "&:hover": {color: "white" }, transition: "0.2s", cursor: "pointer" }}
+                                />
+                            </Box>
+                        </Stack>
+                        
+                        <Divider sx={{ mb: 3 }} />
 
-                    <Stack spacing={2}>
-                        <TextField value={courseName} disabled={editCode !== "" ? true : false} label="Course Name" fullWidth onChange={handleNameChange} 
-                            error={!nameValid && nameCheckOn} helperText={ getCourseNameHelperText() }
-                        />
-                        <Box sx={{ display: "flex", justifyItems: "center" }}>
-                            <TextField value={courseCode} disabled={editCode !== "" ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
-                                error={!codeValid && codeCheckOn} helperText={ !codeValid && codeCheckOn ? "Invalid course code" : "" } 
+                        <Stack spacing={2}>
+                            <TextField value={courseName} disabled={editCode !== "" ? true : false} label="Course Name" fullWidth onChange={handleNameChange} 
+                                error={!nameValid && nameCheckOn} helperText={ getCourseNameHelperText() }
                             />
-                            <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
-                                error={!urlValid && urlCheckOn} helperText={ getURLHelperText() }
-                            />
-                        </Box>
-                    </Stack>
+                            <Box sx={{ display: "flex", justifyItems: "center" }}>
+                                <TextField value={courseCode} disabled={editCode !== "" ? true : false} label="Course Code" sx={{ width: "40%" }} onChange={handleCodeChange} 
+                                    error={!codeValid && codeCheckOn} helperText={ !codeValid && codeCheckOn ? "Invalid course code" : "" } 
+                                />
+                                <TextField value={courseURL} label="Course Page URL" sx={{ ml: 2, width: "60%" }} onChange={handleURLChange} 
+                                    error={!urlValid && urlCheckOn} helperText={ getURLHelperText() }
+                                />
+                            </Box>
+                        </Stack>
 
-                    <Typography variant="h5" sx={{ pt: 5, textAlign: "center" }}> Course Assessments </Typography>
-                    <Divider sx={{ mb: 3 }} />
-                    <Stack spacing={2}>
-                        {   assessments.length > 0 ? (
-                            <TransitionGroup>
-                                {assessments.map((assessment, i) => (
-                                    <Collapse key={i} sx={{ mb: 2 }}>
-                                        <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} 
-                                            checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} 
-                                        />
-                                    </Collapse>
-                                ))}
-                            </TransitionGroup>) : (editCode !== "" && 
-                            <Stack spacing={2}>
-                                <Skeleton variant="rounded" height={150} />
-                                <Skeleton variant="rounded" height={150} />
-                                <Skeleton variant="rounded" height={150} />
-                            </Stack>
-                        )}
-                        {   (assessments.length > 0 || editCode === "") && 
-                            <Button variant="contained" sx={{ width: 200, alignSelf: "center" }} onClick={addAssessment}> 
-                                Add New Assessment 
-                            </Button> 
-                        }
-                    </Stack>
+                        <Typography variant="h5" sx={{ pt: 5, textAlign: "center" }}> Course Assessments </Typography>
+                        <Divider sx={{ mb: 3 }} />
+                        <Stack spacing={2}>
+                            {   assessments.length > 0 ? (
+                                <TransitionGroup>
+                                    {assessments.map((assessment, i) => (
+                                        <Collapse key={i} sx={{ mb: 2 }}>
+                                            <CreateAssessmentCard index={i} details={assessment} removeAssessment={removeAssessment} editCode={editCode}
+                                                checkFormat={checkFormat} assessments={assessments} setParentUpdater={setUpdater} parentUpdater={updater} 
+                                            />
+                                        </Collapse>
+                                    ))}
+                                </TransitionGroup>) : (editCode !== "" && 
+                                <Stack spacing={2}>
+                                    <Skeleton variant="rounded" height={150} />
+                                    <Skeleton variant="rounded" height={150} />
+                                    <Skeleton variant="rounded" height={150} />
+                                </Stack>
+                            )}
+                            {   (assessments.length > 0 || editCode === "") && 
+                                <Button variant="contained" sx={{ width: 200, alignSelf: "center" }} onClick={addAssessment}> 
+                                    Add New Assessment 
+                                </Button> 
+                            }
+                        </Stack>
+                    </Box>
                 </Box>
-            </Dialog>
+            }
 
             <ConfirmDialog open={closeDialog} handleClose={() => {setCloseDialog(false)}} buttonText={"Stop"} message={"Stop template creation?"} 
                 subMessage={"Any inputted data will be lost."} confirmAction={stopCreating} 
@@ -432,4 +450,4 @@ const NewCourseDialog = (props) => {
     );
 };
 
-export default NewCourseDialog;
+export default TemplateEditor;
