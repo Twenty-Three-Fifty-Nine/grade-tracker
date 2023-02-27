@@ -389,8 +389,8 @@ const CourseViewer = (props) => {
                                     ))} 
                                 </TransitionGroup> : 
                                 <Card>
-                                    <CardContent sx={{ minWidth: 731 }}>
-                                        <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
+                                    <CardContent sx={{ minWidth: isMobile ? 300 : 731 }}>
+                                        <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments{isMobile ? <br/> : " " }Match Filter </Typography>
                                     </CardContent>
                                 </Card>
                             } 
