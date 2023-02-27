@@ -121,8 +121,8 @@ const FeedbackDialog = (props) => {
                 </Stack>
 
                 <TextField label="Message Content" fullWidth margin="normal" value={ feedbackMessage ? feedbackMessage : "" } multiline rows={6}
-                    onChange={(e) => setFeedbackMessage(e.target.value)}  error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 350)} 
-                    helperText={ getHelperText("Message", feedbackMessage, 350) }
+                    onChange={(e) => setFeedbackMessage(e.target.value)}  error={feedbackMessage !== null && (feedbackMessage.length === 0 || feedbackMessage.length > 500)} 
+                    helperText={ getHelperText("Message", feedbackMessage, 500) }
                 />
                 
                 <Collapse in={apiAlert !== null && !confirmDeleteAccount}>
@@ -142,7 +142,7 @@ const FeedbackDialog = (props) => {
                 <Button onClick={() => handleFeedbackDialogClose()}> Close </Button>
                 <Box sx={{ position: "relative" }}>
                     <Button onClick={() => sendFeedback()}
-                        disabled={loading || (!feedbackSubject || !feedbackMessage || feedbackSubject.length > 40 || feedbackMessage.length > 350)}
+                        disabled={loading || (!feedbackSubject || !feedbackMessage || feedbackSubject.length > 40 || feedbackMessage.length > 500)}
                     >
                         Send
                     </Button>
