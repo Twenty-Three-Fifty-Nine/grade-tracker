@@ -45,8 +45,8 @@ import CourseViewerHeader from "./CourseViewerHeader";
 import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
-import NewCourseDialog from "../course-manipulation/TemplateEditor";
-import SyncDialog from "../course-manipulation/SyncDialog";
+import SyncMenu from "../course-manipulation/SyncMenu";
+import TemplateEditor from "../course-manipulation/TemplateEditor";
 import { TransitionGroup } from "react-transition-group";
 
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -98,6 +98,8 @@ const CourseViewer = (props) => {
     const keyOverrideR = React.useRef();
     keyOverrideR.current = keyOverride;
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
+    const syncMenuOpenR = React.useRef();
+    syncMenuOpenR.current = syncMenuOpen;
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
 
     // Values saved to display to the user.
@@ -146,7 +148,7 @@ const CourseViewer = (props) => {
 
     /** Alternative to clicking the return button. */
     handleKeyDown = useCallback((event) => {
-        if (editTemplateR.current) return;
+        if (editTemplateR.current || syncMenuOpenR.current) return;
         if (keyOverrideR.current) {
             setKeyOverride(false);
             return;
@@ -157,8 +159,8 @@ const CourseViewer = (props) => {
 
     /** Overrides the current event listener when opening sub menus. */
     React.useEffect(() => {
-        if(editTemplate) setKeyOverride(true);
-    }, [editTemplate]);
+        if(editTemplate || syncMenuOpen) setKeyOverride(true);
+    }, [editTemplate, syncMenuOpen]);
 
     /** Updates the mobile delete icon's Z index on sliding panel transition end. */
     handleTransitionEnd = useCallback((event) => {
@@ -236,7 +238,8 @@ const CourseViewer = (props) => {
     React.useEffect(() => {
         if (assessments.length === 0) return;
         filter();
-    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, filter, assessments.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [finishedFilter, missingGradeFilter, pastDeadlineFilter, testFilter, assignmentFilter, assessments.length]);
 
     /** Changes the active sorting type. */
     const handleChangeSort = (e) => {
@@ -357,7 +360,7 @@ const CourseViewer = (props) => {
 
     return (
         <Box>  
-            {   !editTemplate &&
+            {   !editTemplate && !syncMenuOpen &&
                 <Box>
                     <CourseViewerHeader courseData={courseData} courseCompletion={courseCompletion} courseLetter={courseLetter} 
                         sessionData={sessionData} changesMade={changesMade} deleteZIndex={deleteZIndex}
@@ -472,7 +475,7 @@ const CourseViewer = (props) => {
                 </Box>
             }
 
-            <NewCourseDialog open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
+            <TemplateEditor open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
                 templateData={templateData} setTemplateData={setTemplateData}
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
@@ -483,7 +486,7 @@ const CourseViewer = (props) => {
                 }}
             />
 
-            <SyncDialog open={syncMenuOpen} onClose={() => setSyncMenuOpen(false)} courseData={courseData} templateData={templateData} 
+            <SyncMenu open={syncMenuOpen} onClose={() => setSyncMenuOpen(false)} courseData={courseData} templateData={templateData} 
                 setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} 
             />
 

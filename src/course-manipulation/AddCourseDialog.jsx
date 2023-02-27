@@ -35,9 +35,9 @@ import {
 
 import Axios from "axios";
 import { isMobile } from "react-device-detect";
-import NewCourseDialog from "./TemplateEditor";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { SessionContext } from "../overview/GradesOverview";
+import TemplateEditor from "./TemplateEditor";
 
 /** 
  * A dialog where a user can either add a course
@@ -191,7 +191,7 @@ const AddCourseDialog = (props) => {
                     {isSuccess ? "Course added successfully." : "Error adding course."}
                 </Alert>
             </Snackbar>
-            <NewCourseDialog onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
+            <TemplateEditor onClose={handleCancelCreation} open={courseCreator} activeTri={activeTri}/>
         </Box>
     );
 };
