@@ -48,6 +48,7 @@ const CourseViewerEditorMobile = (props) => {
         changeOverride,
         setChangeOverride,
         checkDuplicateName,
+        filter,
     } = props;
 
     // Used to update components when details are updated. 
@@ -57,13 +58,14 @@ const CourseViewerEditorMobile = (props) => {
         <Dialog open={currentEdit !== null && isMobile} onClose={() => setCurrentEdit(null)}>
             <Stack sx={{ display:"flex", alignItems:"center", mx: 3, my: 2 }}>
                 <Typography variant="h5" sx={{ mt: 1, mb:0.5, textAlign:"center" }}> Edit { currentEdit && currentEdit.isAss ? "Assignment" : "Test" } </Typography>
-                <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} setAssessments={setAssessments}
+                <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} setAssessments={setAssessments} filter={filter}
                     assignmentElement={<Typography> Assignment </Typography>} testElement={<Typography> Test </Typography>}
                 />
 
                 <Divider sx={{ width: 240, mt: 2 }} />
 
-                <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} mt={2} setAssessments={setAssessments} />
+                <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} 
+                    mt={2} setAssessments={setAssessments} filter={filter} />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <MobileDatePicker label="Due Date" sx={{ width: "20%" }} value={currentEdit ? currentEdit.deadline : ""} inputFormat="DD/MM/YYYY"
@@ -72,12 +74,13 @@ const CourseViewerEditorMobile = (props) => {
                             checkChanges();
                             setUpdater(!updater);
                             setAssessments(curr => [...curr]);
+                            filter();
                         }}
                         renderInput={(params) => <TextField {...params} sx={{ width:"90%" }} />}
                     />
                 </LocalizationProvider>
 
-                <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="90%" setAssessments={setAssessments} />
+                <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="90%" setAssessments={setAssessments} filter={filter} />
 
                 <Stack direction="row" spacing={2} sx={{ display:"flex", justifyContent:"center", mt: 2, mb: 1 }}>
                     <Tooltip title={ assessments.length > 1 ? "" : <h3> Cannot delete assessment </h3> } placement="bottom" arrow>

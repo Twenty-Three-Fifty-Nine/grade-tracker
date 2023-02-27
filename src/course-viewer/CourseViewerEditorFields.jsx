@@ -33,6 +33,7 @@ const IsAssignmentToggle = (props) => {
         assignmentElement,
         testElement,
         setAssessments,
+        filter,
     } = props;
 
     // Used to update components when details are updated. 
@@ -47,6 +48,7 @@ const IsAssignmentToggle = (props) => {
                 checkChanges();
                 setUpdater(!updater);
                 setAssessments(curr => [...curr]);
+                filter();
             }}
         >
             <ToggleButton value="ass">
@@ -66,6 +68,7 @@ const AssessmentNameField = (props) =>{
         checkDuplicateName,
         checkChanges,
         setAssessments,
+        filter,
         mt = 0,
     } = props;
 
@@ -82,6 +85,7 @@ const AssessmentNameField = (props) =>{
                 checkChanges();
                 setUpdater(!updater);
                 setAssessments(curr => [...curr]);
+                filter();
             }} 
             error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
             helperText={ getNameHelperText(currentEdit) }
@@ -95,6 +99,7 @@ const AssessmentWeightField = (props) => {
         currentEdit,
         checkChanges,
         setAssessments,
+        filter,
         width = "100%",
     } = props;
 
@@ -110,6 +115,7 @@ const AssessmentWeightField = (props) => {
                     currentEdit.setWeight(weight);
                     setUpdater(!updater);
                     setAssessments(curr => [...curr]);
+                    filter();
                 }
                 checkChanges();
             }} 
