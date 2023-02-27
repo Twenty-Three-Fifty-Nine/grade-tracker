@@ -32,6 +32,7 @@ import {
     Skeleton,
     Stack,
     Toolbar,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -233,7 +234,11 @@ const SyncDialog = (props) => {
                     <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                         { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } 
                     </Typography>
-                    <Button color="inherit" onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
+                    <Tooltip title={<h3> { !validSync ? "There are no changes to sync" : "" } </h3>} placement="left" arrow>
+                        <Box>
+                            <Button color="inherit" onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
+                        </Box>
+                    </Tooltip>
                 </Toolbar>
             </AppBar>
 
