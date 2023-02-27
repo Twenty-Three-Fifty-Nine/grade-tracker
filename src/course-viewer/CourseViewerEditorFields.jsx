@@ -32,7 +32,11 @@ const IsAssignmentToggle = (props) => {
         checkChanges,
         assignmentElement,
         testElement,
+        setAssessments,
     } = props;
+
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
 
     return (
         <ToggleButtonGroup
@@ -41,6 +45,8 @@ const IsAssignmentToggle = (props) => {
             onChange={(e, newValue) => { 
                 currentEdit.setIsAss(newValue === "ass");
                 checkChanges();
+                setUpdater(!updater);
+                setAssessments(curr => [...curr]);
             }}
         >
             <ToggleButton value="ass">
@@ -59,8 +65,12 @@ const AssessmentNameField = (props) =>{
         currentEdit,
         checkDuplicateName,
         checkChanges,
+        setAssessments,
         mt = 0,
     } = props;
+
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
 
     return (
         <TextField label="Assessment Name"
@@ -70,6 +80,8 @@ const AssessmentNameField = (props) =>{
                 currentEdit.setName(e.target.value); 
                 checkDuplicateName();
                 checkChanges();
+                setUpdater(!updater);
+                setAssessments(curr => [...curr]);
             }} 
             error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
             helperText={ getNameHelperText(currentEdit) }
@@ -82,8 +94,12 @@ const AssessmentWeightField = (props) => {
     const {
         currentEdit,
         checkChanges,
+        setAssessments,
         width = "100%",
     } = props;
+
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
 
     return (
         <TextField label="Worth (%)" InputProps={{ inputProps: { min: 0 } }} value={ currentEdit ? currentEdit.weight : 0 } sx={{ mt: 2, width: width }}
@@ -92,6 +108,8 @@ const AssessmentWeightField = (props) => {
                     let weight = e.target.value.replace(/^0+/, '0');
                     if (parseInt(weight) > 0) weight = weight.replace(/^0+/, '');
                     currentEdit.setWeight(weight);
+                    setUpdater(!updater);
+                    setAssessments(curr => [...curr]);
                 }
                 checkChanges();
             }} 

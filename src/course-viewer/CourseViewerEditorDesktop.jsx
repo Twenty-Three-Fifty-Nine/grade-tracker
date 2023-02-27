@@ -49,10 +49,14 @@ const CourseViewerEditorDesktop = (props) => {
         setCurrentEdit,
         checkChanges,
         assessments,
+        setAssessments,
         changeOverride,
         setChangeOverride,
         checkDuplicateName,
     } = props;
+
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
 
     return (
         <Box sx={{ flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline" }}>
@@ -61,7 +65,7 @@ const CourseViewerEditorDesktop = (props) => {
                     <Stack>
                         <Stack direction="row" spacing={0}>
                             <Typography variant="h5" sx={{ mt: 1, ml: 0.3, width: 210 }}> Edit { currentEdit.isAss ? "Assignment" : "Test" } </Typography>
-                            <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} 
+                            <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} setAssessments={setAssessments}
                                 assignmentElement={<MenuBookRoundedIcon />} testElement={<DescriptionRoundedIcon />}
                             />
 
@@ -84,7 +88,7 @@ const CourseViewerEditorDesktop = (props) => {
                         <Divider sx={{ mb: 1.5, mt: 0.5 }}/>
                         
                         <Stack>
-                            <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} />
+                            <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} setAssessments={setAssessments} />
 
                             <Box>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -92,6 +96,8 @@ const CourseViewerEditorDesktop = (props) => {
                                         onChange={(newValue) => {
                                             currentEdit.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
                                             checkChanges();
+                                            setUpdater(!updater);
+                                            setAssessments(curr => [...curr]);
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
                                         
@@ -99,7 +105,7 @@ const CourseViewerEditorDesktop = (props) => {
                                 </LocalizationProvider>
                             </Box>
 
-                            <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="74%" />
+                            <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="74%" setAssessments={setAssessments} />
 
                             <Button variant="contained" sx={{ mt: 2, mr: 1 }} onClick={() => {setCurrentEdit(null)}}> Close </Button>
                         </Stack>

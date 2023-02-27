@@ -375,7 +375,7 @@ const CourseViewer = (props) => {
                     <Stack direction="row" sx={{ display:"flex", alignItems:"baseline", mb: 5 }}>
                         {   currentEdit && !isMobile ?  
                             <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
-                                changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                                changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName} setAssessments={setAssessments}
                             /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
                         }
 
@@ -454,7 +454,7 @@ const CourseViewer = (props) => {
                     }
                     
                     <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
-                        changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                        changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName} setAssessments={setAssessments}
                     />
 
                     <ConfirmDialog open={confirmDelete} handleClose={() => setConfirmDelete(false)} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 

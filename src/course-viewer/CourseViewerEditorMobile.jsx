@@ -44,34 +44,40 @@ const CourseViewerEditorMobile = (props) => {
         setCurrentEdit,
         checkChanges,
         assessments,
+        setAssessments,
         changeOverride,
         setChangeOverride,
         checkDuplicateName,
     } = props;
 
+    // Used to update components when details are updated. 
+    const [updater, setUpdater] = React.useState(false);
+
     return (
         <Dialog open={currentEdit !== null && isMobile} onClose={() => setCurrentEdit(null)}>
             <Stack sx={{ display:"flex", alignItems:"center", mx: 3, my: 2 }}>
                 <Typography variant="h5" sx={{ mt: 1, mb:0.5, textAlign:"center" }}> Edit { currentEdit && currentEdit.isAss ? "Assignment" : "Test" } </Typography>
-                <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} 
+                <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} setAssessments={setAssessments}
                     assignmentElement={<Typography> Assignment </Typography>} testElement={<Typography> Test </Typography>}
                 />
 
                 <Divider sx={{ width: 240, mt: 2 }} />
 
-                <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} mt={2} />
+                <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} mt={2} setAssessments={setAssessments} />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <MobileDatePicker label="Due Date" sx={{ width: "20%" }} value={currentEdit ? currentEdit.deadline : ""} inputFormat="DD/MM/YYYY"
                         onChange={(newValue) => {
                             currentEdit.setDeadline(newValue.format("YYYY-MM-DD HH:mm:ss"));
                             checkChanges();
+                            setUpdater(!updater);
+                            setAssessments(curr => [...curr]);
                         }}
                         renderInput={(params) => <TextField {...params} sx={{ width:"90%" }} />}
                     />
                 </LocalizationProvider>
 
-                <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="90%" />
+                <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="90%" setAssessments={setAssessments} />
 
                 <Stack direction="row" spacing={2} sx={{ display:"flex", justifyContent:"center", mt: 2, mb: 1 }}>
                     <Tooltip title={ assessments.length > 1 ? "" : <h3> Cannot delete assessment </h3> } placement="bottom" arrow>
@@ -82,6 +88,7 @@ const CourseViewerEditorMobile = (props) => {
                                     if (!currentEdit.isNew) setChangeOverride(true);
                                     checkChanges(!currentEdit.isNew ? true : changeOverride);
                                     setCurrentEdit(null);
+                                    setUpdater(!updater);
                                 }}
                             >
                                 Delete 
