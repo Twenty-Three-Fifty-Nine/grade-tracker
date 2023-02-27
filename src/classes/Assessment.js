@@ -52,7 +52,7 @@ class Assessment {
         let nameChanged = this.name !== this.initName;
         let deadlineChanged = this.deadline !== this.initDeadline;
         let isAssChanged = this.isAss !== this.initAss;
-        let weightChanged = this.weight !== this.initWeight;
+        let weightChanged = parseFloat(this.weight) !== parseFloat(this.initWeight);
         this.hasChanged = this.isNew || gradeChanged || nameChanged || deadlineChanged || isAssChanged || weightChanged;
     }
 

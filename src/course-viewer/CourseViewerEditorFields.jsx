@@ -88,8 +88,11 @@ const AssessmentWeightField = (props) => {
     return (
         <TextField label="Worth (%)" InputProps={{ inputProps: { min: 0 } }} value={ currentEdit ? currentEdit.weight : 0 } sx={{ mt: 2, width: width }}
             onChange={(e) => {
-                if (!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) 
-                    currentEdit.setWeight(e.target.value);
+                if (!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) {
+                    let weight = e.target.value.replace(/^0+/, '0');
+                    if (parseInt(weight) > 0) weight = weight.replace(/^0+/, '');
+                    currentEdit.setWeight(weight);
+                }
                 checkChanges();
             }} 
             error={currentEdit && (currentEdit.weight <= 0 || currentEdit.weight > 100)} 
