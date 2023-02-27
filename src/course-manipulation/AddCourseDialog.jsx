@@ -63,6 +63,7 @@ const AddCourseDialog = (props) => {
 
     // States for visual feedback.
     const [loading, setLoading] = React.useState(false);
+    const [loadingList, setLoadingList] = React.useState(false);
     const [loadingAddRequest, setLoadingAddRequest] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");
     const [isSuccess, setIsSuccess] = React.useState("success");
@@ -118,9 +119,9 @@ const AddCourseDialog = (props) => {
     /** Loads a list of templates that can be added to the users account. */
     const getTemplatesList = async () => {
         const trimesters = session && session !== "Reloading" ? session.courses[session.timeInfo.selectedYear] : null;
-        if(!trimesters || loading) return null;
+        if(!trimesters || loadingList) return null;
         
-        setLoading(true);
+        setLoadingList(true);
 
         let tempList = [];
         await Axios.get("https://api.twentythreefiftynine.com/courses?year=" + activeTri.year + "&trimester=" + activeTri.tri).then((courses) => {
@@ -135,7 +136,7 @@ const AddCourseDialog = (props) => {
             setCourseList(tempList.sort());
         });
 
-        setLoading(false);
+        setLoadingList(false);
         
         return "Loading...";
     };
@@ -152,9 +153,12 @@ const AddCourseDialog = (props) => {
                         renderInput={(params) => <TextField {...params} label="Course Code" />}
                         value={courseCode} onChange={(e, value) => setCourseCode(value)} 
                     />
-                    <IconButton onClick={() => getTemplatesList()}>
-                        <RefreshIcon fontSize="large" />
-                    </IconButton>
+                    <Box sx={{ position: "relative" }}>
+                        <IconButton onClick={() => getTemplatesList()} sx={{zIndex: 1}}>
+                            <RefreshIcon fontSize="large" />
+                        </IconButton>
+                        {loadingList && <CircularProgress size={46} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-25px", ml: "-23px" }} />}
+                    </Box>
                 </Stack>
 
                 <DialogContentText sx={{ m: "auto", maxWidth: 300, textAlign: "center", pt: 1, pb: 3, pr: isMobile ? 4 : 0, pl: isMobile ? 4 : 0}}> 
