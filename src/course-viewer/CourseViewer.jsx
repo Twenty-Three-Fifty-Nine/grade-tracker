@@ -218,7 +218,8 @@ const CourseViewer = (props) => {
      * @param list - The list of assessments to be sorted.
      */
     const sortAlgorithm = (isAsc, value, list) => {
-        list.sort((a, b) => isAsc ? a[value] > b[value] : a[value] < b[value]);
+        let ascValue = isAsc ? 1 : -1;
+        list.sort((a, b) => a[value] > b[value] ? ascValue : -ascValue);
         return list;
     };
 
