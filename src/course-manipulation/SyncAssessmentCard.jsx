@@ -21,6 +21,7 @@ import {
     Card,
     CardContent,
     Box,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -55,7 +56,9 @@ const SyncAssessmentCard = (props) => {
                 <Box sx={{ mb: 2 }}>
                     <Box sx={{ display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", mb: 1 }}>
                         <Typography variant="body1" fontWeight="fontWeightMedium" fontSize="large">Assessment Name</Typography>
-                        { assessment.isAss ?  <MenuBookRoundedIcon /> : <DescriptionRoundedIcon /> }
+                        <Tooltip title={<h3> { assessment.isAss ? "Assignment" : "Test" } </h3>} placement="left" arrow>
+                            { assessment.isAss ?  <MenuBookRoundedIcon /> : <DescriptionRoundedIcon /> }
+                        </Tooltip>
                     </Box>
                     <Field text={assessment.name} />
                 </Box>
