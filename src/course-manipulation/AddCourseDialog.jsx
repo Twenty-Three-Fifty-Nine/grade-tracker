@@ -62,7 +62,6 @@ const AddCourseDialog = (props) => {
     const [courseCreator, setCourseCreator] = React.useState(false);
 
     // States for visual feedback.
-    const [loading, setLoading] = React.useState(false);
     const [loadingList, setLoadingList] = React.useState(false);
     const [loadingAddRequest, setLoadingAddRequest] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState("none");

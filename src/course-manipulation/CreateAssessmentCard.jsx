@@ -79,7 +79,11 @@ const CreateAssessmentCard = (props) => {
      * is changed, then checks if it is valid.
      */
     const handleWeightChange = (e) => {
-        if (!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) details.setWeight(e.target.value);
+        if (!isNaN(e.target.value) && (!e.target.value.includes(".") || (e.target.value.split(".")[1].length || 0) <= 2)) {
+            let weight = e.target.value.replace(/^0+/, '0');
+            if (parseInt(weight) > 0) weight = weight.replace(/^0+/, '');
+            details.setWeight(weight);
+        }
         setUpdater(!updater);
         updateValidity(details.name);
         setWeightCheckOn(true);
