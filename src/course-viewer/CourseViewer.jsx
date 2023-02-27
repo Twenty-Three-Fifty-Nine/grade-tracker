@@ -45,7 +45,7 @@ import CourseViewerHeader from "./CourseViewerHeader";
 import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
-import NewCourseDialog from "../course-manipulation/NewCourseDialog";
+import NewCourseDialog from "../course-manipulation/TemplateEditor";
 import SyncDialog from "../course-manipulation/SyncDialog";
 import { TransitionGroup } from "react-transition-group";
 
@@ -92,6 +92,11 @@ const CourseViewer = (props) => {
 
     // Used to open sub menus.
     const [editTemplate, setEditTemplate] = React.useState(false);
+    const editTemplateR = React.useRef();
+    editTemplateR.current = changesMade;
+    const [keyOverride, setKeyOverride] = React.useState(false);
+    const keyOverrideR = React.useRef();
+    keyOverrideR.current = keyOverride;
     const [syncMenuOpen, setSyncMenuOpen] = React.useState(false);
     const [syncSuggestion, setSyncSuggestion] = React.useState(false);
 
@@ -141,8 +146,19 @@ const CourseViewer = (props) => {
 
     /** Alternative to clicking the return button. */
     handleKeyDown = useCallback((event) => {
+        if (editTemplateR.current) return;
+        if (keyOverrideR.current) {
+            setKeyOverride(false);
+            return;
+        }
+
         if (event.key === "Escape") attemptClose();
     }, [attemptClose]);
+
+    /** Overrides the current event listener when opening sub menus. */
+    React.useEffect(() => {
+        if(editTemplate) setKeyOverride(true);
+    }, [editTemplate]);
 
     /** Updates the mobile delete icon's Z index on sliding panel transition end. */
     handleTransitionEnd = useCallback((event) => {
@@ -341,119 +357,123 @@ const CourseViewer = (props) => {
 
     return (
         <Box>  
-            <CourseViewerHeader courseData={courseData} courseCompletion={courseCompletion} courseLetter={courseLetter} 
-                sessionData={sessionData} changesMade={changesMade} deleteZIndex={deleteZIndex}
-                setEditTemplate={setEditTemplate} setSyncMenuOpen={setSyncMenuOpen} setConfirmDelete={setConfirmDelete}
-                attemptClose={attemptClose} validChanges={validChanges} apiLoading={apiLoading} saveChanges={saveChanges}
-            />
+            {   !editTemplate &&
+                <Box>
+                    <CourseViewerHeader courseData={courseData} courseCompletion={courseCompletion} courseLetter={courseLetter} 
+                        sessionData={sessionData} changesMade={changesMade} deleteZIndex={deleteZIndex}
+                        setEditTemplate={setEditTemplate} setSyncMenuOpen={setSyncMenuOpen} setConfirmDelete={setConfirmDelete}
+                        attemptClose={attemptClose} validChanges={validChanges} apiLoading={apiLoading} saveChanges={saveChanges}
+                    />
 
-            <Divider variant="middle" role="presentation" 
-                sx={{ borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5 }} 
-            />
+                    <Divider variant="middle" role="presentation" 
+                        sx={{ borderBottomWidth: 5, borderColor:"primary.main", mr: isMobile ? 3 : 10, ml: isMobile ? 3 : 10, mb: 5 }} 
+                    />
 
-            <Stack direction="row" sx={{ display:"flex", alignItems:"baseline", mb: 5 }}>
-                {   currentEdit && !isMobile ?  
-                    <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
-                        changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
-                    /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
-                }
+                    <Stack direction="row" sx={{ display:"flex", alignItems:"baseline", mb: 5 }}>
+                        {   currentEdit && !isMobile ?  
+                            <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                                changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                            /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
+                        }
 
-                <Stack spacing={3} sx={{ pl: 2, pr: 2 }}>
-                    {   filteredAssessments.length > 0 ? 
-                        <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
-                            {filteredAssessments.map((assessment, index) => (
-                                <Collapse key={index} sx={{ mb: 2 }}>
-                                    <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
-                                </Collapse>
-                            ))} 
-                        </TransitionGroup> : 
-                        <Card>
-                            <CardContent sx={{ minWidth: 731 }}>
-                                <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
-                            </CardContent>
-                        </Card>
-                    } 
+                        <Stack spacing={3} sx={{ pl: 2, pr: 2 }}>
+                            {   filteredAssessments.length > 0 ? 
+                                <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
+                                    {filteredAssessments.map((assessment, index) => (
+                                        <Collapse key={index} sx={{ mb: 2 }}>
+                                            <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
+                                        </Collapse>
+                                    ))} 
+                                </TransitionGroup> : 
+                                <Card>
+                                    <CardContent sx={{ minWidth: 731 }}>
+                                        <Typography variant="h5" component="div" sx={{textAlign:"center"}}> No Assessments Match Filter </Typography>
+                                    </CardContent>
+                                </Card>
+                            } 
+                            
+                            <Button variant="contained" 
+                                onClick={() => {
+                                    let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true, false);
+                                    setAssessments((current) => [...current, newAss]);
+                                    setCurrentEdit(newAss);
+                                    setChangesMade(true);
+                                    setValidChanges(false);
+                                }}
+                            > Add Assessment </Button>
+                        </Stack>
+
+                        <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
+                            {   !isMobile && 
+                                <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
+                                    sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
+                                    pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
+                                    setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                                />
+                            }
+                        </Box>  
+                    </Stack>
                     
-                    <Button variant="contained" 
-                        onClick={() => {
-                            let newAss = new Assessment("", 10, -1, new dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss"), true, true, false);
-                            setAssessments((current) => [...current, newAss]);
-                            setCurrentEdit(newAss);
-                            setChangesMade(true);
-                            setValidChanges(false);
-                        }}
-                    > Add Assessment </Button>
-                </Stack>
-
-                <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
                     {   !isMobile && 
-                        <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
-                            sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
-                            pastDeadlineFilter={pastDeadlineFilter} testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter}
-                            setMissingGradeFilter={setMissingGradeFilter} setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                        <Box>
+                            <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
+                                <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
+                                    <KeyboardArrowLeftIcon fontSize="large" />
+                                </Fab>
+                            </Tooltip>
+                            
+                            {changesMade && (
+                                <Box>
+                                    <Button disabled={!validChanges || apiLoading} sx={{ position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium" }} 
+                                        variant="contained" onClick={() => {saveChanges()}}> 
+                                        Save Changes
+                                    </Button>
+                                    {apiLoading && <CircularProgress size={36} sx={{ position: "fixed", bottom: 50, right: 90, mt: "-18px", ml: "-18px" }} />}
+                                </Box>
+                            )}
+                        </Box>
+                    }
+
+                    {   isMobile && 
+                        <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
+                            changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges} mb={2}
                         />
                     }
-                </Box>  
-            </Stack>
-            
-            {   !isMobile && 
-                <Box>
-                    <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
-                        <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
-                            <KeyboardArrowLeftIcon fontSize="large" />
-                        </Fab>
-                    </Tooltip>
-                    
-                    {changesMade && (
-                        <Box>
-                            <Button disabled={!validChanges || apiLoading} sx={{ position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium" }} 
-                                variant="contained" onClick={() => {saveChanges()}}> 
-                                Save Changes
-                            </Button>
-                            {apiLoading && <CircularProgress size={36} sx={{ position: "fixed", bottom: 50, right: 90, mt: "-18px", ml: "-18px" }} />}
+
+                    {   isMobile && 
+                        <Box id="mobileSlidePanel"> 
+                            <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
+                                handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter} pastDeadlineFilter={pastDeadlineFilter} 
+                                testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
+                                setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                            />
                         </Box>
-                    )}
-                </Box>
-            }
+                    }
+                    
+                    <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                        changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
+                    />
 
-            {   isMobile && 
-                <CourseViewerMobileActionButtons attemptClose={attemptClose} validChanges={validChanges} 
-                    changesMade={changesMade} apiLoading={apiLoading} saveChanges={saveChanges} mb={2}
-                />
-            }
+                    <ConfirmDialog open={confirmDelete} handleClose={() => setConfirmDelete(false)} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
+                        subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
+                    />
 
-            {   isMobile && 
-                <Box id="mobileSlidePanel"> 
-                    <CourseViewerFilterMobile sliderPos={sliderPos} setSliderPos={setSliderPos} sortType={sortType} 
-                        handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter} pastDeadlineFilter={pastDeadlineFilter} 
-                        testFilter={testFilter} assignmentFilter={assignmentFilter} setFinishedFilter={setFinishedFilter} setMissingGradeFilter={setMissingGradeFilter}
-                        setPastDeadlineFilter={setPastDeadlineFilter} setTestFilter={setTestFilter} setAssignmentFilter={setAssignmentFilter}
+                    <ConfirmDialog open={confirmExit} handleClose={() => setConfirmExit(false)} buttonText={"Exit"} message={"Exit course viewer?"} 
+                        subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
+                    />
+
+                    <ConfirmDialog open={syncSuggestion} handleClose={() => setSyncSuggestion(false)} buttonText={"Sync"} message={"Would you like to sync?"} 
+                        subMessage={"You have updated the template but not your instance. Sync to update your course instance."} 
+                        confirmAction={() => {
+                            setSyncMenuOpen(true); 
+                            setSyncSuggestion(false)
+                        }} 
                     />
                 </Box>
             }
-            
-            <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
-                changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName}
-            />
-
-            <ConfirmDialog open={confirmDelete} handleClose={() => setConfirmDelete(false)} buttonText={"Delete"} message={"Remove " + courseData.code + "?"} 
-                subMessage={"This action cannot be reverted."} confirmAction={deleteCourse} loading={apiLoading} 
-            />
-
-            <ConfirmDialog open={confirmExit} handleClose={() => setConfirmExit(false)} buttonText={"Exit"} message={"Exit course viewer?"} 
-                subMessage={"You have unsaved changes."} confirmAction={exitViewer} 
-            />
-
-            <ConfirmDialog open={syncSuggestion} handleClose={() => setSyncSuggestion(false)} buttonText={"Sync"} message={"Would you like to sync?"} 
-                subMessage={"You have updated the template but not your instance. Sync to update your course instance."} 
-                confirmAction={() => {
-                    setSyncMenuOpen(true); 
-                    setSyncSuggestion(false)
-                }} 
-            />
 
             <NewCourseDialog open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
-                templateData={templateData} setTemplateData={setTemplateData} 
+                templateData={templateData} setTemplateData={setTemplateData}
                 onClose={(didUpdate) => {
                     setEditTemplate(false); 
                     if (didUpdate) {

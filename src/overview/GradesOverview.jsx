@@ -55,8 +55,9 @@ const GradesOverview = (props) => {
     const [selectedYear, setYear] = React.useState(activeTri.year);
     const [activateTab, setActivateTab] = React.useState(false);
 
-    // Whether or not the course adder dialog is open.
+    // Tracks if other dialogs or screens are open.
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
+    const [courseCreator, setCourseCreator] = React.useState(false);
 
     /** Stops the year tab value from being loaded before the tabs exist. */
     setTimeout(() => {
@@ -153,28 +154,34 @@ const GradesOverview = (props) => {
 
     return (
         <Box>        
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                {   sessionData && sessionData !== "Reloading" ? 
-                    <Tabs value={selectedYear} onChange={handleChangedYear}>
-                        {activateTab && Object.entries(sessionData.courses).map(([key, value]) => <Tab key={key} value={parseInt(key)} label={key} />)}
-                    </Tabs>
-                : null }
-            </Box>
+            {   !courseCreator &&
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    {   sessionData && sessionData !== "Reloading" ? 
+                        <Tabs value={selectedYear} onChange={handleChangedYear}>
+                            {activateTab && Object.entries(sessionData.courses).map(([key, value]) => <Tab key={key} value={parseInt(key)} label={key} />)}
+                        </Tabs>
+                    : null }
+                </Box>
+            }
 
             <Box sx={{ mt: 2 }}>
                 <SessionContext.Provider value={ sessionData !== null ? sessionData : "Reloading" }>
-                    <YearOverview setViewedCourse={setViewedCourse} /> 
+                    {   !courseCreator && 
+                        <Box>
+                            <YearOverview setViewedCourse={setViewedCourse} /> 
 
-                    <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
-                        <Fab color="primary" size={ isMobile ? "large" : "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
-                            sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 9999 }}
-                        >
-                            <Icon>add</Icon>
-                        </Fab>
-                    </Tooltip>
+                            <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
+                                <Fab color="primary" size={ isMobile ? "large" : "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
+                                    sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 9999 }}
+                                >
+                                    <Icon>add</Icon>
+                                </Fab>
+                            </Tooltip>
+                        </Box>
+                    }
 
                     <AddCourseDialog open={addCourseOpen} onClose={() => setAddCourseOpen(false)} activeTri={activeTri} updateData={handleLoadData} 
-                        courseList={courseList} setCourseList={setCourseList} 
+                        courseList={courseList} setCourseList={setCourseList} courseCreator={courseCreator} setCourseCreator={setCourseCreator}
                     />
                 </SessionContext.Provider> 
             </Box>
