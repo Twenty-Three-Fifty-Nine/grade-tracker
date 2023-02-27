@@ -23,10 +23,13 @@ import {
     Stack,
 } from "@mui/material";
 
+import ConfirmDialog from "../ConfirmDialog";
 import { getLetterGrade } from "../classes/Course";
 import { isMobile } from "react-device-detect";
 import { SessionContext } from "./GradesOverview";
 import TrimesterOverview from "./TrimesterOverview";
+
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 /** Provides a basic overview of how the users year is going. */
 const YearOverview = (props) => {
@@ -39,6 +42,8 @@ const YearOverview = (props) => {
 
     // Tracks which trimester accordions are open.
     const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
+
+    const [gpaClicked, setGPAClicked] = React.useState(false);
 
     /** Resets accordion states when the session data is loading. */
     useEffect(() => {
@@ -98,7 +103,10 @@ const YearOverview = (props) => {
                 <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
             </Stack>
 
-            <Alert severity="info" sx={{ mt: 1, mb: isMobile ? 10 : 2 }}> Current GPA for the Year: {getGPA()} </Alert>
+            <Alert severity="info" sx={{ mt: 1, mb: isMobile ? 10 : 2 }} iconMapping={{ info: <InfoOutlinedIcon sx={{ "&:hover": { cursor: "pointer" } }} onClick={() => { setGPAClicked(true) }}/> }}> Current GPA for the Year: {getGPA()} </Alert>
+            <ConfirmDialog buttonText="Close" open={gpaClicked} handleClose={() => setGPAClicked(false)} message="What is GPA?"
+                    subMessage="GPA, or Grade Point Average, is a numerical representation of your academic performance.
+                        GPA is calculated by averaging the grades received in all courses taken during a period. A higher GPA indicates better academic performance." />
         </Box>
     )
 }
