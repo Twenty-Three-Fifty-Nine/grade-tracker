@@ -26,6 +26,7 @@ import {
     TextField,
     ToggleButtonGroup,
     ToggleButton,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -118,6 +119,12 @@ const CreateAssessmentCard = (props) => {
         checkFormat();
     };
 
+    const getDeleteTooltipTitle = () => {
+        if (assessments.length === 1) return <h3> Cannot delete assessment </h3>;
+        if (!isMobile) return <h3> Delete Assessment </h3>;
+        return "";
+    }
+
     return (
         <Card sx={{ maxWidth: 500 }}>
             <CardContent>
@@ -145,17 +152,21 @@ const CreateAssessmentCard = (props) => {
                             </ToggleButtonGroup>
                             <Typography variant="body2" sx={{ textAlign:"center" }}> { details.isAss ? "Assignment" : "Test" } </Typography>
                         </Stack>
-                        <IconButton sx={{ ml: 2, "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: "relative", 
-                            top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0 }}
-                            onClick={() => {
-                                removeAssessment(index); 
-                                let oldName = details.name;
-                                details.name = "";
-                                updateValidity(oldName);
-                            }} 
-                        >
-                            <DeleteIcon />
-                        </IconButton>
+                        <Tooltip title={ getDeleteTooltipTitle() } placement="bottom" arrow sx={{ ml: 2 }}>
+                            <Box>
+                                <IconButton sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: "relative", 
+                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0 }} disabled={assessments.length === 1}
+                                    onClick={() => {
+                                        removeAssessment(index); 
+                                        let oldName = details.name;
+                                        details.name = "";
+                                        updateValidity(oldName);
+                                    }} 
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Box>
+                        </Tooltip>
                     </Box>
 
                     <Box sx={{ display: "flex" }}>
