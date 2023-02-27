@@ -53,6 +53,7 @@ const CourseViewerEditorDesktop = (props) => {
         changeOverride,
         setChangeOverride,
         checkDuplicateName,
+        filter,
     } = props;
 
     // Used to update components when details are updated. 
@@ -66,7 +67,7 @@ const CourseViewerEditorDesktop = (props) => {
                         <Stack direction="row" spacing={0}>
                             <Typography variant="h5" sx={{ mt: 1, ml: 0.3, width: 210 }}> Edit { currentEdit.isAss ? "Assignment" : "Test" } </Typography>
                             <IsAssignmentToggle currentEdit={currentEdit} checkChanges={checkChanges} setAssessments={setAssessments}
-                                assignmentElement={<MenuBookRoundedIcon />} testElement={<DescriptionRoundedIcon />}
+                                assignmentElement={<MenuBookRoundedIcon />} testElement={<DescriptionRoundedIcon />} filter={filter}
                             />
 
                             <Tooltip title={ assessments.length > 1 ? <h3> Delete Assessment </h3> : <h3> Cannot delete assessment </h3> } placement="bottom" arrow>
@@ -88,7 +89,8 @@ const CourseViewerEditorDesktop = (props) => {
                         <Divider sx={{ mb: 1.5, mt: 0.5 }}/>
                         
                         <Stack>
-                            <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} checkChanges={checkChanges} setAssessments={setAssessments} />
+                            <AssessmentNameField currentEdit={currentEdit} checkDuplicateName={checkDuplicateName} 
+                                checkChanges={checkChanges} setAssessments={setAssessments} filter={filter} /> 
 
                             <Box>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -98,6 +100,7 @@ const CourseViewerEditorDesktop = (props) => {
                                             checkChanges();
                                             setUpdater(!updater);
                                             setAssessments(curr => [...curr]);
+                                            filter();
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
                                         
@@ -105,7 +108,7 @@ const CourseViewerEditorDesktop = (props) => {
                                 </LocalizationProvider>
                             </Box>
 
-                            <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="74%" setAssessments={setAssessments} />
+                            <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="74%" setAssessments={setAssessments} filter={filter} />
 
                             <Button variant="contained" sx={{ mt: 2, mr: 1 }} onClick={() => {setCurrentEdit(null)}}> Close </Button>
                         </Stack>

@@ -374,7 +374,7 @@ const CourseViewer = (props) => {
 
                     <Stack direction="row" sx={{ display:"flex", alignItems:"baseline", mb: 5 }}>
                         {   currentEdit && !isMobile ?  
-                            <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                            <CourseViewerEditorDesktop currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} filter={filter}
                                 changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName} setAssessments={setAssessments}
                             /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
                         }
@@ -384,7 +384,7 @@ const CourseViewer = (props) => {
                                 <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                                     {filteredAssessments.map((assessment, index) => (
                                         <Collapse key={index} sx={{ mb: 2 }}>
-                                            <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} />
+                                            <AssessmentViewerCard assData={assessment} checkChanges={checkChanges} setCurrentEdit={setCurrentEdit} filter={filter} />
                                         </Collapse>
                                     ))} 
                                 </TransitionGroup> : 
@@ -453,7 +453,7 @@ const CourseViewer = (props) => {
                         </Box>
                     }
                     
-                    <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} 
+                    <CourseViewerEditorMobile currentEdit={currentEdit} setCurrentEdit={setCurrentEdit} checkChanges={checkChanges} assessments={assessments} filter={filter}
                         changeOverride={changeOverride} setChangeOverride={setChangeOverride} checkDuplicateName={checkDuplicateName} setAssessments={setAssessments}
                     />
 

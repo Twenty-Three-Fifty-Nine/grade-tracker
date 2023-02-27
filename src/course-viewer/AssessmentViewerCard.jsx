@@ -42,6 +42,7 @@ const AssessmentViewerCard = (props) => {
         assData,
         checkChanges,
         setCurrentEdit,
+        filter,
     } = props;
     
     // Used to update components when details are updated. 
@@ -68,6 +69,7 @@ const AssessmentViewerCard = (props) => {
         assData.checkValid();
         checkChanges();
         setUpdater(!updater);
+        filter();
     };
 
     /** Stops transitions from being blocked after the updated assessment is mounted. */
