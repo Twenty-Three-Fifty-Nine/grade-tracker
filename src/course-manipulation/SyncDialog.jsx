@@ -322,11 +322,9 @@ const SyncDialog = (props) => {
                                 return (
                                     <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                         <SyncAssessmentCard assessment={assignment.user} />
-                                        <Box sx={{ mx: 4 }}>
-                                            <IconButton onClick={() => { assignment.newSelected = !assignment.newSelected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main" }}> 
-                                                <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)" }} />
-                                            </IconButton>
-                                        </Box>
+                                        <IconButton onClick={() => { assignment.newSelected = !assignment.newSelected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                            <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.newSelected ? "rotate(0deg)" : "rotate(-180deg)" }} />
+                                        </IconButton>
                                         <SyncAssessmentCard assessment={assignment.template} />
                                     </Stack>
                                 )
@@ -344,9 +342,9 @@ const SyncDialog = (props) => {
                                 return (
                                     <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                         <SyncAssessmentCard assessment={assignment.user}/>
-                                        <Box sx={{ mx: 4 }}>
-                                            <Checkbox checked={assignment.selected} onChange={() => { assignment.selected = !assignment.selected; checkValidSync(); }} />
-                                        </Box>
+                                        <IconButton onClick={() => { assignment.selected = !assignment.selected; checkValidSync(); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                            <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: assignment.selected ? "rotate(0deg)" : "rotate(-180deg)" }} />
+                                        </IconButton>
                                         <SyncAssessmentCard assessment={assignment.template} />
                                     </Stack>
                                 )
@@ -365,9 +363,9 @@ const SyncDialog = (props) => {
                                 return (
                                     <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                         <SyncAssessmentCard assessment={assignment.user}/>
-                                        <Box sx={{ mx: 4 }}>
-                                            <Checkbox checked={assignment.selected} onChange={() => { assignment.selected = !assignment.selected; }} />
-                                        </Box>
+                                        <IconButton onClick={() => { assignment.selected = !assignment.selected; }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                            <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: !assignment.selected ? "rotate(0deg)" : "rotate(-180deg)" }} />
+                                        </IconButton>
                                         <SyncAssessmentCard assessment={assignment.template} />
                                     </Stack>
                                 )
