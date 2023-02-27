@@ -18,11 +18,13 @@
 
 import React from "react";
 import {
+    Box,
     Button,
     Dialog,
     Divider,
     Stack,
     TextField,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -72,16 +74,20 @@ const CourseViewerEditorMobile = (props) => {
                 <AssessmentWeightField currentEdit={currentEdit} checkChanges={checkChanges} width="90%" />
 
                 <Stack direction="row" spacing={2} sx={{ display:"flex", justifyContent:"center", mt: 2, mb: 1 }}>
-                    <Button variant="outlined" 
-                        onClick= {() => {
-                            assessments.splice(assessments.indexOf(currentEdit), 1);
-                            if (!currentEdit.isNew) setChangeOverride(true);
-                            checkChanges(!currentEdit.isNew ? true : changeOverride);
-                            setCurrentEdit(null);
-                        }}
-                    >
-                        Delete 
-                    </Button>
+                    <Tooltip title={ assessments.length > 1 ? "" : <h3> Cannot delete assessment </h3> } placement="bottom" arrow>
+                        <Box>
+                            <Button variant="outlined" disabled={assessments.length === 1}
+                                onClick= {() => {
+                                    assessments.splice(assessments.indexOf(currentEdit), 1);
+                                    if (!currentEdit.isNew) setChangeOverride(true);
+                                    checkChanges(!currentEdit.isNew ? true : changeOverride);
+                                    setCurrentEdit(null);
+                                }}
+                            >
+                                Delete 
+                            </Button>
+                        </Box>
+                    </Tooltip>
                     <Button variant="contained" onClick={() => setCurrentEdit(null)}> Close </Button>
                 </Stack>
             </Stack>

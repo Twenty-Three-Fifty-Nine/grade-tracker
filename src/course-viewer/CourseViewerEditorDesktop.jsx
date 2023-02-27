@@ -65,17 +65,19 @@ const CourseViewerEditorDesktop = (props) => {
                                 assignmentElement={<MenuBookRoundedIcon />} testElement={<DescriptionRoundedIcon />}
                             />
 
-                            <Tooltip title={<h3> Delete Assessment </h3>} placement="bottom" arrow>
-                                <IconButton color="error" sx={{ ml: 1 }} 
-                                    onClick={() => {
-                                        assessments.splice(assessments.indexOf(currentEdit), 1);
-                                        if (!currentEdit.isNew) setChangeOverride(true);
-                                        checkChanges(!currentEdit.isNew ? true : changeOverride);
-                                        setCurrentEdit(null);
-                                    }}
-                                >    
-                                    <DeleteIcon />
-                                </IconButton>
+                            <Tooltip title={ assessments.length > 1 ? <h3> Delete Assessment </h3> : <h3> Cannot delete assessment </h3> } placement="bottom" arrow>
+                                <Box>
+                                    <IconButton color="error" sx={{ ml: 1 }} disabled={assessments.length === 1}
+                                        onClick={() => {
+                                            assessments.splice(assessments.indexOf(currentEdit), 1);
+                                            if (!currentEdit.isNew) setChangeOverride(true);
+                                            checkChanges(!currentEdit.isNew ? true : changeOverride);
+                                            setCurrentEdit(null);
+                                        }}
+                                    >    
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Box>
                             </Tooltip>
                         </Stack>
 
