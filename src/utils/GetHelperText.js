@@ -8,7 +8,7 @@
 const getNameHelperText = (details, nameCheckOn = true) => {
     if (!nameCheckOn || !details) return "";
     if (details.name.length === 0) return "The name cannot be empty";
-    if (details.name.length > 30) return "The name cannot be longer than 30 characters";
+    if (details.name.length > 60) return "The name cannot be longer than 60 characters";
     if (details.duplicate) return "Another assessment has the same name";
     return "";
 };

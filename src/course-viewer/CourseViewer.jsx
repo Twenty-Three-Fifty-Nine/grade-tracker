@@ -218,7 +218,8 @@ const CourseViewer = (props) => {
      * @param list - The list of assessments to be sorted.
      */
     const sortAlgorithm = (isAsc, value, list) => {
-        list.sort((a, b) => isAsc ? a[value] > b[value] : a[value] < b[value]);
+        let ascValue = isAsc ? 1 : -1;
+        list.sort((a, b) => a[value] > b[value] ? ascValue : -ascValue);
         return list;
     };
 
@@ -379,7 +380,7 @@ const CourseViewer = (props) => {
                             /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
                         }
 
-                        <Stack spacing={3} sx={{ pl: 2, pr: 2 }}>
+                        <Stack spacing={3} sx={{ pl: 1, pr: 1 }}>
                             {   filteredAssessments.length > 0 ? 
                                 <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                                     {filteredAssessments.map((assessment, index) => (
@@ -406,7 +407,7 @@ const CourseViewer = (props) => {
                             > Add Assessment </Button>
                         </Stack>
 
-                        <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
+                        <Box sx={{ flexGrow: 1, flexBasis: 0, position: "sticky", top: 90 }}>
                             {   !isMobile && 
                                 <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
                                     sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}

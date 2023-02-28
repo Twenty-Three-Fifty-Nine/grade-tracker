@@ -87,7 +87,7 @@ const AssessmentNameField = (props) =>{
                 setAssessments(curr => [...curr]);
                 filter();
             }} 
-            error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 30 || currentEdit.duplicateName)} 
+            error={currentEdit && (currentEdit.name.length === 0 || currentEdit.name.length > 60 || currentEdit.duplicateName)} 
             helperText={ getNameHelperText(currentEdit) }
         />
     );
