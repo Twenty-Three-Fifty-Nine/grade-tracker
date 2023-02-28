@@ -155,8 +155,7 @@ const CreateAssessmentCard = (props) => {
                         </Stack>
                         <Tooltip title={ getDeleteTooltipTitle() } placement="bottom" arrow sx={{ ml: 2 }}>
                             <Box>
-                                <IconButton sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: "relative", 
-                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 60) ? -11 : 0 }} disabled={assessments.length === 1 && editCode !== ""}
+                                <IconButton sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" } }} disabled={assessments.length === 1 && editCode !== ""}
                                     onClick={() => {
                                         removeAssessment(index); 
                                         let oldName = details.name;
