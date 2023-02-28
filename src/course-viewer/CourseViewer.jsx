@@ -479,6 +479,7 @@ const CourseViewer = (props) => {
             <TemplateEditor open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
                 templateData={templateData} setTemplateData={setTemplateData}
                 onClose={(didUpdate) => {
+                    setKeyOverride(false);
                     setEditTemplate(false); 
                     if (didUpdate) {
                         courseData.lastUpdated = new Date();
@@ -487,7 +488,7 @@ const CourseViewer = (props) => {
                 }}
             />
 
-            <SyncMenu open={syncMenuOpen} onClose={() => setSyncMenuOpen(false)} courseData={courseData} templateData={templateData} 
+            <SyncMenu open={syncMenuOpen} onClose={() => { setSyncMenuOpen(false); setKeyOverride(false); }} courseData={courseData} templateData={templateData} 
                 setTemplateData={setTemplateData} assessments={assessments} setAssessments={setAssessments} saveChanges={saveChanges} 
             />
 
