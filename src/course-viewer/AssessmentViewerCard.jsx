@@ -84,7 +84,7 @@ const AssessmentViewerCard = (props) => {
                 <Stack spacing={1}>
                     <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 310 : 350 }}>
                         <Tooltip title={<h3> { assData.name === "" ? "..." : assData.name } </h3>} placement="top" arrow>
-                            <Typography variant={"h5"} component="div" sx={[{ flexGrow: 1, width: isMobile ? 275 : 200 }, !isMobile ? { mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" } : { mr: 1 }]}>
+                            <Typography variant={"h5"} component="div" sx={[{ flexGrow: 1, width: isMobile ? 200 : 275 }, !isMobile ? { mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" } : { mr: 1 }]}>
                                 { assData.name === "" ? "..." : assData.name }
                             </Typography>
                         </Tooltip>
