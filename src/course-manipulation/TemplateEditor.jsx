@@ -73,8 +73,6 @@ const TemplateEditor = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [closeDialog, setCloseDialog] = React.useState(false);
     const [isKeyPress, setIsKeyPress] = React.useState(false);
-    const isKeyPressR = React.useRef();
-    isKeyPressR.current = isKeyPress;
     const openR = React.useRef();
     openR.current = open;
 
@@ -291,27 +289,27 @@ const TemplateEditor = (props) => {
     };
 
     /** Closes the creator dialog. */
-    const stopCreating = useCallback(() => {
+    const stopCreating = useCallback((keyPressed = isKeyPress) => {
         resetStates();
-        onClose(false, isKeyPressR.current);
-    }, [onClose]);
+        onClose(false, keyPressed);
+    }, [isKeyPress, onClose]);
 
     /** 
      * Closes the editor unless changes have been made in the 
      * current editor session, in which case a confirmation dialog
      * is shown to the user.
      */
-    const attemptClose = useCallback(() => {
+    const attemptClose = useCallback((keyPressed = isKeyPress) => {
         if ((editCode === "" || changesMade || changeOverride) && 
            (assessments.length > 0 || courseName !== "" || courseCode !== "" || courseURL !== "")) 
             setCloseDialog(true);
-        else stopCreating();
-    }, [assessments.length, changeOverride, changesMade, courseCode, courseName, courseURL, editCode, stopCreating]);
+        else stopCreating(keyPressed);
+    }, [assessments.length, changeOverride, changesMade, courseCode, courseName, courseURL, editCode, isKeyPress, stopCreating]);
 
     /** Alternative to clicking the return button. */
     const handleKeyDown = useCallback((event) => {
         setIsKeyPress(true);
-        if (event.key === "Escape" && openR.current) attemptClose();
+        if (event.key === "Escape" && openR.current) attemptClose(true);
     }, [attemptClose]);
 
     /** Resets the dialog states and fields. */
@@ -355,10 +353,10 @@ const TemplateEditor = (props) => {
     return (
         <Box>
             {   open &&
-                <Box onKeyDown={() => {console.log("Hi")}}>
+                <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
-                            <IconButton color="inherit" onClick={() => { attemptClose(); setIsKeyPress(true); }}>
+                            <IconButton color="inherit" onClick={() => { attemptClose(false); setIsKeyPress(false); }}>
                                 <Icon>close</Icon>
                             </IconButton>
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
