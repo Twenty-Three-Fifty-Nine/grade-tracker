@@ -95,7 +95,7 @@ const SyncMenu = (props) => {
     
     /** Alternative to clicking the return button. */
     const handleKeyDown = useCallback((event) => {
-        if (event.key === "Escape" && openR.current) onClose();
+        if (event.key === "Escape" && openR.current) onClose(true);
     }, [onClose]);
 
     /** Checks if syncing will actually change any information. */
@@ -209,7 +209,7 @@ const SyncMenu = (props) => {
         if (!open) return;
         if (keepNewURL) courseData.url = templateData.url;
         saveChanges(true);
-        onClose();
+        onClose(false);
         setConfirmSync(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assessments]);
@@ -250,7 +250,7 @@ const SyncMenu = (props) => {
                 <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
-                            <IconButton color="inherit" onClick={onClose}>
+                            <IconButton color="inherit" onClick={() => onClose(false)}>
                                 <Icon>close</Icon>
                             </IconButton>
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 

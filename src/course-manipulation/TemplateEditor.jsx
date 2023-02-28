@@ -72,6 +72,9 @@ const TemplateEditor = (props) => {
     const [errorText, setErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [closeDialog, setCloseDialog] = React.useState(false);
+    const [isKeyPress, setIsKeyPress] = React.useState(false);
+    const isKeyPressR = React.useRef();
+    isKeyPressR.current = isKeyPress;
     const openR = React.useRef();
     openR.current = open;
 
@@ -290,7 +293,7 @@ const TemplateEditor = (props) => {
     /** Closes the creator dialog. */
     const stopCreating = useCallback(() => {
         resetStates();
-        onClose();
+        onClose(false, isKeyPressR.current);
     }, [onClose]);
 
     /** 
@@ -307,6 +310,7 @@ const TemplateEditor = (props) => {
 
     /** Alternative to clicking the return button. */
     const handleKeyDown = useCallback((event) => {
+        setIsKeyPress(true);
         if (event.key === "Escape" && openR.current) attemptClose();
     }, [attemptClose]);
 
@@ -354,7 +358,7 @@ const TemplateEditor = (props) => {
                 <Box onKeyDown={() => {console.log("Hi")}}>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
-                            <IconButton color="inherit" onClick={attemptClose}>
+                            <IconButton color="inherit" onClick={() => { attemptClose(); setIsKeyPress(true); }}>
                                 <Icon>close</Icon>
                             </IconButton>
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
