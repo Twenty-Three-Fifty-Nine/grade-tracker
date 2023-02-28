@@ -18,6 +18,7 @@
 
 import React from "react";
 import {
+    Box,
     Card,
     CardContent,
     Divider,
@@ -83,21 +84,24 @@ const AssessmentViewerCard = (props) => {
                 <Stack spacing={1}>
                     <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 300 : 350, alignItems:"center" }}>
                         <Tooltip title={<h3> { assData.name === "" ? "..." : assData.name } </h3>} placement="top" arrow>
-                            <Typography variant={"h5"} component="div" sx={!isMobile ? { mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: isMobile ? 100 : 275 } : { mr: 1 }}>
+                            <Typography variant={"h5"} component="div" sx={[{ flexGrow: 1 }, !isMobile ? { mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: isMobile ? 100 : 275 } : { mr: 1 }]}>
                                 { assData.name === "" ? "..." : assData.name }
                             </Typography>
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : <h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
-                            {   assData.isAss ? 
-                                <MenuBookRoundedIcon /> :
-                                <DescriptionRoundedIcon /> 
-                            }
-                        </Tooltip>
-                        <Tooltip title={ isMobile ? "" : <h3> Edit Assessment </h3> } placement="bottom" arrow>
-                            <IconButton sx={{ ml:"auto", mt:-0.5 }} onClick={() => {setCurrentEdit(assData)}}>    
-                                <EditIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                            <Tooltip title={isMobile ? "" : <h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
+                                {   assData.isAss ? 
+                                    <MenuBookRoundedIcon /> :
+                                    <DescriptionRoundedIcon /> 
+                                }
+                            </Tooltip>
+                            <Tooltip title={ isMobile ? "" : <h3> Edit Assessment </h3> } placement="bottom" arrow>
+                                <IconButton sx={{ ml:"auto", mt:-0.5 }} onClick={() => {setCurrentEdit(assData)}}>    
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Stack>
+                        
                     </Stack>
 
                     <Divider />
