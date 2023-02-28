@@ -380,7 +380,7 @@ const CourseViewer = (props) => {
                             /> : <Box sx={{ visibility: "hidden", flexGrow: 1, flexBasis: 0 }} />
                         }
 
-                        <Stack spacing={3} sx={{ pl: 2, pr: 2 }}>
+                        <Stack spacing={3} sx={{ pl: 1, pr: 1 }}>
                             {   filteredAssessments.length > 0 ? 
                                 <TransitionGroup appear={!currentEdit || !currentEdit.stopTransition} enter={!currentEdit || !currentEdit.stopTransition} exit={false}>
                                     {filteredAssessments.map((assessment, index) => (
