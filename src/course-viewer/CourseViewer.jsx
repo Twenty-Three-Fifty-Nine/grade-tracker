@@ -407,7 +407,7 @@ const CourseViewer = (props) => {
                             > Add Assessment </Button>
                         </Stack>
 
-                        <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
+                        <Box sx={{ flexGrow: 1, flexBasis: 0, position: "sticky", top: 90 }}>
                             {   !isMobile && 
                                 <CourseViewerFilterDesktop setFilterPanelOpen={setFilterPanelOpen} filterPanelOpen={filterPanelOpen} 
                                     sortType={sortType} handleChangeSort={handleChangeSort} finishedFilter={finishedFilter} missingGradeFilter={missingGradeFilter}
