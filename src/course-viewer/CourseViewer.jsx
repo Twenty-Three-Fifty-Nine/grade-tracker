@@ -479,7 +479,7 @@ const CourseViewer = (props) => {
             <TemplateEditor open={editTemplate} activeTri={{ year: courseData.year, tri: courseData.tri }} editCode={courseData.code} 
                 templateData={templateData} setTemplateData={setTemplateData}
                 onClose={(didUpdate, isKeyPress) => {
-                    setKeyOverride(false);
+                    if(!isKeyPress) setKeyOverride(false);
                     setEditTemplate(false); 
                     if (didUpdate) {
                         courseData.lastUpdated = new Date();
