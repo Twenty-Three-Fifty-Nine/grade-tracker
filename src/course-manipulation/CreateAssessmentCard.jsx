@@ -96,7 +96,7 @@ const CreateAssessmentCard = (props) => {
      * if an assessment already exists with the same name.
      */
     const updateValidity = (oldName) => {
-        details.valid = details.name.length > 0 && details.name.length < 31 && details.weight > 0 && details.weight <= 100;
+        details.valid = details.name.length > 0 && details.name.length < 61 && details.weight > 0 && details.weight <= 100;
         let matches = 0;
         let oldMatches = 0;
         assessments.forEach((ass) => {
@@ -132,7 +132,7 @@ const CreateAssessmentCard = (props) => {
                 <Stack spacing={2}>
                     <Box sx={{ display: "flex" }}>
                         <TextField label="Assessment Name" fullWidth value={details.name} onChange={handleNameChange} 
-                            error={(details.name.length === 0 || details.name.length > 30 || details.duplicate) && nameCheckOn} 
+                            error={(details.name.length === 0 || details.name.length > 60 || details.duplicate) && nameCheckOn} 
                             helperText={ getNameHelperText(details, nameCheckOn) }
                         />
                         <Stack sx={{ ml: 2 }}>
@@ -156,7 +156,7 @@ const CreateAssessmentCard = (props) => {
                         <Tooltip title={ getDeleteTooltipTitle() } placement="bottom" arrow sx={{ ml: 2 }}>
                             <Box>
                                 <IconButton sx={{ "&:hover": {color: "error.main", backgroundColor: "transparent" }, position: "relative", 
-                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 30) ? -11 : 0 }} disabled={assessments.length === 1 && editCode !== ""}
+                                    top: nameCheckOn && (details.name.length === 0 || details.name.length > 60) ? -11 : 0 }} disabled={assessments.length === 1 && editCode !== ""}
                                     onClick={() => {
                                         removeAssessment(index); 
                                         let oldName = details.name;
