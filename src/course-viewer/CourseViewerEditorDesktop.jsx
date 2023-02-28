@@ -60,7 +60,7 @@ const CourseViewerEditorDesktop = (props) => {
     const [updater, setUpdater] = React.useState(false);
 
     return (
-        <Box sx={{ flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline" }}>
+        <Box sx={{ flexGrow: 1, flexBasis: 0, display:"flex", justifyContent:"end", alignItems:"baseline", position: "sticky", top: 90 }}>
             <Card sx={{ width: 360, m: 0, display: "flex", alignItems:"baseline" }}>
                 <CardContent sx={{ pt: 1, pr: 5, display: "flex", alignItems:"baseline" }}>
                     <Stack>
