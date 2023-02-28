@@ -81,14 +81,16 @@ const AssessmentViewerCard = (props) => {
         <Card>
             <CardContent sx={{ display: "flex" }}>
                 <Stack spacing={1}>
-                    <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 300 : 350 }}>
-                        <Typography variant={"h5"} component="div" sx={{ mr: 1 }}>
-                            { assData.name === "" ? "..." : assData.name }
-                        </Typography>
-                        <Tooltip title={<h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
+                    <Stack direction="row" sx={{ display:"flex", minWidth: isMobile ? 300 : 350, alignItems:"center" }}>
+                        <Tooltip title={<h3> { assData.name === "" ? "..." : assData.name } </h3>} placement="top" arrow>
+                            <Typography variant={"h5"} component="div" sx={!isMobile ? { mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: isMobile ? 100 : 275 } : { mr: 1 }}>
+                                { assData.name === "" ? "..." : assData.name }
+                            </Typography>
+                        </Tooltip>
+                        <Tooltip title={isMobile ? "" : <h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
                             {   assData.isAss ? 
-                                <MenuBookRoundedIcon sx={{ mt: 0.3 }}/> :
-                                <DescriptionRoundedIcon sx={{ mt: 0.4 }} /> 
+                                <MenuBookRoundedIcon /> :
+                                <DescriptionRoundedIcon /> 
                             }
                         </Tooltip>
                         <Tooltip title={ isMobile ? "" : <h3> Edit Assessment </h3> } placement="bottom" arrow>
