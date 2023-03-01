@@ -146,7 +146,8 @@ const LoginDialog = (props) => {
                                         <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
                                             { showPassword ? <VisibilityOff /> : <Visibility /> }
                                         </IconButton>
-                                    </InputAdornment>
+                                    </InputAdornment>,
+                                    style: { WebkitBoxShadow: "0 0 0 1000px transparent inset" }
                                 }}
                             />
 
