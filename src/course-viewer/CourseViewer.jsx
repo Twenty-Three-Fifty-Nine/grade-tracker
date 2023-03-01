@@ -93,7 +93,7 @@ const CourseViewer = (props) => {
     // Used to open sub menus.
     const [editTemplate, setEditTemplate] = React.useState(false);
     const editTemplateR = React.useRef();
-    editTemplateR.current = changesMade;
+    editTemplateR.current = editTemplate;
     const [keyOverride, setKeyOverride] = React.useState(false);
     const keyOverrideR = React.useRef();
     keyOverrideR.current = keyOverride;
