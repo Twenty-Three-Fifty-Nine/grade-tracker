@@ -18,7 +18,6 @@
 
 import React from "react";
 import {
-    Box,
     Card,
     CardContent,
     Divider,
@@ -70,7 +69,6 @@ const AssessmentViewerCard = (props) => {
         assData.checkValid();
         checkChanges();
         setUpdater(!updater);
-        filter();
     };
 
     /** Stops transitions from being blocked after the updated assessment is mounted. */
@@ -113,10 +111,10 @@ const AssessmentViewerCard = (props) => {
                         Worth: {assData.weight}%
                     </Typography>
 
-                    { isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} />}
+                    { isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} filter={filter} />}
                 </Stack>
 
-                {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} />}
+                {!isMobile && <AssessmentViewerGrades assData={assData} handleGradeChange={handleGradeChange} getAssessmentLetter={getAssessmentLetter} filter={filter} />}
             </CardContent>
         </Card>
     );
