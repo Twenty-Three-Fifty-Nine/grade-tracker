@@ -41,7 +41,7 @@ class Assessment {
 
     /** Checks if the assessment has valid information. */
     checkValid() {
-        let nameValid = !(this.name.length === 0 || this.name.length > 30 || this.duplicateName);
+        let nameValid = !(this.name.length === 0 || this.name.length > 60 || this.duplicateName);
         let weightValid = this.weight > 0 && this.weight <= 100;
         this.valid = nameValid && this.gradeValid && weightValid;
     }
