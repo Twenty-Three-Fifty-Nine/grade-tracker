@@ -94,6 +94,16 @@ const lightTheme = createTheme({
                     color: "#ffffff",
                 }
             }
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                input: {
+                    "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0 1000px #ede1cf inset",
+                        WebkitTextFillColor: "black",
+                    }
+                }
+            }
         }
     }
 });
