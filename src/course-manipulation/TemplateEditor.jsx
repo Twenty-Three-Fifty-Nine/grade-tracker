@@ -26,6 +26,7 @@ import {
     Collapse,
     Divider,
     Fab,
+    IconButton,
     Skeleton,
     Snackbar,
     Stack,
@@ -43,6 +44,7 @@ import { getSnackbarXPosition } from "../utils/GetSnackbarPosition";
 import { isMobile } from "react-device-detect";
 import { TransitionGroup } from "react-transition-group";
 
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
@@ -357,6 +359,11 @@ const TemplateEditor = (props) => {
                 <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
+                        { isMobile && (
+                                <IconButton color="inherit" onClick={() => onClose(false)} size="small">
+                                    <CloseRoundedIcon />
+                                </IconButton>
+                            )}
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                                 { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
                             </Typography>

@@ -42,6 +42,7 @@ import { isMobile } from "react-device-detect";
 import SyncAssessmentCard from "./SyncAssessmentCard";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
@@ -251,6 +252,11 @@ const SyncMenu = (props) => {
                 <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
+                            { isMobile && (
+                                <IconButton color="inherit" onClick={() => onClose(false)}>
+                                    <CloseRoundedIcon />
+                                </IconButton>
+                            )}
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                                 { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } 
                             </Typography>
