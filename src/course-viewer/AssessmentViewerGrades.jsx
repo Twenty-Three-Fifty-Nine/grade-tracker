@@ -7,6 +7,7 @@ import {
     Typography,
 } from "@mui/material";
 
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 import { isMobile } from "react-device-detect";
 
 const AssessmentViewerGrades = (props) => {
@@ -14,13 +15,25 @@ const AssessmentViewerGrades = (props) => {
         assData,
         handleGradeChange,
         getAssessmentLetter,
+        filter,
     } = props;
 
+    // Tracks last value for this field since last filter.
+    const [lastValue, setLastValue] = React.useState(assData.grade);
+
+    /** @returns Color of the grade letter box. */
     const getGradeColor = () => {
         if (isNaN(assData.grade) || parseInt(assData.grade) === -1) return "grey";
         if (assData.gradeValid) return "primary.main";
         return "error.main";
     };
+
+    /** Filters assessment list when user is done editing a grade. */
+    const handleClickAway = () => {
+        if(assData.grade.toString() === lastValue.toString()) return;
+        setLastValue(assData.grade);
+        filter();
+    }
 
     return (
         <Stack direction={ isMobile ? "column" : "row" }>
@@ -34,10 +47,12 @@ const AssessmentViewerGrades = (props) => {
                 </Typography>
 
                 <Stack direction="row">
-                    <TextField InputProps={{ inputProps: { min: 0 }, style: { fontSize: 35 } }} 
-                        value={ isNaN(assData.grade) || parseInt(assData.grade) === -1 ? "" : assData.grade } 
-                        error={!assData.gradeValid} onChange={handleGradeChange} sx={{ fontSize:"large", width: isMobile ? 200 : 180 }} 
-                    />
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <TextField InputProps={{ inputProps: { min: 0 }, style: { fontSize: 35 } }} 
+                            value={ isNaN(assData.grade) || parseInt(assData.grade) === -1 ? "" : assData.grade } 
+                            error={!assData.gradeValid} onChange={handleGradeChange} sx={{ fontSize:"large", width: isMobile ? 200 : 180 }} 
+                        />
+                    </ClickAwayListener>
                     <Box sx={{ mt: 0, ml: 3, border: 2, p: 1.4, borderRadius: 1, width: 85, color: getGradeColor() }}>
                         <Typography variant={"h3"} component="div" sx={{ textAlign:"center" }}>
                             {getAssessmentLetter()}
