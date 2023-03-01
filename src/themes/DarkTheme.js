@@ -99,6 +99,16 @@ const darkTheme = createTheme({
                     backgroundColor: "#2c382c",
                 }
             }
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                input: {
+                    "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0 1000px #40443b inset",
+                        WebkitTextFillColor: "white",
+                    }
+                }
+            }
         }
     }
 });
