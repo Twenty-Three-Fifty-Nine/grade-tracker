@@ -25,13 +25,13 @@ import {
     CircularProgress,
     Collapse,
     Divider,
-    IconButton,
-    Icon,
+    Fab,
     Skeleton,
     Snackbar,
     Stack,
     TextField,
     Toolbar,
+    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -44,6 +44,7 @@ import { isMobile } from "react-device-detect";
 import { TransitionGroup } from "react-transition-group";
 
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 /**
  * Allows the user to create a new course template that
@@ -356,9 +357,6 @@ const TemplateEditor = (props) => {
                 <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
-                            <IconButton color="inherit" onClick={() => { attemptClose(false); setIsKeyPress(false); }}>
-                                <Icon>close</Icon>
-                            </IconButton>
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                                 { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
                             </Typography>
@@ -425,6 +423,13 @@ const TemplateEditor = (props) => {
                             }
                         </Stack>
                     </Box>
+                    {!isMobile && (
+                        <Tooltip title={ editCode !== "" ? <h3> Return to {editCode} </h3> : <h3> Return to overview </h3> } placement="right" arrow>
+                            <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
+                                <KeyboardArrowLeftIcon fontSize="large" />
+                            </Fab>
+                        </Tooltip>
+                    )}
                 </Box>
             }
 

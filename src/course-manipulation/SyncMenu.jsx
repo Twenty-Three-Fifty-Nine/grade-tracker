@@ -25,8 +25,8 @@ import {
     CardContent,
     Checkbox,
     Divider,
+    Fab,
     FormControlLabel,
-    Icon,
     IconButton,
     Skeleton,
     Stack,
@@ -43,6 +43,7 @@ import SyncAssessmentCard from "./SyncAssessmentCard";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 /** 
  * This dialog allows the user to sync their current course
@@ -250,9 +251,6 @@ const SyncMenu = (props) => {
                 <Box>
                     <AppBar position="fixed" component="nav">
                         <Toolbar>
-                            <IconButton color="inherit" onClick={() => onClose(false)}>
-                                <Icon>close</Icon>
-                            </IconButton>
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                                 { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } 
                             </Typography>
@@ -423,6 +421,13 @@ const SyncMenu = (props) => {
                             )}
                         </Stack>
                     </Box>
+                    {!isMobile && (
+                        <Tooltip title={ courseData.code !== "" ? <h3> Return to {courseData.code} </h3> : <h3> Return to overview </h3> } placement="right" arrow>
+                            <Fab color="primary" onClick={() => onClose(false)} sx={{ position: "fixed", bottom: 32, left: 32 }}>
+                                <KeyboardArrowLeftIcon fontSize="large" />
+                            </Fab>
+                        </Tooltip>
+                    )}
                 </Box>
             }
 
