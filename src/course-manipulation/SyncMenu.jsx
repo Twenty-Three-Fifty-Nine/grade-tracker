@@ -260,7 +260,7 @@ const SyncMenu = (props) => {
                             <Typography sx={{ flex: 1, pl: 1 }} variant={isMobile ? "body1" : "h6"}> 
                                 { courseData ? "Syncing " + courseData.code + " to it's Template" : "" } 
                             </Typography>
-                            <Tooltip title={<h3> { !validSync ? "There are no changes to sync" : "" } </h3>} placement="left" arrow>
+                            <Tooltip title={!validSync ? <h3> There are no changes to sync </h3> : null} placement="left" arrow>
                                 <Box>
                                     <Button color="inherit" onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
                                 </Box>
