@@ -87,7 +87,7 @@ const AssessmentViewerCard = (props) => {
                             </Typography>
                         </Tooltip>
                         <Stack direction="row" spacing={1} sx={{ alignSelf: "baseline", alignItems:"center" }}>
-                            <Tooltip title={isMobile ? "" : <h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="right" arrow>
+                            <Tooltip title={isMobile ? "" : <h3> { assData.isAss ? "Assignment" : "Test" } </h3>} placement="bottom" arrow>
                                 {   assData.isAss ? 
                                     <MenuBookRoundedIcon /> :
                                     <DescriptionRoundedIcon /> 
