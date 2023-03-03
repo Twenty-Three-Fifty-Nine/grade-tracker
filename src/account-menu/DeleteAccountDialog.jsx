@@ -41,6 +41,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 const DeleteAccountDialog = (props) => {
     const {
         confirmDeleteAccount,
+        deletedAccount,
         handleLogout,
         sessionData,
         setConfirmDeleteAccount,
@@ -63,7 +64,10 @@ const DeleteAccountDialog = (props) => {
                 activeTri: sessionData.timeInfo.activeTri
             }}
         ).then((response) => {
-            if(response.status === 200) handleLogout();
+            if(response.status === 200) {
+                deletedAccount();
+                handleLogout();
+            }
         }).catch((error) => setApiAlert("Incorrect password"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deletePassword, handleLogout, userDetails.email]);

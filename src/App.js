@@ -57,6 +57,9 @@ const App = () => {
     // Tracks whether or not the user just logged out
     const [newLogout, setNewLogout] = React.useState(false);
 
+    // Tracks whether or not the user deleted their account
+    const [deletedAccount, setDeletedAccount] = React.useState(false);
+
     // Tracks whether or not the user is in light mode.
     const [lightMode, setLightMode] = React.useState(true);
 
@@ -200,6 +203,7 @@ const App = () => {
                                 toggleTheme={() => setLightMode(!lightMode)}
                                 lightMode={lightMode}
                                 inCourseViewer={viewedCourse}
+                                deletedAccount={() => setDeletedAccount(true)}
                             />
                         ) : (
                             <FormControlLabel
@@ -239,8 +243,8 @@ const App = () => {
             <Snackbar open={newLogout} autoHideDuration={4000} onClose={() => setNewLogout(false)}
                 anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
             >
-                <Alert security="success" onClose={() => setNewLogout(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%" }}>
-                    Logged out successfully.
+                <Alert security="success" onClose={() => {setNewLogout(false); setDeletedAccount(false)}} severity="success" sx={{ width: isMobile ? "75%" : "100%" }}>
+                    {deletedAccount ? "Account deleted" : "Logged out"} successfully.
                 </Alert>
             </Snackbar>
         </ThemeProvider>
