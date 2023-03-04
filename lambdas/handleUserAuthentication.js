@@ -25,6 +25,8 @@ import {
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import crypto from "crypto";
+
+import DeletedAccountEmailTemplate from "./DeletedAccountEmailTemplate.mjs";
 import VerificationEmailTemplate from "./VerificationEmailTemplate.mjs";
 
 const client = new DynamoDBClient({ region: "ap-southeast-2" });
@@ -50,10 +52,11 @@ export const handler = async (event) => {
     } else if (route === "/users/{user}") {
         if(event.requestContext.http.method === "DELETE"){
             let authResponse = 500;
-            await authenticateUser(event).then((result) => {
+            await authenticateUser(event).then(async (result) => {
                 authResponse = result.statusCode;
                 if(authResponse === 200){
-                    deleteUser(JSON.parse(event.body)["email"]);
+                    await deleteUser(JSON.parse(event.body)["email"]);
+                    await sendDeletedAccountEmail(JSON.parse(event.body)["email"]);
                 }
             });
             return {
@@ -417,6 +420,29 @@ async function sendVerificationEmail(email, token, displayName, newSignUp) {
             Subject: {
                 Charset: "UTF-8",
                 Data: "Verify your email",
+            },
+        },
+        Source: source,
+    };
+
+    await sesClient.send(new SendEmailCommand(params));
+}
+
+async function sendDeletedAccountEmail(email) {
+    const params = {
+        Destination: {
+            ToAddresses: [email],
+        },
+        Message: {
+            Body: {
+                Html: {
+                    Charset: "UTF-8",
+                    Data: DeletedAccountEmailTemplate(),
+                },
+            },
+            Subject: {
+                Charset: "UTF-8",
+                Data: "Your account has been deleted",
             },
         },
         Source: source,
