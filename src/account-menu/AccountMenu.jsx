@@ -33,12 +33,14 @@ import {
 import AccountEditDialog from "./AccountEditDialog";
 import Cookies from "universal-cookie";
 import DeleteAccountDialog from "./DeleteAccountDialog";
+import DonationDialog from "./DonationDialog";
 import FeedbackDialog from "./FeedbackDialog";
 import { getSnackbarXPosition } from "../utils/GetSnackbarPosition";
 import { isMobile } from "react-device-detect";
 import ThemeSwitch from "../themes/ThemeSwitch";
 
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
@@ -68,6 +70,7 @@ const AccountMenu = (props) => {
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
     const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
     const [confirmDeleteAccount, setConfirmDeleteAccount] = React.useState(false);
+    const [donationClicked, setDonationClicked] = React.useState(false);
 
     // State for visual feedback when the form is being used.
     const [snackbarMessage, setSnackbarMessage] = React.useState(null);
@@ -107,6 +110,12 @@ const AccountMenu = (props) => {
                     </ListItemIcon>
                     <Typography variant="body1"> Feedback </Typography>
                 </MenuItem>
+                <MenuItem onClick={() => { setDonationClicked(true); setAnchorEl(null); }}>
+                    <ListItemIcon>
+                        <AttachMoneyRoundedIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <Typography variant="body1"> Donate </Typography>
+                </MenuItem>
                 <MenuItem onClick={() => {setAnchorEl(null); handleLogout()}}>
                     <ListItemIcon>
                         <LogoutIcon fontSize="small"/>
@@ -145,6 +154,8 @@ const AccountMenu = (props) => {
             <FeedbackDialog feedbackDialogOpen={feedbackDialogOpen} setFeedbackDialogOpen={setFeedbackDialogOpen} userDetails={userDetails}
                 confirmDeleteAccount={confirmDeleteAccount} setSnackbarMessage={setSnackbarMessage}
             />
+
+            <DonationDialog dialogOpen={donationClicked} handleDialogClose={() => setDonationClicked(false)}/>
         </Box>
     );
 };
