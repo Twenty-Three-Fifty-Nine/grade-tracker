@@ -445,7 +445,7 @@ const TemplateEditor = (props) => {
             />
             
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
-                anchorOrigin={{ vertical:"bottom", horizontal: getSnackbarXPosition(editCode !== "") }}
+                anchorOrigin={{ vertical:"bottom", horizontal: getSnackbarXPosition(editCode !== "") }} sx={{zIndex: -1}}
             >
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && isSuccess && editCode === "" ? 9 : 0 }}>
                     { getAlertText() }

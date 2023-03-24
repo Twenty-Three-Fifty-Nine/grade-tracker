@@ -185,7 +185,7 @@ const AddCourseDialog = (props) => {
             </Dialog>
 
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: -1}}
             >
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     {isSuccess ? "Course added successfully." : "Error adding course."}
