@@ -46,6 +46,7 @@ import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
 /** A dropdown menu that opens other account-related dialogs. */
 const AccountMenu = (props) => {
     const {
+        deletedAccount,
         inCourseViewer,
         lightMode,
         sessionData,
@@ -138,7 +139,7 @@ const AccountMenu = (props) => {
             />
 
             <DeleteAccountDialog userDetails={userDetails} sessionData={sessionData} handleLogout={handleLogout}
-                confirmDeleteAccount={confirmDeleteAccount} setConfirmDeleteAccount={setConfirmDeleteAccount}
+                confirmDeleteAccount={confirmDeleteAccount} setConfirmDeleteAccount={setConfirmDeleteAccount} deletedAccount={deletedAccount}
             />
 
             <FeedbackDialog feedbackDialogOpen={feedbackDialogOpen} setFeedbackDialogOpen={setFeedbackDialogOpen} userDetails={userDetails}
