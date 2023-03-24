@@ -227,21 +227,21 @@ const App = () => {
             />
             
             <Snackbar open={emailSent} autoHideDuration={4000} onClose={() => setEmailSent(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: -1}}
             >
                 <Alert onClose={() => setEmailSent(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Signup successful. Please check your email to verify your account.
                 </Alert>
             </Snackbar>
             <Snackbar open={emailVerified} autoHideDuration={4000} onClose={() => setEmailVerified(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: -1}}
             >
                 <Alert onClose={() => setEmailVerified(false)} severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile ? 9 : 0 }}>
                     Email verified!
                 </Alert>
             </Snackbar>
             <Snackbar open={newLogout} autoHideDuration={4000} onClose={() => setNewLogout(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: -1}}
             >
                 <Alert security="success" onClose={() => {setNewLogout(false); setDeletedAccount(false)}} severity="success" sx={{ width: isMobile ? "75%" : "100%" }}>
                     {deletedAccount ? "Account deleted" : "Logged out"} successfully.
