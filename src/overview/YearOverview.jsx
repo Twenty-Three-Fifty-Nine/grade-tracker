@@ -86,7 +86,7 @@ const YearOverview = (props) => {
         let totalCourses = 0;
         trimesters.forEach(trimester => {
             trimester.forEach(course => {
-                totalGrade += course.totalGrade;
+                totalGrade += parseFloat(course.totalGrade);
                 totalCourses++;
             });
         });
