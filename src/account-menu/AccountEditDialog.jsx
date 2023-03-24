@@ -184,7 +184,7 @@ const AccountEditDialog = (props) => {
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth onKeyDown={handleKeyDown}>
             <Stack direction="row">
                 <Typography variant="h6" sx={{ flexGrow: 1, ml: 3, mt: 2 }}> Update Information </Typography>
-                <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
+                <Tooltip title={ <h3> Delete Account </h3> } placement="left" arrow>
                     <IconButton onClick={() => setConfirmDeleteAccount(true) } 
                         sx={{ "&:hover": { color: "error.main", backgroundColor: "transparent" }, mr: 1.5, mt: 1.5 }}
                     >
