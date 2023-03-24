@@ -21,6 +21,7 @@ import {
     Alert,
     Box,
     Button,
+    CircularProgress,
     Collapse,
     Dialog,
     DialogTitle,
@@ -55,8 +56,13 @@ const DeleteAccountDialog = (props) => {
     // Displays an alert if the value is non-null.
     const [apiAlert, setApiAlert] = React.useState(null);
 
+    // Tracks whether or not the user is deleting their account.
+    const [loading, setLoading] = React.useState(false);
+
     /** Deletes the user from the database and logs them out. */
     const deleteUser = useCallback(async () => {
+        setLoading(true);
+
         await Axios.delete("https://api.twentythreefiftynine.com/users/" + userDetails.email, 
             { data: {
                 password: deletePassword, 
@@ -69,6 +75,8 @@ const DeleteAccountDialog = (props) => {
                 handleLogout();
             }
         }).catch((error) => setApiAlert("Incorrect password"));
+
+        setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deletePassword, handleLogout, userDetails.email]);
 
@@ -108,7 +116,8 @@ const DeleteAccountDialog = (props) => {
                         Cancel
                     </Button>
                     <Box sx={{ position: "relative" }}>
-                        <Button onClick={deleteUser} variant="contained"> Delete </Button>
+                        <Button onClick={deleteUser} disabled={loading || deletePassword === ""} variant="contained" fullWidth> Delete </Button>
+                        {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", mt: "-12px", ml: "-12px" }} />}
                     </Box>
                 </Stack>
             </Stack>
