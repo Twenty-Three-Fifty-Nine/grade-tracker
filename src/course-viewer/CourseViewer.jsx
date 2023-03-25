@@ -438,7 +438,15 @@ const CourseViewer = (props) => {
                                 </Fab>
                             </Tooltip>
                             
-                            {changesMade && (
+                            {changesMade && ( <>
+                                <Button sx={{ position: "fixed", bottom: 110, right: 32, width: 150, fontSize:13 }} 
+                                    variant="outlined" onClick={() => {
+                                        setAssessments([]);
+                                        setChangeOverride(false);
+                                        setChangesMade(false);
+                                    }}> 
+                                    Revert Changes
+                                </Button>
                                 <Box>
                                     <Button disabled={!validChanges || apiLoading} sx={{ position: "fixed", bottom: 32, right: 32, width: 150, fontSize:"medium" }} 
                                         variant="contained" onClick={() => {saveChanges()}}> 
@@ -446,7 +454,8 @@ const CourseViewer = (props) => {
                                     </Button>
                                     {apiLoading && <CircularProgress size={36} sx={{ position: "fixed", bottom: 50, right: 90, mt: "-18px", ml: "-18px" }} />}
                                 </Box>
-                            )}
+                            </> )}
+                            
                         </Box>
                     }
 
