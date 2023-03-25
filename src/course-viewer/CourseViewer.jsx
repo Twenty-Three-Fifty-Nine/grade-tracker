@@ -195,6 +195,15 @@ const CourseViewer = (props) => {
         });
     }, [assessments.length, courseData, handleKeyDown, handleTransitionEnd, handleTransitionStart]);
 
+    /** @return A list of assessment where any NaN grade is -1. */
+    const flipNaNAssessments = useCallback((list) => {
+        return list.map((a) => {
+            if (isNaN(a.grade)) a.grade = -1;
+            else if(a.grade === -1) a.grade = NaN;
+            return a;
+        });
+    }, []);
+
     /**
      * Determines what type of sorting to be used by the algorithm. 
      * 
@@ -208,7 +217,10 @@ const CourseViewer = (props) => {
         else if (type === "deadline-d") return sortAlgorithm(false, "deadline", list);
         else if (type === "weight-a") return sortAlgorithm(false, "weight", list);
         else if (type === "weight-d") return sortAlgorithm(true, "weight", list);
-    }, [filteredAssessments, sortType]);
+        else if (type === "grade-a") return flipNaNAssessments(sortAlgorithm(false, "grade", flipNaNAssessments(list)));
+        else if (type === "grade-d") return flipNaNAssessments(sortAlgorithm(true, "grade", flipNaNAssessments(list)));
+            
+    }, [filteredAssessments, flipNaNAssessments, sortType]);
 
     /** 
      * Sorts the assessments.
