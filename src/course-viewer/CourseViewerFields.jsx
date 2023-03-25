@@ -51,6 +51,8 @@ const SortSelect = (props) => {
                 <MenuItem value={"deadline-d"}> Due Date (Furthest) </MenuItem>
                 <MenuItem value={"weight-a"}> Weight (Highest) </MenuItem>
                 <MenuItem value={"weight-d"}> Weight (Lowest) </MenuItem>
+                <MenuItem value={"grade-a"}> Grade (Highest) </MenuItem>
+                <MenuItem value={"grade-d"}> Grade (Lowest) </MenuItem>
             </Select>
         </FormControl>
     );

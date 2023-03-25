@@ -208,6 +208,8 @@ const CourseViewer = (props) => {
         else if (type === "deadline-d") return sortAlgorithm(false, "deadline", list);
         else if (type === "weight-a") return sortAlgorithm(false, "weight", list);
         else if (type === "weight-d") return sortAlgorithm(true, "weight", list);
+        else if (type === "grade-a") return sortAlgorithm(false, "grade", list);
+        else if (type === "grade-d") return sortAlgorithm(true, "grade", list);
     }, [filteredAssessments, sortType]);
 
     /** 
