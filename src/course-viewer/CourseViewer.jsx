@@ -196,11 +196,11 @@ const CourseViewer = (props) => {
     }, [assessments.length, courseData, handleKeyDown, handleTransitionEnd, handleTransitionStart]);
 
     /** @return A list of assessment where any NaN grade is -1. */
-    const getNonNaNAssessments = useCallback((list) => {
+    const flipNaNAssessments = useCallback((list) => {
         return list.map((a) => {
-            let formattedGradeAss = a.clone();
-            if (isNaN(a.grade)) formattedGradeAss.grade = -1;
-            return formattedGradeAss;
+            if (isNaN(a.grade)) a.grade = -1;
+            else if(a.grade === -1) a.grade = NaN;
+            return a;
         });
     }, []);
 
@@ -217,10 +217,10 @@ const CourseViewer = (props) => {
         else if (type === "deadline-d") return sortAlgorithm(false, "deadline", list);
         else if (type === "weight-a") return sortAlgorithm(false, "weight", list);
         else if (type === "weight-d") return sortAlgorithm(true, "weight", list);
-        else if (type === "grade-a") return sortAlgorithm(false, "grade", getNonNaNAssessments(list));
-        else if (type === "grade-d") return sortAlgorithm(true, "grade", getNonNaNAssessments(list));
+        else if (type === "grade-a") return flipNaNAssessments(sortAlgorithm(false, "grade", flipNaNAssessments(list)));
+        else if (type === "grade-d") return flipNaNAssessments(sortAlgorithm(true, "grade", flipNaNAssessments(list)));
             
-    }, [filteredAssessments, getNonNaNAssessments, sortType]);
+    }, [filteredAssessments, flipNaNAssessments, sortType]);
 
     /** 
      * Sorts the assessments.
