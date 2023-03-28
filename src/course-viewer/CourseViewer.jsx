@@ -514,6 +514,7 @@ const CourseViewer = (props) => {
                 onClose={(isKeyPress) => {
                     setSyncMenuOpen(false);
                     if(!isKeyPress) setKeyOverride(false);
+                    setAssessments([]);
                 }}
             />
 
