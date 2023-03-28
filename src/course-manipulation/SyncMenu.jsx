@@ -102,7 +102,7 @@ const SyncMenu = (props) => {
 
     /** Checks if syncing will actually change any information. */
     const checkValidSync = () => {
-        let changesAvailable = changedAssessments.length + newAssessments.length > 0 || templateData.url !== courseData.url;
+        let changesAvailable = changedAssessments.length + newAssessments.length  + unchangedAssessments.length > 0 || templateData.url !== courseData.url;
 
         let foundChangeSelection = false;
         changedAssessments.forEach(assessment => {
@@ -114,7 +114,12 @@ const SyncMenu = (props) => {
             if (assessment.selected) foundNewSelection = true;
         })
 
-        setValidSync(changesAvailable && (foundChangeSelection || foundNewSelection));
+        let foundDeletedSelection = false;
+        unchangedAssessments.forEach(assessment => {
+            if (!assessment.selected) foundDeletedSelection = true;
+        })
+
+        setValidSync(changesAvailable && (foundChangeSelection || foundNewSelection || foundDeletedSelection));
     };
 
     /**
@@ -314,6 +319,7 @@ const SyncMenu = (props) => {
                                                 unchangedAssessments.forEach((assessment) => {
                                                     assessment.selected = newValue;
                                                 });
+                                                checkValidSync();
                                                 setUpdater(!updater);
                                             }} 
                                         />
@@ -393,7 +399,7 @@ const SyncMenu = (props) => {
                                         return (
                                             <Stack direction="row" key={assignment.user.name + assignment.template.name} justifyContent="center" alignItems="center">
                                                 <SyncAssessmentCard assessment={assignment.user}/>
-                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; setUpdater(!updater); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
+                                                <IconButton onClick={() => { assignment.selected = !assignment.selected; checkValidSync(); setUpdater(!updater); }} sx={{ backgroundColor:"secondary.main", mx: 4 }}> 
                                                     <ArrowForwardIosIcon sx={{ transition: "all 0.2s linear", transform: !assignment.selected ? "rotate(0deg)" : "rotate(-180deg)" }} />
                                                 </IconButton>
                                                 <SyncAssessmentCard assessment={assignment.template} />
