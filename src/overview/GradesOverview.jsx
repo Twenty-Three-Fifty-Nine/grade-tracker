@@ -40,20 +40,24 @@ import YearOverview from "./YearOverview";
  */
 const GradesOverview = (props) => {
     const {
+        accordionsOpen,
+        activateTab,
         activeTri,
         courseList,
+        selectedYear,
         sessionData,
+        setAccordionsOpen,
+        setActivateTab,
         setCourseList,
         setSessionData,
+        setUpdatedYear,
         setViewedCourse,
+        setYear,
+        updatedYear,
         userEmail,
         userName,
         verifiedEmail,
-    } = props
-
-    // States related to the year select tabs.
-    const [selectedYear, setYear] = React.useState(activeTri.year);
-    const [activateTab, setActivateTab] = React.useState(false);
+    } = props;
 
     // Tracks if other dialogs or screens are open.
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
@@ -146,6 +150,7 @@ const GradesOverview = (props) => {
      * @param newValue The new value (year). 
      */
     const handleChangedYear = async (event, newValue) => {
+        if (selectedYear !== newValue) setUpdatedYear(true);
         setYear(newValue);
         const tempData = sessionData;
         tempData.timeInfo.selectedYear = newValue;
@@ -168,14 +173,17 @@ const GradesOverview = (props) => {
                 <SessionContext.Provider value={ sessionData !== null ? sessionData : "Reloading" }>
                     {   !courseCreator && 
                         <Box>
-                            <YearOverview setViewedCourse={setViewedCourse} /> 
+                            <YearOverview setViewedCourse={setViewedCourse} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear} 
+                                accordionsOpen={accordionsOpen} setAccordionsOpen={setAccordionsOpen} /> 
 
                             <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
-                                <Fab color="primary" size={ isMobile ? "large" : "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
-                                    sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 0 }}
-                                >
-                                    <Icon>add</Icon>
-                                </Fab>
+                                <Box>
+                                    <Fab color="primary" size={ isMobile ? "large" : "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
+                                        sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 0 }}
+                                    >
+                                        <Icon>add</Icon>
+                                    </Fab>
+                                </Box>
                             </Tooltip>
                         </Box>
                     }
