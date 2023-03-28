@@ -96,10 +96,10 @@ const AssessmentNameField = (props) =>{
 /** Used to input an assessment's weight. */
 const AssessmentWeightField = (props) => {
     const {
-        currentEdit,
         checkChanges,
-        setAssessments,
+        currentEdit,
         filter,
+        setAssessments,
         width = "100%",
     } = props;
 

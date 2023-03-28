@@ -40,20 +40,20 @@ import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
  * whether the user is on mobile/desktop.
  */
 const CourseViewerHeader = (props) => {
-    const { 
-        courseData, 
-        courseCompletion, 
-        courseLetter, 
-        sessionData, 
-        changesMade, 
-        deleteZIndex,
-        setEditTemplate, 
-        setSyncMenuOpen, 
-        setConfirmDelete,
-        attemptClose, 
-        validChanges,
+    const {
         apiLoading,
+        attemptClose,
+        changesMade,
+        courseCompletion,
+        courseData,
+        courseLetter,
+        deleteZIndex,
         saveChanges,
+        sessionData,
+        setConfirmDelete,
+        setEditTemplate,
+        setSyncMenuOpen,
+        validChanges,
     } = props;
 
     return (

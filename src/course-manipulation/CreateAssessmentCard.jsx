@@ -50,11 +50,11 @@ const CreateAssessmentCard = (props) => {
         assessments,
         checkFormat,
         details,
+        editCode,
         index,
         parentUpdater,
         removeAssessment,
         setParentUpdater,
-        editCode,
     } = props;
 
     // Used to update components when details are updated. 

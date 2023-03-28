@@ -61,16 +61,16 @@ const SortSelect = (props) => {
 /** Used to select filter options for the viewer to use. */
 const FilterSelect = (props) => {
     const {
+        assignmentFilter,
         finishedFilter,
         missingGradeFilter,
         pastDeadlineFilter,
-        testFilter,
-        assignmentFilter,
+        setAssignmentFilter,
         setFinishedFilter,
         setMissingGradeFilter,
         setPastDeadlineFilter,
         setTestFilter,
-        setAssignmentFilter,
+        testFilter,
     } = props;
 
     return (

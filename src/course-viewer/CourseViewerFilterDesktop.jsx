@@ -35,20 +35,20 @@ import { FilterSelect, SortSelect } from "./CourseViewerFields";
 /** Used to choose filter options on desktop. */
 const CourseViewerFilterDesktop = (props) => {
     const {
-        setFilterPanelOpen,
+        assignmentFilter,
         filterPanelOpen,
-        sortType,
-        handleChangeSort,
         finishedFilter,
+        handleChangeSort,
         missingGradeFilter,
         pastDeadlineFilter,
-        testFilter,
-        assignmentFilter,
+        setAssignmentFilter,
+        setFilterPanelOpen,
         setFinishedFilter,
         setMissingGradeFilter,
         setPastDeadlineFilter,
         setTestFilter,
-        setAssignmentFilter,
+        sortType,
+        testFilter,
     } = props;
 
     return (

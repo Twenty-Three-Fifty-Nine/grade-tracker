@@ -33,20 +33,20 @@ import { FilterSelect, SortSelect } from "./CourseViewerFields";
 /** Used to choose filter options on mobile. */
 const CourseViewerFilterMobile = (props) => {
     const {
-        sliderPos,
-        setSliderPos,
-        sortType,
-        handleChangeSort,
+        assignmentFilter,
         finishedFilter,
+        handleChangeSort,
         missingGradeFilter,
         pastDeadlineFilter,
-        testFilter,
-        assignmentFilter,
+        setAssignmentFilter,
         setFinishedFilter,
         setMissingGradeFilter,
         setPastDeadlineFilter,
+        setSliderPos,
         setTestFilter,
-        setAssignmentFilter,
+        sliderPos,
+        sortType,
+        testFilter,
     } = props;
 
     return (

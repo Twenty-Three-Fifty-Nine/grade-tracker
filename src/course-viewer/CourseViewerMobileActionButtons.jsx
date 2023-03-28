@@ -33,11 +33,11 @@ import { isMobile } from "react-device-detect";
  */
 const CourseViewerMobileActionButtons = (props) => {
     const {
-        attemptClose,
-        validChanges,
-        changesMade,
         apiLoading,
+        attemptClose,
+        changesMade,
         saveChanges,
+        validChanges,
         mb = 0,
     } = props;
 

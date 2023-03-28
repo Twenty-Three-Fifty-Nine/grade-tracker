@@ -47,13 +47,13 @@ import TemplateEditor from "./TemplateEditor";
 const AddCourseDialog = (props) => {
     const {
         activeTri,
+        courseCreator,
         courseList,
         onClose,
         open,
+        setCourseCreator,
         setCourseList,
         updateData,
-        courseCreator,
-        setCourseCreator,
     } = props;
 
     // Uses the session data object.
