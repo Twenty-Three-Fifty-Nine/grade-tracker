@@ -34,22 +34,25 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 /** Provides a basic overview of how the users year is going. */
 const YearOverview = (props) => {
     const {
+        accordionsOpen,
+        setAccordionsOpen,
         setViewedCourse,
+        updatedYear,
+        setUpdatedYear,
     } = props;
     
     // Uses the session data object.
     const session = React.useContext(SessionContext);
 
-    // Tracks which trimester accordions are open.
-    const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
-
     const [gpaClicked, setGPAClicked] = React.useState(false);
 
     /** Resets accordion states when the session data is loading. */
     useEffect(() => {
-        if (session && session !== "Reloading") setAccordionsOpen([getTriInfo(1).isActive, getTriInfo(2).isActive, getTriInfo(3).isActive]);
+        if (!session || session === "Reloading" || !updatedYear) return;
+        setAccordionsOpen([getTriInfo(1).isActive, getTriInfo(2).isActive, getTriInfo(3).isActive]);
+        setUpdatedYear(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session])
+    }, [session, updatedYear])
 
     /**
      * Toggles a given accordion.

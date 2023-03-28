@@ -81,6 +81,15 @@ const App = () => {
         return { year: 2023, tri: 1 };
     }, []);
 
+    // States related to the year select tabs.
+    const [selectedYear, setYear] = React.useState(activeTri.year);
+    const [activateTab, setActivateTab] = React.useState(false);
+
+    // Tracks which trimester accordions are open.
+    const [accordionsOpen, setAccordionsOpen] = React.useState([false, false, false]);
+
+    // Updates accordion states when the course viewer is closed.
+    const [updatedYear, setUpdatedYear] = React.useState(true);
 
     /**
      * Verifies the user email using the verification token
@@ -160,8 +169,10 @@ const App = () => {
                         setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
 
         if (!verifying)
-            return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} setViewedCourse={setViewedCourse}
-                        sessionData={sessionData} setSessionData={setSessionData} courseList={courseList} setCourseList={setCourseList} activeTri={activeTri}/>;
+            return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} activateTab={activateTab}
+                        sessionData={sessionData} setSessionData={setSessionData} courseList={courseList} setCourseList={setCourseList} setActivateTab={setActivateTab}
+                        selectedYear={selectedYear} setYear={setYear} setViewedCourse={setViewedCourse} activeTri={activeTri} accordionsOpen={accordionsOpen} 
+                        setAccordionsOpen={setAccordionsOpen} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear}/>;
 
         return null;
     }
