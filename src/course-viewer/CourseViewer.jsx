@@ -519,7 +519,7 @@ const CourseViewer = (props) => {
             />
 
             <Snackbar open={snackbar !== "none"} autoHideDuration={4000} onClose={() => setSnackbar("none")}
-                anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "right" }} sx={{zIndex: -1}}
+                anchorOrigin={{ vertical:"bottom", horizontal: isMobile ? "center" : "left" }} sx={{ zIndex: -1, mb: isMobile ? 0 : 10}}
             >
                 <Alert severity={isSuccess ? "success" : "error"} sx={{ width: isMobile ? "75%" : "100%" }}>
                     { isSuccess ? successText : errorText }
