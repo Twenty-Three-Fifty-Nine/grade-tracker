@@ -45,15 +45,15 @@ import { AssessmentNameField, AssessmentWeightField, IsAssignmentToggle } from "
 /** Allows the user to edit an assessment on desktop. */
 const CourseViewerEditorDesktop = (props) => {
     const {
-        currentEdit,
-        setCurrentEdit,
-        checkChanges,
         assessments,
-        setAssessments,
         changeOverride,
-        setChangeOverride,
+        checkChanges,
         checkDuplicateName,
+        currentEdit,
         filter,
+        setAssessments,
+        setChangeOverride,
+        setCurrentEdit,
     } = props;
 
     // Used to update components when details are updated. 

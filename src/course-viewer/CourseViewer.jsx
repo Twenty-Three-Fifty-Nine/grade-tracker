@@ -58,12 +58,12 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
  */
 const CourseViewer = (props) => {
     const { 
-        courseData, 
-        setViewedCourse, 
+        courseData,
+        sessionData,
+        setCourseList,
+        setSessionData,
+        setViewedCourse,
         userDetails, 
-        setSessionData, 
-        sessionData, 
-        setCourseList, 
     } = props;
 
     // Tracks whether the user can perform a valid, non-empty save.

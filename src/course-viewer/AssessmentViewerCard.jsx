@@ -41,8 +41,8 @@ const AssessmentViewerCard = (props) => {
     const { 
         assData,
         checkChanges,
-        setCurrentEdit,
         filter,
+        setCurrentEdit,
     } = props;
     
     // Used to update components when details are updated. 

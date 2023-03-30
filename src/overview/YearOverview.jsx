@@ -36,9 +36,9 @@ const YearOverview = (props) => {
     const {
         accordionsOpen,
         setAccordionsOpen,
+        setUpdatedYear,
         setViewedCourse,
         updatedYear,
-        setUpdatedYear,
     } = props;
     
     // Uses the session data object.

@@ -13,9 +13,9 @@ import { isMobile } from "react-device-detect";
 const AssessmentViewerGrades = (props) => {
     const {
         assData,
-        handleGradeChange,
-        getAssessmentLetter,
         filter,
+        getAssessmentLetter,
+        handleGradeChange,
     } = props;
 
     // Tracks last value for this field since last filter.

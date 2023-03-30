@@ -37,7 +37,6 @@ import {
 
 import Axios from "axios";
 import Cookies from "universal-cookie";
-import { isMobile } from "react-device-detect";
 import PasswordValidation from "../login/PasswordValidation";
 
 import CloseIcon from "@mui/icons-material/Close";

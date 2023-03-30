@@ -40,14 +40,14 @@ import { AssessmentNameField, AssessmentWeightField, IsAssignmentToggle } from "
 /** Allows the user to edit an assessment on mobile. */
 const CourseViewerEditorMobile = (props) => {
     const {
-        currentEdit,
-        setCurrentEdit,
-        checkChanges,
         assessments,
-        setAssessments,
         changeOverride,
-        setChangeOverride,
+        checkChanges,
         checkDuplicateName,
+        currentEdit,
+        setAssessments,
+        setChangeOverride,
+        setCurrentEdit,
         filter,
     } = props;
 
