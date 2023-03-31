@@ -444,6 +444,7 @@ const CourseViewer = (props) => {
                                         setAssessments([]);
                                         setChangeOverride(false);
                                         setChangesMade(false);
+                                        setCurrentEdit(null);
                                     }}> 
                                     Revert Changes
                                 </Button>
