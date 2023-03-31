@@ -136,9 +136,9 @@ const AccountMenu = (props) => {
             </Menu>
 
             <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} 
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: 1, mb: !isMobile && inCourseViewer ? 10 : 0}}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: 1, mb: isMobile || inCourseViewer ? 0 : 10 }}
             >
-                <Alert severity="success" sx={{ width: isMobile ? "75%" : "100%", mb: isMobile && !inCourseViewer ? 9 : 0 }}> {snackbarMessage} </Alert>
+                <Alert severity="success" sx={{ width: isMobile ? "75%" : "100%" }}> {snackbarMessage} </Alert>
             </Snackbar>
 
             <AccountEditDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)} userDetails={userDetails}
