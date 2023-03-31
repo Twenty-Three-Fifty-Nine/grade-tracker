@@ -199,7 +199,7 @@ const PasswordResetDialog = (props) => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={resetPasswordSuccess} autoHideDuration={6000} onClose={handleClose} sx={{zIndex: -1}}>
+            <Snackbar open={resetPasswordSuccess} autoHideDuration={6000} onClose={handleClose} sx={{zIndex: 1}}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}> 
                     Password reset successfully
                 </Alert>
