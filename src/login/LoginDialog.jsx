@@ -196,7 +196,7 @@ const LoginDialog = (props) => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={resetPasswordSuccess} autoHideDuration={4000} onClose={() => setResetPasswordSuccess(false)} sx={{zIndex: -1}}>
+            <Snackbar open={resetPasswordSuccess} autoHideDuration={4000} onClose={() => setResetPasswordSuccess(false)} sx={{zIndex: 1}}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}> 
                     Password reset email sent!
                 </Alert>

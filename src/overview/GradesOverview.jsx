@@ -179,7 +179,7 @@ const GradesOverview = (props) => {
                             <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
                                 <Box>
                                     <Fab color="primary" size={ "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
-                                        sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 0 }}
+                                        sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 2 }}
                                     >
                                         <Icon>add</Icon>
                                     </Fab>
