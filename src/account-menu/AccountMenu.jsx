@@ -136,7 +136,7 @@ const AccountMenu = (props) => {
             </Menu>
 
             <Snackbar open={snackbarMessage !== null} autoHideDuration={4000} onClose={() => setSnackbarMessage(null)} 
-                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: 1, mb: isMobile || inCourseViewer ? 0 : 10 }}
+                anchorOrigin={{ vertical: "bottom", horizontal: isMobile ? "center" : "left" }} sx={{zIndex: 1, mb: (!isMobile !== !inCourseViewer) ? 10 : 0 }}
             >
                 <Alert severity="success" sx={{ width: isMobile ? "75%" : "100%" }}> {snackbarMessage} </Alert>
             </Snackbar>
