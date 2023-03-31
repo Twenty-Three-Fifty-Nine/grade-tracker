@@ -53,6 +53,9 @@ export const handler = async(event) => {
             },
         },
         Source: `${toTitleCase(feedbackType)} 2359 <${feedbackType}@twentythreefiftynine.com>`,
+        ReplyToAddresses: [
+            email
+        ]
     };
 
     const command = new SendEmailCommand(params);
