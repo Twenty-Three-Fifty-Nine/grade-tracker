@@ -186,7 +186,7 @@ const CourseViewer = (props) => {
         }
         window.scrollTo(0, 0);
 
-        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
+        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(3));
         setCourseLetter(courseData.getCourseLetter());
 
         courseData.assessments.forEach((assessment) => {
@@ -293,7 +293,7 @@ const CourseViewer = (props) => {
         });
 
         courseData.updateTotal();
-        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(2));
+        setCourseCompletion((courseData.getCourseCompletion() * 100).toFixed(3));
         setCourseLetter(courseData.getCourseLetter());
 
         assessments.forEach((assessment) => {
