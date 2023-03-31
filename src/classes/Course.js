@@ -47,7 +47,7 @@ class Course {
             let num = isNaN(ass.grade) ? 0 : ass.grade;
             temp += (num * ass.weight * 0.01);
         });
-        this.totalGrade = temp === 0 ? temp : temp.toFixed(2);
+        this.totalGrade = temp === 0 ? temp : temp.toFixed(3);
     }
 }
 
