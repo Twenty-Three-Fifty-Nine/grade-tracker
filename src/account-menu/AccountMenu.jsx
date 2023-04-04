@@ -56,6 +56,7 @@ const AccountMenu = (props) => {
         setNewLogout,
         setSessionData,
         setUserDetails,
+        setViewAssessments,
         setViewedCourse,
         toggleTheme,
         userDetails,
@@ -82,11 +83,12 @@ const AccountMenu = (props) => {
         setSessionData(null);
         setCourseList(null)
         setViewedCourse(null);
+        setViewAssessments(null);
         setConfirmDeleteAccount(false);
         setNewLogout(true);
 
         new Cookies().remove("userDetails", { path: "/", sameSite: "strict" });
-    }, [setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse, setNewLogout]);
+    }, [setIsLoggedIn, setUserDetails, setSessionData, setCourseList, setViewedCourse, setViewAssessments, setNewLogout]);
 
     return (
         <Box sx={{ mr: 2 }}>

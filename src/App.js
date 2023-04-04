@@ -220,6 +220,7 @@ const App = () => {
                                 lightMode={lightMode}
                                 inCourseViewer={viewedCourse}
                                 deletedAccount={() => setDeletedAccount(true)}
+                                setViewAssessments={setViewAssessments}
                             />
                         ) : (
                             <FormControlLabel
