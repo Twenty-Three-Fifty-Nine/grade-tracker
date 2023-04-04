@@ -40,7 +40,19 @@ const AssessmentsOverview = (props) => {
 
     const { triInfo, courses } = viewAssessments;
 
-    console.log(courses);
+    const [assessments, setAssessments] = React.useState([]);
+
+    React.useEffect(() => {
+        const asses = courses.map((course) => course.assessments.map((assessment) => {
+            assessment.course = course.code;
+            return assessment;
+        })).flat().filter((assessment) => {
+            return isNaN(assessment.grade);
+        }).sort((a, b) => {
+            return new dayjs(a.deadline).isBefore(new dayjs(b.deadline)) ? -1 : 1;
+        })
+        setAssessments(asses);
+    }, [courses])
 
     return (
         <Box sx={{
@@ -53,30 +65,29 @@ const AssessmentsOverview = (props) => {
             </Typography>
 
             <Stack spacing={2} sx={{ mb: 5 }}>
-                {courses.map((course) => (
-                    course.assessments.map((assessment) => (
-                    <Card key={assessment.name + course.code} sx={{ width: isMobile ? 300 : 500 }}>
+                {assessments.map((assessment) => (
+                    <Card key={assessment.deadline + assessment.name + assessment.course} sx={{ width: isMobile ? 300 : 500 }}>
                         <CardContent>
                             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <Typography variant="h6" sx={[{ flexGrow: 1, width: isMobile ? 200 : 275, mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }]}>
                                     {assessment.name}
                                 </Typography>
-                                <Typography variant="body1" color="text.secondary">{course.code}</Typography>
+                                <Typography variant="body1" color="text.secondary">{assessment.course}</Typography>
                             </Box>
 
                             <Box>
                                 <Typography variant={"body1"} component="div" >
                                     Due: {new dayjs(assessment.deadline).format("DD/MM/YYYY")}
+                                    {new dayjs(assessment.deadline).isBefore(new dayjs()) && <Typography color="error">Overdue</Typography>}
                                 </Typography>
                                 <Typography variant={"body1"} component="div">
                                     Worth: {assessment.weight}%
                                 </Typography>
                             </Box>
-                            
                         </CardContent>
                     </Card>
                 ))
-                ))}
+                }
             </Stack>
 
             { !isMobile && (
