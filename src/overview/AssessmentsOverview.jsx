@@ -63,7 +63,7 @@ const AssessmentsOverview = (props) => {
             alignItems: "center",
         }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-                Assessments for trimester {triInfo.tri}, {triInfo.year}
+                Assessments for Trimester {triInfo.tri}, {triInfo.year}
             </Typography>
 
             <Stack spacing={2} sx={{ mb: 5 }}>
