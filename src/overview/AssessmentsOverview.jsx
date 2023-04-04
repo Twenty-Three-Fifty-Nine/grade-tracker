@@ -19,6 +19,7 @@
 import React from "react";
 import {
     Box,
+    Button,
     Card,
     CardContent,
     Fab,
@@ -34,6 +35,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 const AssessmentsOverview = (props) => {
     const {
+        setViewedCourse,
         setViewAssessments,
         viewAssessments,
     } = props;
@@ -80,9 +82,15 @@ const AssessmentsOverview = (props) => {
                                     Due: {new dayjs(assessment.deadline).format("DD/MM/YYYY")}
                                     {new dayjs(assessment.deadline).isBefore(new dayjs()) && <Typography color="error">Overdue</Typography>}
                                 </Typography>
-                                <Typography variant={"body1"} component="div">
-                                    Worth: {assessment.weight}%
-                                </Typography>
+                                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Typography variant={"body1"} component="div">
+                                        Worth: {assessment.weight}%
+                                    </Typography>
+                                    <Button variant="text" onClick={() => {
+                                        setViewAssessments(null);
+                                        setViewedCourse(courses.find((course) => course.code === assessment.course));
+                                    }}>Update</Button>
+                                </Box>
                             </Box>
                         </CardContent>
                     </Card>

@@ -170,8 +170,8 @@ const App = () => {
             return <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails}
                         setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
 
-        if (viewAssessments){
-            return <AssessmentsOverview setViewAssessments={setViewAssessments} viewAssessments={viewAssessments} />;}
+        if (viewAssessments)
+            return <AssessmentsOverview setViewAssessments={setViewAssessments} viewAssessments={viewAssessments} setViewedCourse={setViewedCourse} />;
 
         if (!verifying)
             return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} activateTab={activateTab}
