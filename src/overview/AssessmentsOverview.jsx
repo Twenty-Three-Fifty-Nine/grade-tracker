@@ -69,8 +69,8 @@ const AssessmentsOverview = (props) => {
 
             <Stack spacing={2} sx={{ mb: 5 }}>
                 {assessments.map((assessment) => (
-                    <Card key={assessment.deadline + assessment.name + assessment.course} sx={{ width: isMobile ? 300 : 500 }}>
-                        <CardContent>
+                    <Card key={assessment.deadline + assessment.name + assessment.course} sx={{ width: isMobile ? 300 : 500}}>
+                        <CardContent sx={{ "&:last-child": { pb: 2 }, py: 2 }}>
                             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <Typography variant="h6" sx={[{ flexGrow: 1, width: isMobile ? 200 : 275, mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }]}>
                                     {assessment.name}
