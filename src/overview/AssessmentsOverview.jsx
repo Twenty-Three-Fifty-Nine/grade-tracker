@@ -42,6 +42,7 @@ const AssessmentsOverview = (props) => {
 
     const { triInfo, courses } = viewAssessments;
 
+    /** The assessments to display */
     const [assessments, setAssessments] = React.useState([]);
 
     /** Alternative to clicking the return button. */
@@ -63,6 +64,7 @@ const AssessmentsOverview = (props) => {
         setAssessments(asses);
     }, [courses, handleKeyDown])
 
+    /** Adds and removes keylistener when the component mounts or unmounts */
     React.useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
         return () => {
