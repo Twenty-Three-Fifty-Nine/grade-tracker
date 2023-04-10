@@ -61,8 +61,9 @@ const AssessmentsOverview = (props) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
         }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
                 Assessments for Trimester {triInfo.tri}, {triInfo.year}
             </Typography>
 
