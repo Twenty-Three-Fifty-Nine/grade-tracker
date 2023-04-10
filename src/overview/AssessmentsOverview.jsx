@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React from "react";
+import React, { useCallback } from "react";
 import {
     Box,
     Button,
@@ -44,7 +44,17 @@ const AssessmentsOverview = (props) => {
 
     const [assessments, setAssessments] = React.useState([]);
 
+    /** Alternative to clicking the return button. */
+    const handleKeyDown = useCallback((event) => {
+        if (event.key === "Escape") {
+            setViewAssessments(null)
+            document.removeEventListener("keydown", handleKeyDown, false);
+        }
+    }, [setViewAssessments]);
+
     React.useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown, false);
+
         const asses = courses.map((course) => course.assessments.map((assessment) => {
             assessment.course = course.code;
             return assessment;
@@ -54,7 +64,7 @@ const AssessmentsOverview = (props) => {
             return new dayjs(a.deadline).isBefore(new dayjs(b.deadline)) ? -1 : 1;
         })
         setAssessments(asses);
-    }, [courses])
+    }, [courses, handleKeyDown])
 
     return (
         <Box sx={{
