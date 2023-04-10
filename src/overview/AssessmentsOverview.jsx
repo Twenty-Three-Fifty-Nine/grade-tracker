@@ -48,13 +48,10 @@ const AssessmentsOverview = (props) => {
     const handleKeyDown = useCallback((event) => {
         if (event.key === "Escape") {
             setViewAssessments(null)
-            document.removeEventListener("keydown", handleKeyDown, false);
         }
     }, [setViewAssessments]);
 
     React.useEffect(() => {
-        document.addEventListener("keydown", handleKeyDown, false);
-
         const asses = courses.map((course) => course.assessments.map((assessment) => {
             assessment.course = course.code;
             return assessment;
@@ -65,6 +62,13 @@ const AssessmentsOverview = (props) => {
         })
         setAssessments(asses);
     }, [courses, handleKeyDown])
+
+    React.useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown, false);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown, false);
+        };
+    }, [handleKeyDown]);
 
     return (
         <Box sx={{
@@ -98,7 +102,6 @@ const AssessmentsOverview = (props) => {
                                         Worth: {assessment.weight}%
                                     </Typography>
                                     <Button variant="text" onClick={() => {
-                                        setViewAssessments(null);
                                         setViewedCourse(courses.find((course) => course.code === assessment.course));
                                     }}>Update</Button>
                                 </Box>

@@ -70,7 +70,6 @@ const App = () => {
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
     const [viewAssessments, setViewAssessments] = React.useState(null);
-
     // Email verification/reset related states.
     const location = useLocation();
     const [resetData, setResetData] = React.useState(null);
@@ -168,7 +167,7 @@ const App = () => {
 
         if (viewedCourse)
             return <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails}
-                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
+                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList} viewAssessments={viewAssessments} />;
 
         if (viewAssessments)
             return <AssessmentsOverview setViewAssessments={setViewAssessments} viewAssessments={viewAssessments} setViewedCourse={setViewedCourse} />;
