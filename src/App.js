@@ -157,6 +157,9 @@ const App = () => {
         if (isMobile) return viewedCourse ? viewedCourse.code : userDetails.displayName;
 
         const name = userDetails.displayName + (userDetails.displayName[userDetails.displayName.length - 1] === "s" ? "'" : "'s")
+
+        if (viewAssessments && !viewedCourse) return name + " Upcoming Assessments";
+
         return viewedCourse ? name + " " + viewedCourse.code : name + " Overview";
     };
 
