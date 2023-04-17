@@ -64,6 +64,7 @@ const CourseViewer = (props) => {
         setSessionData,
         setViewedCourse,
         userDetails, 
+        viewAssessments,
     } = props;
 
     // Tracks whether the user can perform a valid, non-empty save.
@@ -432,7 +433,7 @@ const CourseViewer = (props) => {
                     
                     {   !isMobile && 
                         <Box>
-                            <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
+                            <Tooltip title={viewAssessments ? <h3> Return to assessments </h3> : <h3> Return to overview </h3>} placement="right" arrow>
                                 <Fab color="primary" onClick={attemptClose} sx={{ position: "fixed", bottom: 32, left: 32 }}>
                                     <KeyboardArrowLeftIcon fontSize="large" />
                                 </Fab>

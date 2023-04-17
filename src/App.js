@@ -31,6 +31,7 @@ import {
 } from "@mui/material";
 
 import AccountMenu from "./account-menu/AccountMenu";
+import AssessmentsOverview from "./overview/AssessmentsOverview";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import CourseViewer from "./course-viewer/CourseViewer";
@@ -68,7 +69,7 @@ const App = () => {
     const [viewedCourse, setViewedCourse] = React.useState(null);
     const [sessionData, setSessionData] = React.useState(null);
     const [courseList, setCourseList] = React.useState(null);
-
+    const [viewAssessments, setViewAssessments] = React.useState(null);
     // Email verification/reset related states.
     const location = useLocation();
     const [resetData, setResetData] = React.useState(null);
@@ -156,6 +157,9 @@ const App = () => {
         if (isMobile) return viewedCourse ? viewedCourse.code : userDetails.displayName;
 
         const name = userDetails.displayName + (userDetails.displayName[userDetails.displayName.length - 1] === "s" ? "'" : "'s")
+
+        if (viewAssessments && !viewedCourse) return name + " Upcoming Assessments";
+
         return viewedCourse ? name + " " + viewedCourse.code : name + " Overview";
     };
 
@@ -166,13 +170,16 @@ const App = () => {
 
         if (viewedCourse)
             return <CourseViewer courseData={viewedCourse} setViewedCourse={setViewedCourse} userDetails={userDetails}
-                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList}/>;
+                        setSessionData={setSessionData} sessionData={sessionData} setCourseList={setCourseList} viewAssessments={viewAssessments} />;
+
+        if (viewAssessments)
+            return <AssessmentsOverview setViewAssessments={setViewAssessments} viewAssessments={viewAssessments} setViewedCourse={setViewedCourse} />;
 
         if (!verifying)
             return <GradesOverview userEmail={userDetails.email} userName={userDetails.name} verifiedEmail={userDetails.verifiedEmail} activateTab={activateTab}
                         sessionData={sessionData} setSessionData={setSessionData} courseList={courseList} setCourseList={setCourseList} setActivateTab={setActivateTab}
                         selectedYear={selectedYear} setYear={setYear} setViewedCourse={setViewedCourse} activeTri={activeTri} accordionsOpen={accordionsOpen} 
-                        setAccordionsOpen={setAccordionsOpen} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear}/>;
+                        setAccordionsOpen={setAccordionsOpen} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear} setViewAssessments={setViewAssessments} />;
 
         return null;
     }
@@ -215,6 +222,7 @@ const App = () => {
                                 lightMode={lightMode}
                                 inCourseViewer={viewedCourse}
                                 deletedAccount={() => setDeletedAccount(true)}
+                                setViewAssessments={setViewAssessments}
                             />
                         ) : (
                             <FormControlLabel

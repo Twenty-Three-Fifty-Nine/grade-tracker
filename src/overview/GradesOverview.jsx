@@ -51,6 +51,7 @@ const GradesOverview = (props) => {
         setCourseList,
         setSessionData,
         setUpdatedYear,
+        setViewAssessments,
         setViewedCourse,
         setYear,
         updatedYear,
@@ -174,7 +175,7 @@ const GradesOverview = (props) => {
                     {   !courseCreator && 
                         <Box>
                             <YearOverview setViewedCourse={setViewedCourse} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear} 
-                                accordionsOpen={accordionsOpen} setAccordionsOpen={setAccordionsOpen} /> 
+                                accordionsOpen={accordionsOpen} setAccordionsOpen={setAccordionsOpen} setViewAssessments={setViewAssessments} />
 
                             <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
                                 <Box>

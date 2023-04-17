@@ -23,6 +23,7 @@ import {
     AccordionDetails,
     Alert,
     Box,
+    Button,
     Chip,
     Skeleton,
     Stack,
@@ -48,6 +49,7 @@ const getActiveChip = (triInfo) => {
 const TrimesterOverview = (props) => {
     const {
         open,
+        setViewAssessments,
         setViewedCourse,
         toggleAccordion,
         triInfo,
@@ -62,7 +64,11 @@ const TrimesterOverview = (props) => {
                 <Accordion expanded={open} onChange={() => toggleAccordion(triInfo.tri)} key={triInfo.tri}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ pt: 0.5 }}> Trimester {triInfo.tri} </Typography>
-                        { getActiveChip(triInfo) } 
+                        { getActiveChip(triInfo) }
+                        { triInfo.isActive && <Button variant="outlined" size="small" sx={{ mx: 2 }} onClick={(e) => {
+                            e.stopPropagation();
+                            setViewAssessments({triInfo, courses: courses[triInfo.year][triInfo.tri - 1]});
+                        }}>Assessments</Button> }
                     </AccordionSummary>
 
                     <AccordionDetails>

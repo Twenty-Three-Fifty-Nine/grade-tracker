@@ -37,6 +37,7 @@ const YearOverview = (props) => {
         accordionsOpen,
         setAccordionsOpen,
         setUpdatedYear,
+        setViewAssessments,
         setViewedCourse,
         updatedYear,
     } = props;
@@ -101,9 +102,9 @@ const YearOverview = (props) => {
     return (
         <Box>
             <Stack spacing={1} sx={{ zIndex: 0 }}>
-                <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
-                <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
-                <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} />
+                <TrimesterOverview triInfo={getTriInfo(1)} open={accordionsOpen ? accordionsOpen[0] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} setViewAssessments={setViewAssessments} />
+                <TrimesterOverview triInfo={getTriInfo(2)} open={accordionsOpen ? accordionsOpen[1] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} setViewAssessments={setViewAssessments} />
+                <TrimesterOverview triInfo={getTriInfo(3)} open={accordionsOpen ? accordionsOpen[2] : false} toggleAccordion={toggleAccordion} setViewedCourse={setViewedCourse} setViewAssessments={setViewAssessments} />
             </Stack>
 
             <Alert severity="info" sx={{ mt: 1, mb: isMobile ? 10 : 2 }} iconMapping={{ info: <InfoOutlinedIcon sx={{ "&:hover": { cursor: "pointer" } }} onClick={() => { setGPAClicked(true) }}/> }}> Current GPA for the Year: {getGPA()} </Alert>
