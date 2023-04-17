@@ -65,7 +65,8 @@ const TrimesterOverview = (props) => {
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography sx={{ pt: 0.5 }}> Trimester {triInfo.tri} </Typography>
                         { getActiveChip(triInfo) }
-                        { triInfo.isActive && <Button variant="outlined" size="small" sx={{ mx: 2 }} onClick={() => {
+                        { triInfo.isActive && <Button variant="outlined" size="small" sx={{ mx: 2 }} onClick={(e) => {
+                            e.stopPropagation();
                             setViewAssessments({triInfo, courses: courses[triInfo.year][triInfo.tri - 1]});
                         }}>Assessments</Button> }
                     </AccordionSummary>
