@@ -18,12 +18,15 @@
 
 import React, { useCallback } from "react";
 import {
+    AppBar,
     Box,
     Button,
     Card,
     CardContent,
     Fab,
+    IconButton,
     Stack,
+    Toolbar,
     Tooltip,
     Typography,
 } from "@mui/material";
@@ -31,6 +34,7 @@ import {
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 const AssessmentsOverview = (props) => {
@@ -73,54 +77,70 @@ const AssessmentsOverview = (props) => {
     }, [handleKeyDown]);
 
     return (
-        <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-        }}>
-            <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
-                Assessments for Trimester {triInfo.tri}, {triInfo.year}
-            </Typography>
-
-            <Stack spacing={2} sx={{ mb: 5 }}>
-                {assessments.map((assessment) => (
-                    <Card key={assessment.deadline + assessment.name + assessment.course} sx={{ width: isMobile ? 300 : 500}}>
-                        <CardContent sx={{ "&:last-child": { pb: 2 }, py: 2 }}>
-                            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                <Typography variant="h6" sx={[{ flexGrow: 1, width: isMobile ? 200 : 275, mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }]}>
-                                    {assessment.name}
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">{assessment.course}</Typography>
-                            </Box>
-
-                            <Box>
-                                <Typography variant={"body1"} component="div" >
-                                    Due: {new dayjs(assessment.deadline).format("DD/MM/YYYY")}
-                                    {new dayjs(assessment.deadline).isBefore(new dayjs()) && <Typography color="error">Overdue</Typography>}
-                                </Typography>
-                                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                    <Typography variant={"body1"} component="div">
-                                        Worth: {assessment.weight}%
-                                    </Typography>
-                                    <Button variant="text" onClick={() => {
-                                        setViewedCourse(courses.find((course) => course.code === assessment.course));
-                                    }}>Update</Button>
-                                </Box>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                ))
-                }
-            </Stack>
-
-            { !isMobile && (
-                <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
-                    <Fab color="primary" sx={{ position: "fixed", bottom: 32, left: 32 }} onClick={() => {setViewAssessments(null)}}>
-                        <KeyboardArrowLeftIcon fontSize="large" />
-                    </Fab>
-                </Tooltip>
+        <Box>
+            { isMobile && (
+                <AppBar position="fixed" component="nav">
+                    <Toolbar>
+                            <IconButton color="inherit" onClick={() => setViewAssessments(null)}>
+                                <CloseRoundedIcon />
+                            </IconButton>
+                        <Typography variant="body1" sx={{ mx: .5, textAlign: "center" }}>
+                        Assessments for Trimester {triInfo.tri}, {triInfo.year}
+                    </Typography>
+                    </Toolbar>
+                </AppBar>
             )}
+            
+            <Box sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+            }}>
+
+                {!isMobile && <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
+                    Assessments for Trimester {triInfo.tri}, {triInfo.year}
+                </Typography>}
+
+                <Stack spacing={2} sx={{ mb: 5 }}>
+                    {assessments.map((assessment) => (
+                        <Card key={assessment.deadline + assessment.name + assessment.course} sx={{ width: isMobile ? 300 : 500}}>
+                            <CardContent sx={{ "&:last-child": { pb: 2 }, py: 2 }}>
+                                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Typography variant="h6" sx={[{ flexGrow: 1, width: isMobile ? 200 : 275, mr: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }]}>
+                                        {assessment.name}
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">{assessment.course}</Typography>
+                                </Box>
+
+                                <Box>
+                                    <Typography variant={"body1"} component="div" >
+                                        Due: {new dayjs(assessment.deadline).format("DD/MM/YYYY")}
+                                        {new dayjs(assessment.deadline).isBefore(new dayjs()) && <Typography color="error">Overdue</Typography>}
+                                    </Typography>
+                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography variant={"body1"} component="div">
+                                            Worth: {assessment.weight}%
+                                        </Typography>
+                                        <Button variant="text" onClick={() => {
+                                            setViewedCourse(courses.find((course) => course.code === assessment.course));
+                                        }}>Update</Button>
+                                    </Box>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    ))
+                    }
+                </Stack>
+
+                { !isMobile && (
+                    <Tooltip title={<h3> Return to overview </h3>} placement="right" arrow>
+                        <Fab color="primary" sx={{ position: "fixed", bottom: 32, left: 32 }} onClick={() => {setViewAssessments(null)}}>
+                            <KeyboardArrowLeftIcon fontSize="large" />
+                        </Fab>
+                    </Tooltip>
+                )}
+            </Box>
         </Box>
     )
 }
