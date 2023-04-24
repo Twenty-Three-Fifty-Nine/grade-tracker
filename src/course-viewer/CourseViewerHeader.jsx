@@ -21,6 +21,9 @@ import {
     Box,
     Button,
     Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
     Divider,
     IconButton,
     Stack,
@@ -121,6 +124,8 @@ const CurrentlyAchievedDisplay = (props) => {
     } = props;
 
     let sum = courseData.assessments.map((assessment) => assessment.weight).reduce((a, b) => a + b, 0);
+
+    const [incompleteDialogOpen, setIncompleteDialogOpen] = React.useState(false);
     
     return (
         <Stack spacing={ isMobile ? 0 : 2 }>
@@ -131,9 +136,22 @@ const CurrentlyAchievedDisplay = (props) => {
                 <Stack direction="row" gap={1}>
                     <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
                     {sum < 100 && (
-                        <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
-                            <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} />
-                        </Tooltip>
+                        <>
+                            <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
+                                <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} onClick={() => setIncompleteDialogOpen(true)} />
+                            </Tooltip>
+
+                            <Dialog open={incompleteDialogOpen}>
+                                <DialogContent>
+                                    <Typography variant="body1" component="div" sx={{ textAlign:"center" }}>
+                                        This course may have incomplete assessments as the weights don't add to 100.
+                                    </Typography>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={() => setIncompleteDialogOpen(false)}>Ok</Button>
+                                </DialogActions>
+                            </Dialog>
+                        </>
                     )}
                 </Stack>
                 <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{ p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
