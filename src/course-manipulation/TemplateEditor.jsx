@@ -455,7 +455,7 @@ const TemplateEditor = (props) => {
             />
 
             <ConfirmDialog open={confirmDialog} handleClose={() => setConfirmDialog(false)} buttonText={"Proceed"} message={"Assessment weights"}
-                subMessage={"The assessment weights don't add up to 100. Are you sure you want to proceed?"} confirmAction={editCode !== "" ? updateCourse : createCourse}
+                subMessage={"The assessment weights don't add up to 100%. Are you sure you want to proceed?"} confirmAction={editCode !== "" ? updateCourse : createCourse}
             />
             
             <Snackbar open={snackbar !== "none" } autoHideDuration={4000} onClose={() => setSnackbar("none")}

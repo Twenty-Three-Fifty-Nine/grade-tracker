@@ -139,11 +139,11 @@ const CurrentlyAchievedDisplay = (props) => {
                                 <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} onClick={() => setIncompleteDialogOpen(true)} />
 
                                 <ConfirmDialog open={incompleteDialogOpen} handleClose={() => setIncompleteDialogOpen(false)} buttonText={"Ok"} message={"Assessment weights"}
-                                    subMessage={"The assessment weights don't add up to 100. Are you sure you want to proceed?"}
+                                    subMessage={"The assessment weights don't add up to 100%. This likely means that the course may have incomplete assessments."}
                                 />
                             </>
                         ) : (
-                            <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
+                            <Tooltip title={<h3>The assessment weights don't add up to 100%. This likely means that the course may have incomplete assessments.</h3>} arrow>
                                 <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} />
                             </Tooltip>
                         )
