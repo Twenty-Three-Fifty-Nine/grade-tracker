@@ -136,22 +136,26 @@ const CurrentlyAchievedDisplay = (props) => {
                 <Stack direction="row" gap={1}>
                     <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
                     {sum < 100 && (
-                        <>
-                            <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
+                        isMobile ? (
+                            <>
                                 <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} onClick={() => setIncompleteDialogOpen(true)} />
+                            
+                                <Dialog open={incompleteDialogOpen}>
+                                    <DialogContent>
+                                        <Typography variant="body1" component="div" sx={{ textAlign:"center" }}>
+                                            This course may have incomplete assessments as the weights don't add to 100.
+                                        </Typography>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={() => setIncompleteDialogOpen(false)}>Ok</Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </>
+                        ) : (
+                            <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
+                                <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} />
                             </Tooltip>
-
-                            <Dialog open={incompleteDialogOpen}>
-                                <DialogContent>
-                                    <Typography variant="body1" component="div" sx={{ textAlign:"center" }}>
-                                        This course may have incomplete assessments as the weights don't add to 100.
-                                    </Typography>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={() => setIncompleteDialogOpen(false)}>Ok</Button>
-                                </DialogActions>
-                            </Dialog>
-                        </>
+                        )
                     )}
                 </Stack>
                 <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{ p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
