@@ -21,9 +21,6 @@ import {
     Box,
     Button,
     Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
     Divider,
     IconButton,
     Stack,
@@ -31,6 +28,7 @@ import {
     Typography,
 } from "@mui/material";
 
+import ConfirmDialog from "../ConfirmDialog";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 
@@ -139,17 +137,10 @@ const CurrentlyAchievedDisplay = (props) => {
                         isMobile ? (
                             <>
                                 <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} onClick={() => setIncompleteDialogOpen(true)} />
-                            
-                                <Dialog open={incompleteDialogOpen}>
-                                    <DialogContent>
-                                        <Typography variant="body1" component="div" sx={{ textAlign:"center" }}>
-                                            This course may have incomplete assessments as the weights don't add to 100.
-                                        </Typography>
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button onClick={() => setIncompleteDialogOpen(false)}>Ok</Button>
-                                    </DialogActions>
-                                </Dialog>
+
+                                <ConfirmDialog open={incompleteDialogOpen} handleClose={() => setIncompleteDialogOpen(false)} buttonText={"Ok"} message={"Assessment weights"}
+                                    subMessage={"The assessment weights don't add up to 100. Are you sure you want to proceed?"}
+                                />
                             </>
                         ) : (
                             <Tooltip title={<h3>This course may have incomplete assessments as the weights don't add to 100</h3>} arrow>
