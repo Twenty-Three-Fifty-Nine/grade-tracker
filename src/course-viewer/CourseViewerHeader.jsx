@@ -28,12 +28,14 @@ import {
     Typography,
 } from "@mui/material";
 
+import ConfirmDialog from "../ConfirmDialog";
 import dayjs from "dayjs";
 import { isMobile } from "react-device-detect";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import LaunchIcon from "@mui/icons-material/Launch";
 import CourseViewerMobileActionButtons from "./CourseViewerMobileActionButtons";
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 /** 
  * The main header for the course viewer, changes based on 
@@ -119,13 +121,34 @@ const CurrentlyAchievedDisplay = (props) => {
         courseLetter,
     } = props;
 
+    let sum = courseData.assessments.map((assessment) => assessment.weight).reduce((a, b) => a + b, 0);
+
+    const [incompleteDialogOpen, setIncompleteDialogOpen] = React.useState(false);
+    
     return (
         <Stack spacing={ isMobile ? 0 : 2 }>
             <Typography variant="h4" component="div" sx={{ textAlign:"center" }}> 
                 Currently Achieved:
             </Typography>
-            <Stack direction="row" spacing={ isMobile ? 5 : 10 } sx={{ alignItems:"center", justifyContent:"center" }}>
-                <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
+            <Stack direction="row" spacing={ isMobile ? 5 : 7 } sx={{ alignItems:"center", justifyContent:"center" }}>
+                <Stack direction="row" gap={1}>
+                    <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
+                    {sum < 100 && (
+                        isMobile ? (
+                            <>
+                                <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} onClick={() => setIncompleteDialogOpen(true)} />
+
+                                <ConfirmDialog open={incompleteDialogOpen} handleClose={() => setIncompleteDialogOpen(false)} buttonText={"Ok"} message={"Assessment weights"}
+                                    subMessage={"The assessment weights don't add up to 100%. This likely means that the course may have incomplete assessments."}
+                                />
+                            </>
+                        ) : (
+                            <Tooltip title={<h3>The assessment weights don't add up to 100%. This likely means that the course may have incomplete assessments.</h3>} arrow>
+                                <Chip label={<WarningRoundedIcon />} color="secondary" sx={{ py: 3, fontSize:30, backgroundColor:"error.main", borderRadius: 1 }} />
+                            </Tooltip>
+                        )
+                    )}
+                </Stack>
                 <Chip label={courseLetter ? courseLetter : "-"} color="secondary" sx={{ p: 2, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
             </Stack>
         </Stack>

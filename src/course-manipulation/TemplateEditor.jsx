@@ -74,6 +74,7 @@ const TemplateEditor = (props) => {
     const [errorText, setErrorText] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [closeDialog, setCloseDialog] = React.useState(false);
+    const [confirmDialog, setConfirmDialog] = React.useState(false);
     const [isKeyPress, setIsKeyPress] = React.useState(false);
     const openR = React.useRef();
     openR.current = open;
@@ -250,6 +251,7 @@ const TemplateEditor = (props) => {
         });
 
         setLoading(false);
+        setConfirmDialog(false);
     };
 
     /**
@@ -288,6 +290,7 @@ const TemplateEditor = (props) => {
         });
 
         setLoading(false);
+        setConfirmDialog(false);
     };
 
     /** Closes the creator dialog. */
@@ -295,6 +298,14 @@ const TemplateEditor = (props) => {
         resetStates();
         onClose(false, keyPressed);
     }, [isKeyPress, onClose]);
+
+    /** Checks if the assessment weights sum up to more than 100. */
+    const needConfirmation = () => {
+        let sum = assessments.map((assessment) => assessment.weight).reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+        
+        if (sum < 100) setConfirmDialog(true);
+        else editCode !== "" ? updateCourse() : createCourse();
+    }
 
     /** 
      * Closes the editor unless changes have been made in the 
@@ -367,7 +378,7 @@ const TemplateEditor = (props) => {
                                 { editCode !== "" ? "Editing " + editCode : "Create New Course for Trimester " + activeTri.tri } 
                             </Typography>
                             <Box sx={{ position: "relative" }}>
-                                <Button color="inherit" onClick={editCode !== "" ? updateCourse : createCourse} disabled={loading || !formatValid || 
+                                <Button color="inherit" onClick={needConfirmation} disabled={loading || !formatValid || 
                                     (editCode !== "" && !(changesMade || changeOverride))}
                                 > 
                                     { editCode !== "" ? "Update" : "Create" } </Button>
@@ -441,6 +452,10 @@ const TemplateEditor = (props) => {
 
             <ConfirmDialog open={closeDialog} handleClose={() => {setCloseDialog(false)}} buttonText={"Stop"} message={"Stop template creation?"} 
                 subMessage={"Any inputted data will be lost."} confirmAction={stopCreating} 
+            />
+
+            <ConfirmDialog open={confirmDialog} handleClose={() => setConfirmDialog(false)} buttonText={"Proceed"} message={"Assessment weights"}
+                subMessage={"The assessment weights don't add up to 100%. Are you sure you want to proceed?"} confirmAction={editCode !== "" ? updateCourse : createCourse}
             />
             
             <Snackbar open={snackbar !== "none" } autoHideDuration={4000} onClose={() => setSnackbar("none")}
