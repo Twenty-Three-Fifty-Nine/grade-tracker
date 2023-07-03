@@ -30,6 +30,27 @@ export const handler = async(event) => {
     }
     
     const {subject, message, feedbackType, email, displayName} = JSON.parse(event.body);
+
+    let githubResponse;
+    if (feedbackType === "bug" || feedbackType === "suggestion") {
+        githubResponse = await fetch("https://api.github.com/repos/Twenty-Three-Fifty-Nine/grade-tracker/issues", {
+            method: "POST",
+            body: JSON.stringify({
+                title: subject,
+                body: message,
+                labels: [feedbackType],
+            }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `token ${process.env.GITHUB_TOKEN}`,
+            },
+        });
+
+        if(githubResponse.status !== 201) {
+            console.log("Failed to create GitHub issue");
+            console.log(await githubResponse.json());
+        }
+    }
     
     const params = {
         Destination: {
@@ -61,26 +82,6 @@ export const handler = async(event) => {
     const command = new SendEmailCommand(params);
     await sesClient.send(command);
 
-    if (feedbackType === "bug" || feedbackType === "suggestion") {
-        const githubResponse = await fetch("https://api.github.com/repos/Twenty-Three-Fifty-Nine/grade-tracker/issues", {
-            method: "POST",
-            body: JSON.stringify({
-                title: subject,
-                body: message,
-                labels: [feedbackType],
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `token ${process.env.GITHUB_TOKEN}`,
-            },
-        });
-
-        if(githubResponse.status !== 201) {
-            console.log("Failed to create GitHub issue");
-            console.log(await githubResponse.json());
-        }
-    }
-    
     const response = {
         statusCode: 200,
         body: JSON.stringify('Success'),
