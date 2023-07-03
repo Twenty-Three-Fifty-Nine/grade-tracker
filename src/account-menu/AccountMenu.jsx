@@ -41,6 +41,7 @@ import ThemeSwitch from "../themes/ThemeSwitch";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
 import FeedbackIcon from "@mui/icons-material/Feedback";
+import GitHubIcon from '@mui/icons-material/GitHub';
 import LogoutIcon from "@mui/icons-material/Logout";
 import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
 
@@ -116,6 +117,12 @@ const AccountMenu = (props) => {
                         <AttachMoneyRoundedIcon fontSize="small"/>
                     </ListItemIcon>
                     <Typography variant="body1"> Donate </Typography>
+                </MenuItem>
+                <MenuItem onClick={() => { window.open("https://github.com/Twenty-Three-Fifty-Nine/grade-tracker", "_blank"); setAnchorEl(null); }}>
+                    <ListItemIcon>
+                        <GitHubIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <Typography variant="body1"> Github </Typography>
                 </MenuItem>
                 <MenuItem onClick={() => {setAnchorEl(null); handleLogout()}}>
                     <ListItemIcon>
