@@ -192,7 +192,7 @@ const CreateAssessmentCard = (props) => {
                         </LocalizationProvider>
 
                         <TextField label="Grade Weight (%)" InputProps={{ inputProps: { min: 0 } }} value={details.weight} onChange={handleWeightChange} 
-                            sx={{ ml: 2 }} error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
+                            sx={{ ml: 2, width: 225 }} error={(details.weight <= 0 || details.weight > 100) && weightCheckOn} 
                             helperText={ getWeightHelperText(details, weightCheckOn) }
                         />
                     </Box>
