@@ -75,7 +75,7 @@ const CourseViewerHeader = (props) => {
                     }
 
                     <Typography variant="h6" component="div" sx={{ textAlign:"center" }}> 
-                        { !isNaN(courseCompletion) ? courseCompletion : "?" }% Completed
+                        { !isNaN(courseCompletion) ? parseFloat(courseCompletion).toFixed(2) : "?" }% Completed
                     </Typography>
 
                     <Box sx={{ alignSelf:"center" }}>
@@ -132,7 +132,7 @@ const CurrentlyAchievedDisplay = (props) => {
             </Typography>
             <Stack direction="row" spacing={ isMobile ? 5 : 7 } sx={{ alignItems:"center", justifyContent:"center" }}>
                 <Stack direction="row" gap={1}>
-                    <Chip label={courseData.totalGrade + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
+                    <Chip label={parseFloat(courseData.totalGrade).toFixed(2) + "%"} color="secondary" sx={{ p: 1, pt: 3, pb: 3, fontSize:30, backgroundColor:"primary.main", borderRadius: 1 }} />
                     {sum < 100 && (
                         isMobile ? (
                             <>
