@@ -60,11 +60,12 @@ export const handler = async(event) => {
             Body: {
                 Html: {
                     Charset: "UTF-8",
-                    Data: FeedbackEmailTemplate({
+                    Data: await FeedbackEmailTemplate({
                         email,
                         displayName, 
                         message,
                         feedbackType,
+                        githubResponse
                     }),
                 },
             },
