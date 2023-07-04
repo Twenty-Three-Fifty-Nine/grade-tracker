@@ -30,39 +30,10 @@ export const handler = async(event) => {
     }
     
     const {subject, message, feedbackType, email, displayName} = JSON.parse(event.body);
-    
-    const params = {
-        Destination: {
-            ToAddresses: [`2359gradetracker+${feedbackType}@gmail.com`],
-        },
-        Message: {
-            Body: {
-                Html: {
-                    Charset: "UTF-8",
-                    Data: FeedbackEmailTemplate({
-                        email,
-                        displayName, 
-                        message,
-                        feedbackType,
-                    }),
-                },
-            },
-            Subject: {
-                Charset: "UTF-8",
-                Data: subject,
-            },
-        },
-        Source: `${toTitleCase(feedbackType)} 2359 <${feedbackType}@twentythreefiftynine.com>`,
-        ReplyToAddresses: [
-            email
-        ]
-    };
 
-    const command = new SendEmailCommand(params);
-    await sesClient.send(command);
-
+    let githubResponse;
     if (feedbackType === "bug" || feedbackType === "suggestion") {
-        const githubResponse = await fetch("https://api.github.com/repos/Twenty-Three-Fifty-Nine/grade-tracker/issues", {
+        githubResponse = await fetch("https://api.github.com/repos/Twenty-Three-Fifty-Nine/grade-tracker/issues", {
             method: "POST",
             body: JSON.stringify({
                 title: subject,
@@ -81,6 +52,37 @@ export const handler = async(event) => {
         }
     }
     
+    const params = {
+        Destination: {
+            ToAddresses: [`2359gradetracker+${feedbackType}@gmail.com`],
+        },
+        Message: {
+            Body: {
+                Html: {
+                    Charset: "UTF-8",
+                    Data: await FeedbackEmailTemplate({
+                        email,
+                        displayName, 
+                        message,
+                        feedbackType,
+                        githubResponse
+                    }),
+                },
+            },
+            Subject: {
+                Charset: "UTF-8",
+                Data: subject,
+            },
+        },
+        Source: `${toTitleCase(feedbackType)} 2359 <${feedbackType}@twentythreefiftynine.com>`,
+        ReplyToAddresses: [
+            email
+        ]
+    };
+
+    const command = new SendEmailCommand(params);
+    await sesClient.send(command);
+
     const response = {
         statusCode: 200,
         body: JSON.stringify('Success'),

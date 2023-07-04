@@ -16,8 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-const FeedbackEmailTemplate = (props) => {
-    const { email, displayName, message, feedbackType } = props;
+const FeedbackEmailTemplate = async(props) => {
+    const { email, displayName, message, feedbackType, githubResponse } = props;
+
+    let github = "";
+    if (githubResponse) {
+      const jsonResponse = await githubResponse.json();
+      github = githubResponse.status === 201 ? `<p>GitHub Issue: ${jsonResponse["html_url"]}</p>` : `<p>GitHub Issue: Not Created</p>`;
+    }
+
     return `
 <html>
   <head>
@@ -74,6 +81,7 @@ const FeedbackEmailTemplate = (props) => {
         <p>Name: ${displayName}</p>
         <p>Email: <a href="mailto:test@testing.com">${email}</a></p>
         <p>Contact Reason: ${feedbackType.charAt(0).toUpperCase() + feedbackType.slice(1)}</p>
+        ${github}
       </div>
         <h2>Message:</h2>
         <div id="message">
