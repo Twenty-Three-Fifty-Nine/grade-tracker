@@ -267,7 +267,7 @@ const SyncMenu = (props) => {
                             </Typography>
                             <Tooltip title={!validSync ? <h3> There are no changes to sync </h3> : null} placement="left" arrow>
                                 <Box>
-                                    <Button color="inherit" onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
+                                    <Button color="inherit" sx={{ "&:disabled": {color: "lightgrey"} }} onClick={() => setConfirmSync(true)} disabled={!validSync}> Sync </Button>
                                 </Box>
                             </Tooltip>
                         </Toolbar>
