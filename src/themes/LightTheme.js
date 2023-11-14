@@ -56,6 +56,9 @@ const lightTheme = createTheme({
         },
         passing: {
             main: "#49a527",
+        },
+        disabled: {
+            main: "lightgrey"
         }
     },
 

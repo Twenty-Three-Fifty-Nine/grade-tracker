@@ -55,6 +55,9 @@ const darkTheme = createTheme({
         },
         passing: {
             main: "#49a527",
+        },
+        disabled: {
+            main: "hsl(172, 3%, 50%)",
         }
     },
     components: {
