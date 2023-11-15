@@ -20,7 +20,7 @@ import React, { useCallback } from "react";
 import {
     Box,
     Fab,
-    Icon,
+    Stack,
     Tab,
     Tabs,
     Tooltip,
@@ -32,6 +32,9 @@ import Axios from "axios";
 import Course from "../classes/Course";
 import { isMobile } from "react-device-detect";
 import YearOverview from "./YearOverview";
+
+import AddIcon from '@mui/icons-material/Add';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 /**
  * One of the 3 main pages of the application. This displays an overview 
@@ -63,6 +66,7 @@ const GradesOverview = (props) => {
     // Tracks if other dialogs or screens are open.
     const [addCourseOpen, setAddCourseOpen] = React.useState(false);
     const [courseCreator, setCourseCreator] = React.useState(false);
+    const [createTranscriptOpen, setCreateTranscriptOpen] = React.useState(false);
 
     /** Stops the year tab value from being loaded before the tabs exist. */
     setTimeout(() => {
@@ -177,15 +181,20 @@ const GradesOverview = (props) => {
                             <YearOverview setViewedCourse={setViewedCourse} updatedYear={updatedYear} setUpdatedYear={setUpdatedYear} 
                                 accordionsOpen={accordionsOpen} setAccordionsOpen={setAccordionsOpen} setViewAssessments={setViewAssessments} />
 
-                            <Tooltip title={ isMobile ? "" : <h3> Add a new course </h3> } placement="left" arrow>
-                                <Box>
-                                    <Fab color="primary" size={ "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year} 
-                                        sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 2 }}
-                                    >
-                                        <Icon>add</Icon>
+                            <Stack spacing={ 2 } direction={ isMobile ? "row" : "column" }
+                                sx={{ position: "fixed", bottom: isMobile ? 16 : 32, right: isMobile ? "50%" : 32, mr: isMobile ? -3.5 : 0, zIndex: 2, alignItems: "center" }}
+                            >
+                                <Tooltip title={isMobile ? "" : <h3> Create a transcript </h3>} placement="left" arrow>
+                                    <Fab color="secondary" size="small" onClick={() => setCreateTranscriptOpen(true)}>
+                                        <DescriptionIcon />
                                     </Fab>
-                                </Box>
-                            </Tooltip>
+                                </Tooltip>
+                                <Tooltip title={isMobile ? "" : <h3> Add a new course </h3>} placement="left" arrow>
+                                    <Fab color="primary" size={ "large" } onClick={() => setAddCourseOpen(true)} disabled={selectedYear !== activeTri.year}>
+                                        <AddIcon />
+                                    </Fab>
+                                </Tooltip>
+                            </Stack>
                         </Box>
                     }
 
