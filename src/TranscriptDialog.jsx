@@ -31,7 +31,7 @@ const tableRow = (course) => {
     )
 }
 
-const generateTranscript = (name, studentId, years) => {
+const generateTranscript = (name, studentId, years, currentTri) => {
     const doc = (
         <Document title={name + " Academic Transcript"} producer="23:59">
             <Page size="A4" style={styles.body}>
@@ -54,7 +54,7 @@ const generateTranscript = (name, studentId, years) => {
                                 <Text style={styles.subtitle}>{year}</Text>
                                 {
                                     Object.entries(tris).map(([tri, courses]) => {
-                                        if (courses.length === 0) return (<></>);
+                                        if (courses.length === 0 || (currentTri !== null && Number(year) === currentTri.year && Number(tri) === currentTri.tri - 1)) return (<></>);
 
                                         return (
                                             <>
@@ -212,6 +212,10 @@ const TranscriptDialog = (props) => {
                             })}
                         </Stack>
                     </FormGroup>
+                    <FormLabel component="legend">Additional options</FormLabel>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox onChange={(e) => setCurrentTri(e.target.checked)} />} label="Include current trimester" />
+                    </FormGroup>
                 </Stack>
             </DialogContent>
             <DialogActions>
@@ -220,7 +224,7 @@ const TranscriptDialog = (props) => {
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={() => generateTranscript(name, studentId, selectedYears)}
+                    onClick={() => generateTranscript(name, studentId, selectedYears, currentTri ? null : sessionData.timeInfo.activeTri)}
                 >
                     Create
                 </Button>
