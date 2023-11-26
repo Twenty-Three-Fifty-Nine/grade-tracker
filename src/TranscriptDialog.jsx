@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from '@mui/material';
-import { Document, Font, Page, StyleSheet, Text, pdf, View } from '@react-pdf/renderer';
-import { getLetterGrade } from './classes/Course';
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from "@mui/material";
+import { Document, Font, Page, StyleSheet, Text, pdf, View } from "@react-pdf/renderer";
+import { getLetterGrade } from "./classes/Course";
 
 const tableRow = (course) => {
     return (
@@ -60,8 +60,8 @@ const getGpaLetter = (gpa) => {
 const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, currentTri) => {
     const doc = (
         <Document title={name + " Academic Transcript"} producer="23:59">
-            <Page size="A4" style={styles.body}>
-                <Text style={styles.title}>Academic Transcript</Text>
+            <Page size="A4" style={{ padding: "30px 35px 50px 35px" }}>
+                <Text style={{ fontSize: 25, marginBottom: "10px", textAlign: "center", fontFamily: "Oswald" }}>Academic Transcript</Text>
                 <View style={{ display: "flex", maxWidth: "100%" }}>
                     <View style={{ display: "flex", flexDirection: "row" }}>
                         <Text style={[styles.text, { width: "15%" }]}>Name: </Text>
@@ -95,14 +95,14 @@ const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, curre
 
                         return (
                             <>
-                                <Text style={styles.subtitle}>{year}</Text>
+                                <Text style={{ fontSize: 15, margin: "20px 0 0 0", fontFamily: "Oswald" }}>{year}</Text>
                                 {
                                     Object.entries(tris).map(([tri, courses]) => {
                                         if (courses.length === 0 || (currentTri !== null && Number(year) === currentTri.year && Number(tri) === currentTri.tri - 1)) return (<></>);
 
                                         return (
                                             <>
-                                                <Text style={styles.header}>Trimester {parseInt(tri) + 1}</Text>
+                                                <Text style={{ fontSize: 12, margin: "15px 0 10px 0", color: "grey" }}>Trimester {parseInt(tri) + 1}</Text>
                                                 {courses.map((course) => tableRow(course))}
                                             </>
                                         )
@@ -113,7 +113,9 @@ const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, curre
                         )
                     })
                 }
-                <Text style={styles.footnote}>This is not an official transcript. It is for personal use only.</Text>
+                <Text style={{ position: "absolute", fontSize: 8, bottom: 20, left: 0, right: 0, textAlign: "center", color: "grey" }}>
+                    This is not an official transcript. It is for personal use only.
+                </Text>
             </Page>
         </Document>
     );
@@ -132,57 +134,17 @@ const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, curre
 }
 
 Font.register({
-    family: 'Oswald',
-    src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf'
+    family: "Oswald",
+    src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf"
 });
 
 const styles = StyleSheet.create({
-    body: {
-        paddingTop: 35,
-        paddingBottom: 65,
-        paddingHorizontal: 35,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 15,
-        textAlign: 'center',
-        fontFamily: 'Oswald'
-    },
-    author: {
-        fontSize: 12,
-        textAlign: 'center',
-        marginBottom: 40,
-    },
-    subtitle: {
-        fontSize: 18,
-        margin: "20px 0 0 0",
-        fontFamily: 'Oswald',
-        color: 'red',
-    },
     text: {
         margin: 1,
         fontSize: 10,
-        textAlign: 'justify',
-        fontFamily: 'Times-Roman'
-    },
-    image: {
-        marginVertical: 15,
-        marginHorizontal: 100,
-    },
-    header: {
-        fontSize: 12,
-        margin: "15px 0 10px 0",
-        color: 'grey',
-    },
-    footnote: {
-        position: 'absolute',
-        fontSize: 8,
-        bottom: 30,
-        left: 0,
-        right: 0,
-        textAlign: 'center',
-        color: 'grey',
-    },
+        textAlign: "justify",
+        fontFamily: "Times-Roman"
+    }
 });
 
 const TranscriptDialog = (props) => {
