@@ -31,33 +31,10 @@ const tableRow = (course) => {
     )
 }
 
-const getWeight = (grade) => {
-    if (grade >= 90) return 9;
-    else if (grade >= 85) return 8;
-    else if (grade >= 80) return 7;
-    else if (grade >= 75) return 6;
-    else if (grade >= 70) return 5;
-    else if (grade >= 65) return 4;
-    else if (grade >= 60) return 3;
-    else if (grade >= 55) return 2;
-    else if (grade >= 50) return 1;
-    else return 0;
-}
+const generateTranscript = (name, studentId, years, incOverallGPA, yearlyGPA, currentTri) => {
+    let overallGrade = 0;
+    let overallCourses = 0;
 
-const getGpaLetter = (gpa) => {
-    if (gpa === 9) return "A+";
-    else if (gpa >= 8) return "A";
-    else if (gpa >= 7) return "A-";
-    else if (gpa >= 6) return "B+";
-    else if (gpa >= 5) return "B";
-    else if (gpa >= 4) return "B-";
-    else if (gpa >= 3) return "C+";
-    else if (gpa >= 2) return "C";
-    else if (gpa >= 1) return "C-";
-    else return "D";
-}
-
-const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, currentTri) => {
     const doc = (
         <Document title={name + " Academic Transcript"} producer="23:59">
             <Page size="A4" style={{ padding: "30px 35px 50px 35px" }}>
@@ -79,30 +56,32 @@ const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, curre
                         let totalGrade = 0;
                         tris.forEach(trimester => {
                             trimester.forEach(course => {
-                                totalGrade += getWeight(parseFloat(course.totalGrade)) * 15;
+                                totalGrade += parseFloat(course.totalGrade);
                                 totalCourses++;
                             });
                         });
-                        let gpa = (totalGrade / (15 * totalCourses));
+                        let gpa = (totalGrade / totalCourses);
+                        overallGrade += totalGrade;
+                        overallCourses += totalCourses;
 
                         const yearGPA = yearlyGPA ? (
                             <View style={{ display: "flex", flexDirection: "row", marginTop: "3px" }}>
                                 <Text style={[styles.text, { width: "65%" }]}>GPA</Text>
                                 <Text style={[styles.text, { width: "10%" }]}>{gpa.toFixed(2)}</Text>
-                                <Text style={styles.text}>{getGpaLetter(gpa)}</Text>
+                                <Text style={styles.text}>{getLetterGrade(gpa)}</Text>
                             </View>
                         ) : (<></>);
 
                         return (
                             <>
-                                <Text style={{ fontSize: 15, margin: "20px 0 0 0", fontFamily: "Oswald" }}>{year}</Text>
+                                <Text style={{ fontSize: 15, margin: "15px 0 0 0", fontFamily: "Oswald" }}>{year}</Text>
                                 {
                                     Object.entries(tris).map(([tri, courses]) => {
                                         if (courses.length === 0 || (currentTri !== null && Number(year) === currentTri.year && Number(tri) === currentTri.tri - 1)) return (<></>);
 
                                         return (
                                             <>
-                                                <Text style={{ fontSize: 12, margin: "15px 0 10px 0", color: "grey" }}>Trimester {parseInt(tri) + 1}</Text>
+                                                <Text style={{ fontSize: 12, margin: "10px 0 10px 0", color: "grey" }}>Trimester {parseInt(tri) + 1}</Text>
                                                 {courses.map((course) => tableRow(course))}
                                             </>
                                         )
@@ -113,6 +92,13 @@ const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, curre
                         )
                     })
                 }
+                {incOverallGPA ? (
+                    <View style={{ display: "flex", flexDirection: "row", marginTop: "8px" }}>
+                        <Text style={[styles.text, { width: "65%", fontSize: 11 }]}>Overall GPA</Text>
+                        <Text style={[styles.text, { width: "10%", fontSize: 11 }]}>{(overallGrade / overallCourses).toFixed(2)}</Text>
+                        <Text style={[styles.text, { fontSize: 11 }]}>{getLetterGrade(overallGrade / overallCourses)}</Text>
+                    </View>
+                ) : (<></>)}
                 <Text style={{ position: "absolute", fontSize: 8, bottom: 20, left: 0, right: 0, textAlign: "center", color: "grey" }}>
                     This is not an official transcript. It is for personal use only.
                 </Text>
@@ -142,8 +128,7 @@ const styles = StyleSheet.create({
     text: {
         margin: 1,
         fontSize: 10,
-        textAlign: "justify",
-        fontFamily: "Times-Roman"
+        textAlign: "justify"
     }
 });
 
@@ -221,6 +206,7 @@ const TranscriptDialog = (props) => {
                     </FormGroup>
                     <FormLabel component="legend">Additional options</FormLabel>
                     <FormGroup>
+                        <FormControlLabel control={<Checkbox defaultChecked onChange={(e) => setOverallGPA(e.target.checked)} />} label="Include overall GPA" />
                         <FormControlLabel control={<Checkbox defaultChecked onChange={(e) => setYearlyGPA(e.target.checked)} />} label="Include yearly GPA" />
                         <FormControlLabel control={<Checkbox onChange={(e) => setCurrentTri(e.target.checked)} />} label="Include current trimester" />
                     </FormGroup>
@@ -232,7 +218,7 @@ const TranscriptDialog = (props) => {
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={() => generateTranscript(name, studentId, selectedYears, yearlyGPA, currentTri ? null : sessionData.timeInfo.activeTri)}
+                    onClick={() => generateTranscript(name, studentId, selectedYears, overallGPA, yearlyGPA, currentTri ? null : sessionData.timeInfo.activeTri)}
                 >
                     Create
                 </Button>
