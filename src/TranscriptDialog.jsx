@@ -31,7 +31,33 @@ const tableRow = (course) => {
     )
 }
 
-const generateTranscript = (name, studentId, years, currentTri) => {
+const getWeight = (grade) => {
+    if (grade >= 90) return 9;
+    else if (grade >= 85) return 8;
+    else if (grade >= 80) return 7;
+    else if (grade >= 75) return 6;
+    else if (grade >= 70) return 5;
+    else if (grade >= 65) return 4;
+    else if (grade >= 60) return 3;
+    else if (grade >= 55) return 2;
+    else if (grade >= 50) return 1;
+    else return 0;
+}
+
+const getGpaLetter = (gpa) => {
+    if (gpa === 9) return "A+";
+    else if (gpa >= 8) return "A";
+    else if (gpa >= 7) return "A-";
+    else if (gpa >= 6) return "B+";
+    else if (gpa >= 5) return "B";
+    else if (gpa >= 4) return "B-";
+    else if (gpa >= 3) return "C+";
+    else if (gpa >= 2) return "C";
+    else if (gpa >= 1) return "C-";
+    else return "D";
+}
+
+const generateTranscript = (name, studentId, years, overallGPA, yearlyGPA, currentTri) => {
     const doc = (
         <Document title={name + " Academic Transcript"} producer="23:59">
             <Page size="A4" style={styles.body}>
@@ -49,6 +75,24 @@ const generateTranscript = (name, studentId, years, currentTri) => {
 
                 {
                     Object.entries(years).map(([year, tris]) => {
+                        let totalCourses = 0;
+                        let totalGrade = 0;
+                        tris.forEach(trimester => {
+                            trimester.forEach(course => {
+                                totalGrade += getWeight(parseFloat(course.totalGrade)) * 15;
+                                totalCourses++;
+                            });
+                        });
+                        let gpa = (totalGrade / (15 * totalCourses));
+
+                        const yearGPA = yearlyGPA ? (
+                            <View style={{ display: "flex", flexDirection: "row", marginTop: "3px" }}>
+                                <Text style={[styles.text, { width: "65%" }]}>GPA</Text>
+                                <Text style={[styles.text, { width: "10%" }]}>{gpa.toFixed(2)}</Text>
+                                <Text style={styles.text}>{getGpaLetter(gpa)}</Text>
+                            </View>
+                        ) : (<></>);
+
                         return (
                             <>
                                 <Text style={styles.subtitle}>{year}</Text>
@@ -64,6 +108,7 @@ const generateTranscript = (name, studentId, years, currentTri) => {
                                         )
                                     })
                                 }
+                                {yearGPA}
                             </>
                         )
                     })
@@ -214,6 +259,7 @@ const TranscriptDialog = (props) => {
                     </FormGroup>
                     <FormLabel component="legend">Additional options</FormLabel>
                     <FormGroup>
+                        <FormControlLabel control={<Checkbox defaultChecked onChange={(e) => setYearlyGPA(e.target.checked)} />} label="Include yearly GPA" />
                         <FormControlLabel control={<Checkbox onChange={(e) => setCurrentTri(e.target.checked)} />} label="Include current trimester" />
                     </FormGroup>
                 </Stack>
@@ -224,7 +270,7 @@ const TranscriptDialog = (props) => {
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={() => generateTranscript(name, studentId, selectedYears, currentTri ? null : sessionData.timeInfo.activeTri)}
+                    onClick={() => generateTranscript(name, studentId, selectedYears, yearlyGPA, currentTri ? null : sessionData.timeInfo.activeTri)}
                 >
                     Create
                 </Button>
