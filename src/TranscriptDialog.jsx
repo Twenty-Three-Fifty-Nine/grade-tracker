@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
 */
 
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from "@mui/material";
 import { Document, Font, Page, StyleSheet, Text, pdf, View } from "@react-pdf/renderer";
 import { getLetterGrade } from "./classes/Course";
 
 const tableRow = (course) => {
     return (
-        <View style={{ display: "flex", flexDirection: "row" }}>
+        <View key={course.code} style={{ display: "flex", flexDirection: "row" }}>
             <Text style={[styles.text, { width: "65%" }]}>{`${course.code} - ${course.name}`}</Text>
             <Text style={[styles.text, { width: "10%" }]}>{`${course.totalGrade}%`}</Text>
             <Text style={styles.text}>{getLetterGrade(course.totalGrade)}</Text>
@@ -70,25 +70,27 @@ const generateTranscript = (name, studentId, years, incOverallGPA, yearlyGPA, cu
                                 <Text style={[styles.text, { width: "10%" }]}>{gpa.toFixed(2)}</Text>
                                 <Text style={styles.text}>{getLetterGrade(gpa)}</Text>
                             </View>
-                        ) : (<></>);
+                        ) : (<Fragment key={`noYearGpa`}></Fragment>);
 
                         return (
-                            <>
+                            <Fragment key={year}>
                                 <Text style={{ fontSize: 15, margin: "15px 0 0 0", fontFamily: "Oswald" }}>{year}</Text>
                                 {
                                     Object.entries(tris).map(([tri, courses]) => {
-                                        if (courses.length === 0 || (currentTri !== null && Number(year) === currentTri.year && Number(tri) === currentTri.tri - 1)) return (<></>);
+                                        if (courses.length === 0 || (currentTri !== null && Number(year) === currentTri.year && Number(tri) === currentTri.tri - 1)) {
+                                            return (<Fragment key={`empty-${tri}`}></Fragment>);
+                                        }
 
                                         return (
-                                            <>
+                                            <Fragment key={tri}>
                                                 <Text style={{ fontSize: 12, margin: "10px 0 10px 0", color: "grey" }}>Trimester {parseInt(tri) + 1}</Text>
                                                 {courses.map((course) => tableRow(course))}
-                                            </>
+                                            </Fragment>
                                         )
                                     })
                                 }
                                 {yearGPA}
-                            </>
+                            </Fragment>
                         )
                     })
                 }
