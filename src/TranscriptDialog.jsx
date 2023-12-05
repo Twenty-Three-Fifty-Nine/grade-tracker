@@ -151,8 +151,6 @@ const TranscriptDialog = (props) => {
         const courses = sessionData?.courses;
         const userData = sessionData?.userData;
 
-        console.log(sessionData)
-
         if (userData) setName(userData.displayName);
         if (courses && courses !== "Reloading") {
             setYears(courses);
