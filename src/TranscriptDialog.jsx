@@ -184,8 +184,8 @@ const TranscriptDialog = (props) => {
             <DialogTitle>Create Transcript</DialogTitle>
             <DialogContent sx={{ mt: 1 }}>
                 <Stack spacing={2}>
-                    <TextField sx={{ mt: 1}} value={name} label="Name to display" onChange={(e) => setName(e.target.value)} />
-                    <TextField value={studentId} label="Student ID" onChange={(e) => setStudentId(e.target.value)} />
+                    <TextField sx={{ mt: 1}} defaultValue={name} label="Name to display" onChange={(e) => setName(e.target.value)} />
+                    <TextField defaultValue={studentId} label="Student ID" onChange={(e) => setStudentId(e.target.value)} />
                     <FormGroup>
                         <FormLabel component="legend">Years to include</FormLabel>
                         <Stack direction="row">
