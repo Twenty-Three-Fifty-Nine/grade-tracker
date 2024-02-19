@@ -33,6 +33,7 @@ import {
 import AccountMenu from "./account-menu/AccountMenu";
 import AssessmentsOverview from "./overview/AssessmentsOverview";
 import Axios from "axios";
+import ConfettiExplosion from "react-confetti-explosion";
 import Cookies from "universal-cookie";
 import CourseViewer from "./course-viewer/CourseViewer";
 import darkTheme from "./themes/DarkTheme";
@@ -117,6 +118,23 @@ const App = () => {
 
         setVerifying(false);
     };
+
+    //  Confetti explosion
+    const [isExploding, setIsExploding] = React.useState(false);
+
+    React.useEffect(() => {
+        // Find time until 23:59
+        const date = new Date();
+        const time = date.getHours() * 60 + date.getMinutes();
+        let timeUntilMidnight = 23 * 60 + 59 - time;
+        console.log(timeUntilMidnight * 60 * 1000);
+
+        const confettiTimer = setInterval(() => {
+            console.log("It's time to explode!");
+            setIsExploding(true);
+            clearInterval(confettiTimer);
+        }, timeUntilMidnight * 60 * 1000);
+    }, []);
 
     /**
      * Checks if the user has a login cookie and logs them in
@@ -266,6 +284,18 @@ const App = () => {
                     {deletedAccount ? "Account deleted" : "Logged out"} successfully.
                 </Alert>
             </Snackbar>
+
+            {isExploding && (
+                <Box sx={{ position: "fixed", top: 0, left: 0, width: "100%" }}>
+                    <ConfettiExplosion
+                        force={.75}
+                        duration={3000}
+                        width={3000}
+                        particleCount={750}
+                        onComplete={() => setIsExploding(false)}
+                    />
+                </Box>
+            )}
         </ThemeProvider>
     );
 };
