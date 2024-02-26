@@ -416,6 +416,9 @@ const CourseViewer = (props) => {
                                     setCurrentEdit(newAss);
                                     setChangesMade(true);
                                     setValidChanges(false);
+                                    setTimeout(() => {
+                                        window.scrollTo(0, document.body.scrollHeight);
+                                    }, 250);
                                 }}
                             > Add Assessment </Button>
                         </Stack>
