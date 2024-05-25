@@ -35,7 +35,7 @@ import YearOverview from "./YearOverview";
 
 import AddIcon from '@mui/icons-material/Add';
 import DescriptionIcon from '@mui/icons-material/Description';
-import TranscriptDialog from "../TranscriptDialog";
+const TranscriptDialog = React.lazy(() => import("../TranscriptDialog"));
 
 /**
  * One of the 3 main pages of the application. This displays an overview 
