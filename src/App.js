@@ -80,7 +80,7 @@ const App = () => {
 
     // Tells both the client and the API what the currently active trimester is.
     const activeTri = useMemo(() => {
-        return { year: 2024, tri: 2 };
+        return { year: 2024, tri: 3 };
     }, []);
 
     // States related to the year select tabs.
